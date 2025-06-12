@@ -1,0 +1,6 @@
+###
+POST http://localhost:3000/chat
+
+{
+  "message": "Hello, how are you?"
+}
