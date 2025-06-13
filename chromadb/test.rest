@@ -1,0 +1,13 @@
+GET http://localhost:3000/health
+
+###
+POST http://localhost:3000/collections
+Content-Type: application/json
+
+{
+  "name": "test-collection3",
+  "metadata": {
+    "description": "This is a test collection3"
+  }
+}
+

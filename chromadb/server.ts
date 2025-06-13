@@ -1,31 +1,74 @@
 
 import { ChromaClient } from 'chromadb';
 import { OpenAIEmbeddingFunction } from '@chroma-core/openai';
+import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Connect to your Dockerized ChromaDB server
 const client = new ChromaClient({
-  host: 'http://192.168.1.8:8000',
-  tenant: 'default_tenant',
-  database: 'default_database',
+  // here running chroma db docker container in another machine
+  host: process.env.CHROMA_HOST || 'localhost', // with http, this does not work. Do not add port number as well
+  tenant: process.env.CHROMA_TENANT || 'default_tenant',
+  database: process.env.CHROMA_DATABASE || 'default_database',
+  fetchOptions: {
+   headers: {
+    'Content-Type': 'application/json',
+   },
+  },
 });
 
 // Create OpenAI embedding function
 const embedder = new OpenAIEmbeddingFunction({
-  apiKey: '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',
-  modelName: 'text-embedding-3-small' // or "text-embedding-ada-002"
+  apiKey: process.env.OPENAI_API_KEY || '',
+  modelName: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
 });
 
+// Express setup
+const app = express();
+app.use(express.json());
 
-async function main() {
-  const collections = await client.countCollections();
 
-  console.log('xxxx', collections)
-  // const collection = await client.createCollection({
-  //   name: 'test-from-js',
-  //   embeddingFunction: embedder,
-  // });
-  // const heartbeat = await client.heartbeat();
-  // console.log('ChromaDB connection successful:', heartbeat);
-}
+// Health check API
+app.get('/health', async (req: Request, res: Response) => {
+  try {
+    const heartbeat = await client.heartbeat();
+    res.json({
+      status: 'healthy',
+      chroma: heartbeat > 0 ? 'connected' : 'not connected',
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'unhealthy', error });
+  }
+});
 
-main();
+app.post('/collections', async (req: Request, res: Response) => {
+  try {
+    const { name, metadata } = req.body;
+    const collection = await client.createCollection({
+      name,
+      embeddingFunction: embedder,
+      metadata,
+    });
+    res.status(201).json({ message: `Collection ${collection.name} created` });
+  } catch (error) {
+    res.status(400).json({ error });``
+  }
+});
+
+// Start Express server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, async () => {
+  console.log(`Express server listening on port ${PORT}`);
+
+  // Verify Chromadb connection on startup
+  try {
+    const collections = await client.listCollections();
+    console.log('ChromaDB connection successful. Existing collections: ', collections.length);
+  } catch (error) {
+    console.error('ChromaDB connection failed:', error);
+    process.exit(1);
+  }
+});
