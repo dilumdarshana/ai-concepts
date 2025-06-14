@@ -44,6 +44,7 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 });
 
+// Create a new collection
 app.post('/collections', async (req: Request, res: Response) => {
   try {
     const { name, metadata } = req.body;
@@ -55,6 +56,47 @@ app.post('/collections', async (req: Request, res: Response) => {
     res.status(201).json({ message: `Collection ${collection.name} created` });
   } catch (error) {
     res.status(400).json({ error });``
+  }
+});
+
+// Insert data into the collection
+app.post('/collections/:collectionName/add', async (req: Request, res: Response) => {
+  try {
+    const { collectionName } = req.params;
+    const { documents } = req.body;
+    const collection = await client.getCollection({ name: collectionName });
+
+    for (const document of documents) {
+      const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+      await collection.add({
+        ids: [uniqueId],
+        documents: [document.document],
+        metadatas: [document.metadata],
+      });
+    }
+
+    res.status(201).json({ message: `Documents inserted into collection ${collectionName}` });
+  } catch (error) {
+    console.log('error', error);
+    res.status(400).json({ error });
+  }
+});
+
+app.post('/collections/:collectionName/query', async (req: Request, res: Response) => {
+  try {
+    const { collectionName } = req.params;
+    const { query } = req.body;
+  
+    const collection = await client.getCollection({ name: collectionName });
+
+    const result = await collection.query({
+      queryTexts: [query],
+      nResults: 1,
+    });
+
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error });
   }
 });
 
