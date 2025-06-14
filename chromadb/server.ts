@@ -82,6 +82,7 @@ app.post('/collections/:collectionName/add', async (req: Request, res: Response)
   }
 });
 
+// Query the collection
 app.post('/collections/:collectionName/query', async (req: Request, res: Response) => {
   try {
     const { collectionName } = req.params;
