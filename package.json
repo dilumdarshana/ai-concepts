@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev:chromadb": "pnpm --filter chromadb dev",
-    "dev:langchain": "pnpm --filter langchain dev"
+    "dev:langchain": "pnpm --filter langchain dev",
+    "dev:rag": "pnpm --filter rag dev"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,9 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "dotenv": "^16.5.0"
+    "@langchain/core": "^0.3.58",
+    "@langchain/openai": "^0.5.12",
+    "dotenv": "^16.5.0",
+    "langchain": "^0.3.28"
   }
 }

@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Unstoppable (2010)",
+    "genre": "action",
+    "actors": "Denzel Washington, Chris Pine, Rosario Dawson",
+    "year": 2010
+  },
+  {
+    "title": "The Dark Knight (2008)",
+    "genre": "action",
+    "actors": "Christian Bale, Heath Ledger, Aaron Eckhart",
+    "year": 2008
+  },
+  {
+    "title": "Inception (2010)",
+    "genre": "sci-fi",
+    "actors": "Leonardo DiCaprio, Marion Cotillard, Tom Hardy",
+    "year": 2010
+  },
+  {
+    "title": "Pulp Fiction (1994)",
+    "genre": "crime",
+    "actors": "John Travolta, Samuel L. Jackson, Uma Thurman",
+    "year": 1994
+  },
+  {
+    "title": "The Shawshank Redemption (1994)",
+    "genre": "drama",
+    "actors": "Tim Robbins, Morgan Freeman, Bob Gunton",
+    "year": 1994
+  },
+  {
+    "title": "Forrest Gump (1994)",
+    "genre": "drama",
+    "actors": "Tom Hanks, Robin Wright, Gary Sinise",
+    "year": 1994
+  },
+  {
+    "title": "The Matrix (1999)",
+    "genre": "sci-fi",
+    "actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
+    "year": 1999
+  },
+  {
+    "title": "Goodfellas (1990)",
+    "genre": "crime",
+    "actors": "Robert De Niro, Ray Liotta, Joe Pesci",
+    "year": 1990
+  },
+  {
+    "title": "The Godfather (1972)",
+    "genre": "crime",
+    "actors": "Marlon Brando, Al Pacino, James Caan",
+    "year": 1972
+  },
+  {
+    "title": "Titanic (1997)",
+    "genre": "romance",
+    "actors": "Leonardo DiCaprio, Kate Winslet, Billy Zane",
+    "year": 1997
+  },
+  {
+    "title": "Rising of Crazy AI",
+    "genre": "ai",
+    "actors": "Dilum Darshana, Nimal, Kamal",
+    "year": 2025
+  }
+]

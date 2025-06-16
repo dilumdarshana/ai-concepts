@@ -14,3 +14,8 @@ $ pnpm install
 # Run server from root
 $ pnpm dev:chromadb
 ```
+
+## API Documentation
+Run the following URL from the browser
+
+http://localhost:8000/docs

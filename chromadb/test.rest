@@ -5,9 +5,9 @@ POST http://localhost:3000/collections
 Content-Type: application/json
 
 {
-  "name": "test-collection4",
+  "name": "test-collection",
   "metadata": {
-    "description": "This is a test collection4"
+    "description": "This is a test collection"
   }
 }
 
