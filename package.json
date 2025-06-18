@@ -6,13 +6,15 @@
   "scripts": {
     "dev:chromadb": "pnpm --filter chromadb dev",
     "dev:langchain": "pnpm --filter langchain dev",
-    "dev:rag": "pnpm --filter rag dev"
+    "dev:rag": "pnpm --filter rag dev",
+    "dev:rag-huggingface": "pnpm --filter rag-huggingface dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.7.0",
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
@@ -21,6 +23,7 @@
     "@langchain/core": "^0.3.58",
     "@langchain/openai": "^0.5.12",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "langchain": "^0.3.28"
   }
 }

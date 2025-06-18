@@ -1,4 +1,5 @@
 packages:
   - 'langchain'
   - 'chromadb'
-  - '*'
+  - 'rag-json'
+  - 'rag-huggingface'

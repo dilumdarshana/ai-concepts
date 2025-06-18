@@ -4,7 +4,7 @@
 
 ### langchain
 
-### chromadb (vector database)
+### chromadb (vector database) - express app
 ```bash
 # Install npm modules from root
 $ pnpm install
@@ -16,4 +16,7 @@ $ pnpm dev:chromadb
 $ pnpm add chromadb --filter chromadb
 ```
 
-### RAG (Retrieval Augmented Generation)
+### rag-json (Retrieval Augmented Generation) - nextjs app
+
+### rag-huggingface (Retrieval Augmented Generation) - express app
+

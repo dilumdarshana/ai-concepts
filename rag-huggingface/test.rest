@@ -1,0 +1,14 @@
+POST http://localhost:3000/embeddings
+Content-Type: application/json
+
+{
+  "text": "Hello, how are you?"
+}
+
+###
+POST http://localhost:3000/create-index
+Content-Type: application/json
+
+{
+  "name": "test-index"
+}
