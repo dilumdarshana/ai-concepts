@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { Pinecone, PineconeRecord } from '@pinecone-database/pinecone';
+import { Pinecone } from '@pinecone-database/pinecone';
 // import { pipeline } from '@huggingface/transformers';
-import { InferenceClient } from '@huggingface/inference';
+import { InferenceClient } from '@huggingface/inference'; // Call APIs
 
 // Load environment variables from .env file
 dotenv.config();
@@ -18,6 +18,8 @@ const hf = new InferenceClient(process.env.HUGGINGFACE_TOKEN || '');
 // Express setup
 const app = express();
 app.use(express.json());
+
+const embeddingModel = 'sentence-transformers/all-MiniLM-L12-v2';
 
 app.post('/create-index', async (req: Request, res: Response) => {
   try {
@@ -43,7 +45,7 @@ app.post('/embeddings', async (req: Request, res: Response) => {
   try {
     const { text = 'Sample input' } = req.body;
     const embedding = await hf.featureExtraction({
-      model: 'sentence-transformers/all-MiniLM-L12-v2',
+      model: embeddingModel,
       inputs: text,
     });
 
@@ -55,6 +57,11 @@ app.post('/embeddings', async (req: Request, res: Response) => {
       } else if (Array.isArray(embedding[0])) {
         embeddingArray = embedding[0]; // Take first result for single input
       }
+    }
+
+    // To safe guard
+    if (!embeddingArray || !Array.isArray(embeddingArray)) {
+      res.status(400).json({ error: 'Invalid embedding output' });
     }
 
     const index = pcClient.index<{ genre: string }>('my-index');
@@ -72,59 +79,52 @@ app.post('/embeddings', async (req: Request, res: Response) => {
   }
 });
 
-// Insert data into the collection
-app.post('/collections/:collectionName/add', async (req: Request, res: Response) => {
-  // try {
-  //   const { collectionName } = req.params;
-  //   const { documents } = req.body;
-  //   const collection = await client.getCollection({ name: collectionName });
+// Query from the database
+app.post('/query', async (req: Request, res: Response) => {
+  try {
+    const { query } = req.body;
 
-  //   for (const document of documents) {
-  //     const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-  //     await collection.add({
-  //       ids: [uniqueId],
-  //       documents: [document.document],
-  //       metadatas: [document.metadata],
-  //     });
-  //   }
+    const embedding = await hf.featureExtraction({
+      model: embeddingModel,
+      inputs: query,
+    });
 
-  //   res.status(201).json({ message: `Documents inserted into collection ${collectionName}` });
-  // } catch (error) {
-  //   console.log('error', error);
-  //   res.status(400).json({ error });
-  // }
+    let embeddingArray;
+    if (Array.isArray(embedding)) {
+      if (typeof embedding[0] === 'number') {
+        embeddingArray = embedding;
+      } else if (Array.isArray(embedding[0])) {
+        embeddingArray = embedding[0];
+      }
+    }
+
+    const index = pcClient.index<{genre: string}>('my-index');
+
+    const result = await index.query({
+      topK: 1,
+      vector: embeddingArray as number[],
+      includeMetadata: true,
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
 });
 
-// Query the collection
-app.post('/collections/:collectionName/query', async (req: Request, res: Response) => {
-  // try {
-  //   const { collectionName } = req.params;
-  //   const { query } = req.body;
-  
-  //   const collection = await client.getCollection({ name: collectionName });
-
-  //   const result = await collection.query({
-  //     queryTexts: [query],
-  //     nResults: 1,
-  //   });
-
-  //   res.json(result);
-  // } catch (error) {
-  //   res.status(400).json({ error });
-  // }
+// Chat with agent
+app.post('/chat', async (req: Request, res: Response) => {
+  const output = await hf.textGeneration({
+    model: 'gpt2',
+    inputs: 'Once upon a time',
+    parameters: {
+      max_new_tokens: 50,
+    },
+  });
 });
 
 // Start Express server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   console.log(`Express server listening on port ${PORT}`);
-
-  // Verify Chromadb connection on startup
-  // try {
-  //   const collections = await client.listCollections();
-  //   console.log('ChromaDB connection successful. Existing collections: ', collections.length);
-  // } catch (error) {
-  //   console.error('ChromaDB connection failed:', error);
-  //   process.exit(1);
-  // }
 });

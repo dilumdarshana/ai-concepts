@@ -10,5 +10,5 @@ POST http://localhost:3000/create-index
 Content-Type: application/json
 
 {
-  "name": "test-index"
+  "name": "my-index"
 }
