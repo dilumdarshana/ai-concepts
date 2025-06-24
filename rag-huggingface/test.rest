@@ -2,7 +2,11 @@ POST http://localhost:3000/embeddings
 Content-Type: application/json
 
 {
-  "text": "Hello, how are you?"
+  "text": "Title: Despicable Me (2010)\nRated: PG\nRuntime: 95 min\nGenre: Animation, Adventure, Comedy\nActors: Steve Carell, Jason Segel, Russell Brand\nPlot: Gru, a criminal mastermind, adopts three orphans as pawns to carry out the biggest heist in history. His life takes an unexpected turn when the little girls see the evildoer as their potential father.",
+  "metadata": {
+    "name": "movie",
+    "year": 2010
+  }
 }
 
 ###
@@ -11,4 +15,20 @@ Content-Type: application/json
 
 {
   "name": "my-index"
+}
+
+###
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{ 
+  "query": "action"
+}
+
+###
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{ 
+  "query": "Can you give me a action movies?"
 }
