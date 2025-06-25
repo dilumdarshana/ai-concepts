@@ -1,11 +1,20 @@
 POST http://localhost:3000/embeddings
 Content-Type: application/json
 
+# {
+#   "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
+#   "metadata": {
+#     "name": "Unstoppable",
+#     "year": 2010,
+#     "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe."
+#   }
+# }
 {
-  "text": "Title: Despicable Me (2010)\nRated: PG\nRuntime: 95 min\nGenre: Animation, Adventure, Comedy\nActors: Steve Carell, Jason Segel, Russell Brand\nPlot: Gru, a criminal mastermind, adopts three orphans as pawns to carry out the biggest heist in history. His life takes an unexpected turn when the little girls see the evildoer as their potential father.",
+  "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
   "metadata": {
-    "name": "movie",
-    "year": 2010
+    "name": "Crazy AI",
+    "year": 2025,
+    "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe."
   }
 }
 
@@ -22,7 +31,7 @@ POST http://localhost:3000/query
 Content-Type: application/json
 
 { 
-  "query": "action"
+  "query": "What movies names you have in 2010?"
 }
 
 ###
@@ -30,5 +39,5 @@ POST http://localhost:3000/chat
 Content-Type: application/json
 
 { 
-  "query": "Can you give me a action movies?"
+  "query": "What is the movie featured by Dilum?"
 }

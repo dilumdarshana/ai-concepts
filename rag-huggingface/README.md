@@ -1,2 +1,2 @@
-# RAG based on Huggingface
+# RAG based on Huggingface and Langchain
 
