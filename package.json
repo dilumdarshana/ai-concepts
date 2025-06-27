@@ -7,7 +7,8 @@
     "dev:chromadb": "pnpm --filter chromadb dev",
     "dev:langchain": "pnpm --filter langchain dev",
     "dev:rag": "pnpm --filter rag dev",
-    "dev:rag-huggingface": "pnpm --filter rag-huggingface dev"
+    "dev:rag-huggingface": "pnpm --filter rag-huggingface dev",
+    "dev:langgraph": "pnpm --filter langgraph dev"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@langchain/community": "^0.3.47",
     "@langchain/core": "^0.3.58",
+    "@langchain/langgraph": "^0.3.5",
     "@langchain/openai": "^0.5.12",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",

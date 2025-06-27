@@ -1,0 +1,6 @@
+POST http://localhost:3000/agent
+Content-Type: application/json
+
+{
+  "message": "Convert USD 100 to EUR"
+}

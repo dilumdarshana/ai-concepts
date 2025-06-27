@@ -176,7 +176,7 @@ app.post('/chat', async (req: Request, res: Response) => {
         context: () => context,
       },
       prompt,
-      model, // HuggingFace LLM instance
+      model, // LLM instance
       new StringOutputParser(),
     ]);
 
