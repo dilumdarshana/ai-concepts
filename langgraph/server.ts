@@ -19,8 +19,8 @@ app.post('/agent', async (req: Request, res: Response) => {
         new HumanMessage(message)
       ],
     });
-    console.log('res', result.messages);
-    res.send('Agent response');
+
+    res.send(result.messages[result.messages.length - 1].content);
   } catch (error) {
     console.error('Error on agent', error);
   }
