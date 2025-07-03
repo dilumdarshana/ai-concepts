@@ -2,5 +2,5 @@ POST http://localhost:3000/agent
 Content-Type: application/json
 
 {
-  "message": "I want all the users in the database"
+  "message": "What is the question I asked previously?"
 }

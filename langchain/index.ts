@@ -20,7 +20,11 @@ app.post('/chat', async (req: Request, res: Response): Promise<any> => {
   }
   try {
     const aiResponse = await model.invoke(message);
-    res.json({ response: aiResponse });
+
+    // Get just the text content
+    const responseText = aiResponse.content;
+
+    res.json({ response: responseText });
   } catch (error) {
     res.status(500).json({ error: 'AI service error', details: error });
   }

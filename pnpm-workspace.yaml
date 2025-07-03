@@ -4,4 +4,5 @@ packages:
   - 'rag-json'
   - 'rag-huggingface'
   - 'langgraph'
+  - 'mcp'
   - '*'

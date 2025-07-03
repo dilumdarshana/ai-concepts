@@ -1,0 +1,19 @@
+{
+  "name": "mcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.7.0",
+  "dependencies": {
+    "@langchain/mcp-adapters": "^0.5.2"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/server-filesystem": "^2025.7.1"
+  }
+}
