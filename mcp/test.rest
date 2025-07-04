@@ -2,5 +2,5 @@ POST http://localhost:3000/chat
 Content-Type: application/json
 
 { 
-  "message": "What is the capital of Sri Lanka?"
+  "message": "Can you get the records with _id is 682f691da095ba7ca611d92c?"
 }
