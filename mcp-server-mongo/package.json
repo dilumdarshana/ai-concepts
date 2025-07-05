@@ -1,0 +1,28 @@
+{
+  "name": "mcp-server-mongo",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for MongoDB",
+  "keywords": ["mcp", "mcp mongodb"],
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "mcp-server-mongo": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "dev": "tsc --watch",
+    "inspector": "pnpx @modelcontextprotocol/inspector dist/index.js"
+  },
+  "packageManager": "pnpm@10.7.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "mongodb": "^6.17.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5.8.3"
+  }
+}

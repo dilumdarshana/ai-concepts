@@ -32,9 +32,18 @@ const client = new MultiServerMCPClient({
       command: 'pnpx',
       args: ['@modelcontextprotocol/server-filesystem', './'],
     },
+    // mongodb: {
+    //   command: 'pnpx',
+    //   args: ['mcp-mongo-server'],
+    //   env: {
+    //     MCP_MONGODB_URI: 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster',
+    //     MCP_MONGODB_READONLY: 'true'
+    //   }
+    // },
     mongodb: {
-      command: 'pnpx',
-      args: ['mcp-mongo-server'],
+      // command: 'pnpx',
+      command: 'mcp-server-mongo',
+      args: ['mcp-server-mongo'],
       env: {
         MCP_MONGODB_URI: 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster',
         MCP_MONGODB_READONLY: 'true'
