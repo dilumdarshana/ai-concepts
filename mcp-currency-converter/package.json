@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "mcp-currency-converter": "./dist/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "inspector": "pnpx @modelcontextprotocol/inspector pnpx tsx server.ts"
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "inspector": "pnpx @modelcontextprotocol/inspector node ./dist/index.js"
   },
   "keywords": [],
   "author": "",

@@ -28,12 +28,12 @@
     "@langchain/openai": "^0.5.12",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "global": "link:../../../../../Users/dilum/Library/pnpm/global/5/node_modules/global",
     "langchain": "^0.3.28",
+    "mcp-currency-converter": "link:mcp-currency-converter",
     "mcp-server-mongo": "link:mcp-server-mongo"
   },
   "pnpm": {
-    "overrides": {
-      "mcp-server-mongo": "link:mcp-server-mongo"
-    }
+    "overrides": {}
   }
 }

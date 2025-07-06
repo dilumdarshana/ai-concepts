@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  mcp-server-mongo: link:mcp-server-mongo
-
 importers:
 
   .:
@@ -29,9 +26,15 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
+      global:
+        specifier: link:../../../../../Users/dilum/Library/pnpm/global/5/node_modules/global
+        version: link:../../../../../Users/dilum/Library/pnpm/global/5/node_modules/global
       langchain:
         specifier: ^0.3.28
         version: 0.3.28(@langchain/core@0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32)))(axios@1.10.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(ws@8.18.2)
+      mcp-currency-converter:
+        specifier: link:mcp-currency-converter
+        version: link:mcp-currency-converter
       mcp-server-mongo:
         specifier: link:mcp-server-mongo
         version: link:mcp-server-mongo

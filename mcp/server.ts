@@ -20,34 +20,41 @@ const client = new MultiServerMCPClient({
   // Whether to prefix tool names with the server name (optional, default: true)
   prefixToolNameWithServerName: true,
   // Optional additional prefix for tool names (optional, default: 'mcp')
-  additionalToolNamePrefix: "mcp",
+  additionalToolNamePrefix: 'mcp',
   
   // Use standardized content block format in tool outputs
   useStandardContentBlocks: true,
 
   // Server configuration
   mcpServers: {
-    filesystem: {
-      transport: 'stdio',
-      command: 'pnpx',
-      args: ['@modelcontextprotocol/server-filesystem', './'],
-    },
+    // filesystem: {
+    //   transport: 'stdio',
+    //   command: 'pnpx',
+    //   args: ['@modelcontextprotocol/server-filesystem', './'],
+    // },
     // mongodb: {
     //   command: 'pnpx',
     //   args: ['mcp-mongo-server'],
     //   env: {
-    //     MCP_MONGODB_URI: 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster',
+    //     MCP_MONGODB_URI: process.env.MONGODB_URL as string,
     //     MCP_MONGODB_READONLY: 'true'
     //   }
     // },
-    mongodb: {
-      // command: 'pnpx',
-      command: 'mcp-server-mongo',
-      args: ['mcp-server-mongo'],
+    // mongodb: {
+    //   // command: 'pnpx',
+    //   command: 'mcp-server-mongo',
+    //   args: ['mcp-server-mongo'],
+    //   env: {
+    //     MCP_MONGODB_URI: process.env.MONGODB_URL as string,
+    //     MCP_MONGODB_READONLY: 'true'
+    //   }
+    // },
+    currencyConverter: {
+      command: 'mcp-currency-converter',
+      args: [],
       env: {
-        MCP_MONGODB_URI: 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster',
-        MCP_MONGODB_READONLY: 'true'
-      }
+        FREE_CURRENCY_KEY: process.env.FREE_CURRENCY_KEY as string,
+      },
     },
   }
 });
@@ -58,6 +65,8 @@ app.post('/chat', async (req: Request, res: Response) => {
     const { message } = req.body;
 
     const tools = await client.getTools();
+
+    // console.log('Available tools', tools)
 
     // Free models did not work well. Uisng Open AI model
     const model = new ChatOpenAI({
@@ -78,8 +87,6 @@ app.post('/chat', async (req: Request, res: Response) => {
       ],
     });
     // Get just the text content
-    // const responseText = aiResponse.content;
-
     res.send(result.messages[result.messages.length - 1].content);
   } catch (error) {
     console.log('Error', error);
