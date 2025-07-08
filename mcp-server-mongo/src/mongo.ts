@@ -20,7 +20,7 @@ export async function getMongoConnection(
 
     const db = client.db(); // Use the default DB from URI
 
-    console.log(`Connected with Mongodb: ${db.databaseName}`);
+    // console.log(`Connected with Mongodb: ${db.databaseName}`);
 
     return {
       client,

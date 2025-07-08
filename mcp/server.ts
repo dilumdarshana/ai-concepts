@@ -40,22 +40,22 @@ const client = new MultiServerMCPClient({
     //     MCP_MONGODB_READONLY: 'true'
     //   }
     // },
-    // mongodb: {
-    //   // command: 'pnpx',
-    //   command: 'mcp-server-mongo',
-    //   args: ['mcp-server-mongo'],
-    //   env: {
-    //     MCP_MONGODB_URI: process.env.MONGODB_URL as string,
-    //     MCP_MONGODB_READONLY: 'true'
-    //   }
-    // },
-    currencyConverter: {
-      command: 'mcp-currency-converter',
-      args: [],
+    mongodb: {
+      // command: 'pnpx',
+      command: 'mcp-server-mongo',
+      args: ['mcp-server-mongo'],
       env: {
-        FREE_CURRENCY_KEY: process.env.FREE_CURRENCY_KEY as string,
-      },
+        MCP_MONGODB_URI: process.env.MONGODB_URL as string,
+        MCP_MONGODB_READONLY: 'true'
+      }
     },
+    // currencyConverter: {
+    //   command: 'mcp-currency-converter',
+    //   args: [],
+    //   env: {
+    //     FREE_CURRENCY_KEY: process.env.FREE_CURRENCY_KEY as string,
+    //   },
+    // },
   }
 });
 

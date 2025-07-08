@@ -1,23 +1,40 @@
 #!/usr/bin/env node
+
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { MongoClient } from 'mongodb';
 import { getMongoConnection } from './mongo.js';
 import { createMCPServer } from './server.js';
 
-let mongoClient: MongoClient | null;
+let mongoClient: MongoClient | null = null;
 
+/**
+ * Main entry point to start the MCP MongoDB server.
+ */
 async function main() {
-  let connectionUrl = '';
-  let readOnlyMode = process.env.MCP_MONGODB_READONLY === 'true' || false;
-
+  // Parse command-line arguments (e.g., for future extensions)
   const args = process.argv.slice(2);
-  console.log('args', args);
+  console.warn('args', args);
+  const connectionUrlArg = args.find(arg => arg.startsWith('--url='));
+  const readOnlyArg = args.includes('--readonly');
+
+  // Determine if read-only mode is enabled
+  const readOnlyMode = readOnlyArg || process.env.MCP_MONGODB_READONLY === 'true';
+
+  // Get MongoDB connection URL from env
+  // const connectionUrl = connectionUrlArg 
+  //   ? connectionUrlArg.split('=')[1] 
+  //   : process.env.MCP_MONGODB_URI || '';
+
+  const connectionUrl = 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster';
+
   // If no connection URL from command line, use environment variable
   if (!connectionUrl) {
-    connectionUrl = process.env.MCP_MONGODB_URI || '';
+    console.error('No MongoDB connection URI provided. Set MCP_MONGODB_URI.');
+    process.exit(1);
   }
 
   try {
+    // Connect to MongoDB
     const { client, db } = await getMongoConnection(
       connectionUrl,
       readOnlyMode,
@@ -30,13 +47,13 @@ async function main() {
       process.exit(1);
     }
 
-    // Pass db instead of client to createServer
+    // Initialize the MCP server with MongoDB handlers
     const server = createMCPServer(client, db, readOnlyMode);
-
     const transport = new StdioServerTransport();
 
+    // Start MCP server via stdio transport
     await server.connect(transport);
-    console.warn('mcp-server-mongo MCP Server connected successfully');
+    console.warn('MCP Server connected and ready (mcp-server-mongo)');
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
     if (mongoClient) {

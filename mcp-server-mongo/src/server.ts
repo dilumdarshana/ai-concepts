@@ -1,41 +1,60 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { MongoClient, Db } from 'mongodb';
+import type { MongoClient, Db } from 'mongodb';
 import {
   PingRequestSchema,
   ListToolsRequestSchema,
-  ListResourcesRequestSchema,
+  CallToolRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { handlePingRequest } from './request/ping.js';
 import { handleListToolsRequest } from './request/tools.js';
+import { handleCallToolRequest } from './request/callToolRequest.js';
 
+/**
+ * Creates and configures an MCP server instance for MongoDB.
+ *
+ * @param dbClient - An active MongoDB client instance.
+ * @param db - The connected MongoDB database object.
+ * @param readOnly - If true, restricts tool access to read-only operations.
+ * @param options - Optional configuration for MCP server (e.g. name, version).
+ * @returns An initialized MCP server ready to handle requests.
+ */
 export function createMCPServer (
   dbClient: MongoClient,
   db: Db,
   readOnly = true,
   options = {},
 ) {
+  // Initialize the MCP server with metadata and capabilities.
   const server = new Server(
     {
-      name: 'mongodb',
+      name: 'mongodb', // Name of the MCP server (used in Inspector)
       version: '1.0.0',
-      ...options,
+      ...options, // Allow overriding name/version/etc.
     },
     {
       capabilities: {
-        resources: {},
-        tools: {},
-        prompts: {},
+        resources: {}, // Can be populated with static data resources
+        tools: {},     // Tools will be dynamically discovered from handlers
+        prompts: {},   // Optional: Add prompt templates here
       },
-      ...options,
+      ...options, // Allow customizing capabilities further
     },
   );
 
+  // Register handler for PingRequest (used in Inspector > Ping tab)
   server.setRequestHandler(PingRequestSchema, (request) => 
     handlePingRequest({ request, dbClient, db, readOnly })
   );
 
+  // Register handler for ListToolsRequest (Inspector > Tools tab)
+  // Lists available tools.
   server.setRequestHandler(ListToolsRequestSchema, (request) =>
-    handleListToolsRequest({ request, dbClient, db, readOnly }),
+    handleListToolsRequest(),
+  );
+
+  // Register handler for CallToolRequest (Inspector > Tools > Call Tool tab)
+  server.setRequestHandler(CallToolRequestSchema, (request) =>
+    handleCallToolRequest({ request, dbClient, db, readOnly }),
   );
 
   return server;
