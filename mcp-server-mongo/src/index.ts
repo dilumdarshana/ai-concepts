@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { MongoClient } from 'mongodb';
 import { getMongoConnection } from './mongo.js';
@@ -21,11 +20,8 @@ async function main() {
   const readOnlyMode = readOnlyArg || process.env.MCP_MONGODB_READONLY === 'true';
 
   // Get MongoDB connection URL from env
-  // const connectionUrl = connectionUrlArg 
-  //   ? connectionUrlArg.split('=')[1] 
-  //   : process.env.MCP_MONGODB_URI || '';
-
-  const connectionUrl = 'mongodb+srv://uk_company:Apache123Uk@testculster.lyzepzo.mongodb.net/uk_companies?retryWrites=true&w=majority&appName=TestCulster';
+  const connectionUrl = connectionUrlArg ? connectionUrlArg.split('=')[1] 
+    : process.env.MCP_MONGODB_URI || '';
 
   // If no connection URL from command line, use environment variable
   if (!connectionUrl) {

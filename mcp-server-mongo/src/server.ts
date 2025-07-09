@@ -4,10 +4,17 @@ import {
   PingRequestSchema,
   ListToolsRequestSchema,
   CallToolRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { handlePingRequest } from './request/ping.js';
 import { handleListToolsRequest } from './request/tools.js';
 import { handleCallToolRequest } from './request/callToolRequest.js';
+import { handleListResourcesRequest } from './request/listResources.js';
+import { handleReadResourceRequest } from './request/readResources.js';
+import { handleGetPromptRequest, handleListPromptsRequest } from './request/prompts.js';
 
 /**
  * Creates and configures an MCP server instance for MongoDB.
@@ -55,6 +62,25 @@ export function createMCPServer (
   // Register handler for CallToolRequest (Inspector > Tools > Call Tool tab)
   server.setRequestHandler(CallToolRequestSchema, (request) =>
     handleCallToolRequest({ request, dbClient, db, readOnly }),
+  );
+
+  // Register handler for listing available collections as resources.
+  server.setRequestHandler(ListResourcesRequestSchema, (request) =>
+    handleListResourcesRequest({ request, dbClient, db, readOnly }),
+  );
+
+  // Register handler for reading specific resources (collections/documents).
+  server.setRequestHandler(ReadResourceRequestSchema, (request) =>
+    handleReadResourceRequest({ request, dbClient, db, readOnly }),
+  );
+
+  // Register handler for listing available prompts. (Inspector > Prompts tab)
+  server.setRequestHandler(ListPromptsRequestSchema, (request) =>
+    handleListPromptsRequest({ request, dbClient, db, readOnly }),
+  );
+
+  server.setRequestHandler(GetPromptRequestSchema, (request) =>
+    handleGetPromptRequest({ request, dbClient, db, readOnly }),
   );
 
   return server;
