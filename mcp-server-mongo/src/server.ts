@@ -76,11 +76,12 @@ export function createMCPServer (
 
   // Register handler for listing available prompts. (Inspector > Prompts tab)
   server.setRequestHandler(ListPromptsRequestSchema, (request) =>
-    handleListPromptsRequest({ request, dbClient, db, readOnly }),
+    handleListPromptsRequest(),
   );
 
+  // Register handler for getting a specific prompt template.
   server.setRequestHandler(GetPromptRequestSchema, (request) =>
-    handleGetPromptRequest({ request, dbClient, db, readOnly }),
+    handleGetPromptRequest({ request }),
   );
 
   return server;

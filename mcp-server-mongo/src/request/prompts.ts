@@ -5,58 +5,56 @@ import type {
 import type { Db, MongoClient } from 'mongodb';
 import { PROMPT_TEMPLATES } from '../shared/prompts.js';
 
-export async function handleListPromptsRequest({
-  request,
-  dbClient,
-  db,
-  readOnly,
-}: {
-  request: ListPromptsRequest;
-  dbClient: MongoClient;
-  db: Db;
-  readOnly: boolean;
-}) {
+export async function handleListPromptsRequest() {
   // Map each template to the shape MCP expects
-  const prompts = PROMPT_TEMPLATES.map(({ name, description, arguments: args }) => ({
-    name,
-    description,
-    arguments: args,
-  }));
-
-  return { prompts };
+  return {
+    prompts: PROMPT_TEMPLATES.map(({ name, description, arguments: args }) => ({
+      name,
+      description,
+      arguments: args,
+    })),
+  };
 }
 
-
+// Updated handleGetPromptRequest function with dynamic argument resolution
 export async function handleGetPromptRequest({
   request,
-  dbClient,
-  db,
-  readOnly,
 }: {
   request: GetPromptRequest;
-  dbClient: MongoClient;
-  db: Db;
-  readOnly: boolean;
 }) {
   const { name, arguments: args = {} } = request.params;
+  // Find the template
   const found = PROMPT_TEMPLATES.find((p) => p.name === name);
 
   if (!found) {
     throw new Error(`Prompt '${name}' not found`);
   }
 
-  const collectionName = args.collection;
+  // Validate required arguments
+  const missingArgs = found.arguments
+    .filter((arg) => arg.required && !(arg.name in args))
+    .map((arg) => arg.name);
 
-  const template = found.template;
-  const values = { collection: collectionName };
+  if (missingArgs.length > 0) {
+    throw new Error(`Missing required arguments: ${missingArgs.join(', ')}`);
+  }
 
-  // Simple Mustache‑lite substitution:
-  const filledPrompt = template.replace(
+  // Set default values for optional arguments
+  const resolvedArgs = { ...args };
+  if (name === 'find-recent' && !resolvedArgs.days) {
+    resolvedArgs.days = '7';
+  }
+
+  // Simple substitution - no complex database queries needed
+  const filledPrompt = found.template.replace(
     /\{\{(\w+)\}\}/g,
-    (_, key) => {
-      const v = (values as any)[key];
-      // if (v == null) throw new Error(`Missing prompt argument: ${key}`);
-      return String(v);
+    (match, key) => {
+      const value = resolvedArgs[key];
+      if (value == null) {
+        console.warn(`Missing prompt argument: ${key} in template ${name}`);
+        return match;
+      }
+      return String(value);
     }
   );
 

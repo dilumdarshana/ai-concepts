@@ -6,9 +6,6 @@
  * Inspector or make them available to the agent.
  */
 
-import type { ListToolsRequest } from '@modelcontextprotocol/sdk/types.js';
-import type { Db, MongoClient } from 'mongodb';
-
 export async function handleListToolsRequest() {
   return {
     tools: [
