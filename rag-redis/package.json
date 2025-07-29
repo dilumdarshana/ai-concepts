@@ -1,0 +1,19 @@
+{
+  "name": "rag-redis",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "Dilum Darshana<dilum.dar@gmail.com>",
+  "main": "index.js",
+  "license": "ISC",
+  "scripts": {
+    "dev": "nodemon --exec ts-node server.ts"
+  },
+  "packageManager": "pnpm@10.7.0",
+  "dependencies": {
+    "@huggingface/inference": "^4.6.1",
+    "@huggingface/transformers": "^3.7.0",
+    "@redis/search": "^5.6.1",
+    "redis": "^5.6.1"
+  }
+}

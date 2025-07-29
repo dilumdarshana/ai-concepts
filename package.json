@@ -9,7 +9,8 @@
     "dev:rag": "pnpm --filter rag dev",
     "dev:rag-huggingface": "pnpm --filter rag-huggingface dev",
     "dev:langgraph": "pnpm --filter langgraph dev",
-    "dev:mcp": "pnpm --filter mcp dev"
+    "dev:mcp": "pnpm --filter mcp dev",
+    "dev:rag-redis": "pnpm --filter rag-redis dev"
   },
   "keywords": [],
   "author": "",

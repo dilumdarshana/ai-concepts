@@ -5,4 +5,5 @@ packages:
   - 'rag-huggingface'
   - 'langgraph'
   - 'mcp'
+  - 'rag-redis'
   - '*'

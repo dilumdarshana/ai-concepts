@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@langchain/community':
         specifier: ^0.3.47
-        version: 0.3.47(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.53.1)(deepmerge@4.3.1)(dotenv@16.5.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(zod@3.25.32))(@huggingface/inference@4.0.5)(@huggingface/transformers@3.5.2)(@ibm-cloud/watsonx-ai@1.6.8)(@langchain/core@0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32)))(@pinecone-database/pinecone@6.1.1)(axios@1.10.0)(chromadb@3.0.3)(ibm-cloud-sdk-core@5.4.0)(jsonwebtoken@9.0.2)(mongodb@6.17.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(playwright@1.53.1)(weaviate-client@3.6.2)(ws@8.18.2)
+        version: 0.3.47(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.53.1)(deepmerge@4.3.1)(dotenv@16.5.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(zod@3.25.32))(@huggingface/inference@4.6.1)(@huggingface/transformers@3.7.0)(@ibm-cloud/watsonx-ai@1.6.8)(@langchain/core@0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32)))(@pinecone-database/pinecone@6.1.1)(axios@1.10.0)(chromadb@3.0.3)(ibm-cloud-sdk-core@5.4.0)(jsonwebtoken@9.0.2)(mongodb@6.17.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(playwright@1.53.1)(redis@5.6.1)(weaviate-client@3.6.2)(ws@8.18.2)
       '@langchain/core':
         specifier: ^0.3.58
         version: 0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32))
@@ -224,6 +224,21 @@ importers:
       typescript:
         specifier: ^5
         version: 5.8.3
+
+  rag-redis:
+    dependencies:
+      '@huggingface/inference':
+        specifier: ^4.6.1
+        version: 4.6.1
+      '@huggingface/transformers':
+        specifier: ^3.7.0
+        version: 3.7.0
+      '@redis/search':
+        specifier: ^5.6.1
+        version: 5.6.1(@redis/client@5.6.1)
+      redis:
+        specifier: ^5.6.1
+        version: 5.6.1
 
 packages:
 
@@ -476,6 +491,10 @@ packages:
     resolution: {integrity: sha512-/Qc45BGrN+FBA3JfdeoHfafxfNShH/dxvOsXbBdcxyxIRIYOyefeiXSlShZGVCaiqYpm+10na28D0YtvjKPTlw==}
     engines: {node: '>=18'}
 
+  '@huggingface/inference@4.6.1':
+    resolution: {integrity: sha512-GjEYAoW88rZKthi4OTP+Lq0yi82MywVKEKm2zLDR6BePCinpDyhTPracDPBXSl4guxenYKcoKmitFjqS/zk/sg==}
+    engines: {node: '>=18'}
+
   '@huggingface/jinja@0.4.1':
     resolution: {integrity: sha512-3WXbMFaPkk03LRCM0z0sylmn8ddDm4ubjU7X+Hg4M2GOuMklwoGAFXp9V2keq7vltoB/c7McE5aHUVVddAewsw==}
     engines: {node: '>=18'}
@@ -484,11 +503,21 @@ packages:
     resolution: {integrity: sha512-Ptc03/jGRiYRoi0bUYKZ14MkDslsBRT24oxmsvUlfYrvQMldrxCevhPnT+hfX8awKTT8/f/0ZBBWldoeAcMHdQ==}
     engines: {node: '>=18'}
 
+  '@huggingface/jinja@0.5.1':
+    resolution: {integrity: sha512-yUZLld4lrM9iFxHCwFQ7D1HW2MWMwSbeB7WzWqFYDWK+rEb+WldkLdAJxUPOmgICMHZLzZGVcVjFh3w/YGubng==}
+    engines: {node: '>=18'}
+
   '@huggingface/tasks@0.19.15':
     resolution: {integrity: sha512-L4wB/iolKtsErke5yniXXNsGrSuaFmyREpcD4hL/wJox2UKtSEV5gE5gNrlvNaRLBOY41yN7/QmBF4y9byTM6Q==}
 
+  '@huggingface/tasks@0.19.33':
+    resolution: {integrity: sha512-RBl5apmrW61KdwEoJHYI4FZYqKNCDkJX4k7hOKspwwe+9AVIfUj2bj8xSaq9HiOOALkpbDoFIRMOQ7q95Tjzkg==}
+
   '@huggingface/transformers@3.5.2':
     resolution: {integrity: sha512-mfRXkmcL99+ibpjM++pvZmc2h3po8i1ZgSRI5Rtgh++P15GU0lY8UQteYt/w5V+GQw+Jpao93MoipcePzh3mKg==}
+
+  '@huggingface/transformers@3.7.0':
+    resolution: {integrity: sha512-3VXzzTKtMtaD6b6L2Y3a3T+iiqE76YMJ9OVW4fiodYbNNvnd6U9y09AMoKyPgIquo9oU2+aKTkzy7g6TqIoYyw==}
 
   '@ibm-cloud/watsonx-ai@1.6.8':
     resolution: {integrity: sha512-Ip5bLDM40rQRYauRmmIIpxLO57wI3+F59Njmp0hexnVr+uKroV+O9+eAGQkdE2c9d17R16Q77ueAGheZrzqgWA==}
@@ -1230,6 +1259,34 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
+  '@redis/bloom@5.6.1':
+    resolution: {integrity: sha512-5/22U76IMEfn6TeZ+uvjXspHw+ykBF0kpBa8xouzeHaQMXs/auqBUOEYzU2VKYDvnd2RSpPTyIg82oB7PpUgLg==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.6.1
+
+  '@redis/client@5.6.1':
+    resolution: {integrity: sha512-bWHmSFIJ5w1Y4aHsYs46XMDHKQsBHFRhNcllYaBxz2Zl+lu+gbm5yI9BqxvKh48bLTs/Wx1Kns0gN2WIasE8MA==}
+    engines: {node: '>= 18'}
+
+  '@redis/json@5.6.1':
+    resolution: {integrity: sha512-cTggVzPIVuiFeXcEcnTRiUzV7rmUvM9KUYxWiHyjsAVACTEUe4ifKkvzrij0H/z3ammU5tfGACffDB3olBwtVA==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.6.1
+
+  '@redis/search@5.6.1':
+    resolution: {integrity: sha512-+eOjx8O2YoKygjqkLpTHqcAq0zKLjior+ee2tRBx/3RSf1+OHxiC9Y6NstshQpvB1XHqTw9n7+f0+MsRJZrp0g==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.6.1
+
+  '@redis/time-series@5.6.1':
+    resolution: {integrity: sha512-sd3q4jMJdoSO2akw1L9NrdFI1JJ6zeMgMUoTh4a34p9sY3AnOI4aDLCecy8L2IcPAP1oNR3TbLFJiCJDQ35QTA==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.6.1
+
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
 
@@ -1614,6 +1671,10 @@ packages:
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
+
+  cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -2627,6 +2688,10 @@ packages:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
 
+  redis@5.6.1:
+    resolution: {integrity: sha512-O9DwAvcBm/lrlkGE0A6gNBtUdA8J9oD9njeLYlLzmm+MGTR7nd7VkpspfXqeXFg3gm89zldDqckyaHhXfhY80g==}
+    engines: {node: '>= 18'}
+
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -3226,15 +3291,31 @@ snapshots:
       '@huggingface/jinja': 0.5.0
       '@huggingface/tasks': 0.19.15
 
+  '@huggingface/inference@4.6.1':
+    dependencies:
+      '@huggingface/jinja': 0.5.1
+      '@huggingface/tasks': 0.19.33
+
   '@huggingface/jinja@0.4.1': {}
 
   '@huggingface/jinja@0.5.0': {}
 
+  '@huggingface/jinja@0.5.1': {}
+
   '@huggingface/tasks@0.19.15': {}
+
+  '@huggingface/tasks@0.19.33': {}
 
   '@huggingface/transformers@3.5.2':
     dependencies:
       '@huggingface/jinja': 0.4.1
+      onnxruntime-node: 1.21.0
+      onnxruntime-web: 1.22.0-dev.20250409-89f8206ba4
+      sharp: 0.34.2
+
+  '@huggingface/transformers@3.7.0':
+    dependencies:
+      '@huggingface/jinja': 0.5.1
       onnxruntime-node: 1.21.0
       onnxruntime-web: 1.22.0-dev.20250409-89f8206ba4
       sharp: 0.34.2
@@ -3371,7 +3452,7 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
-  '@langchain/community@0.3.47(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.53.1)(deepmerge@4.3.1)(dotenv@16.5.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(zod@3.25.32))(@huggingface/inference@4.0.5)(@huggingface/transformers@3.5.2)(@ibm-cloud/watsonx-ai@1.6.8)(@langchain/core@0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32)))(@pinecone-database/pinecone@6.1.1)(axios@1.10.0)(chromadb@3.0.3)(ibm-cloud-sdk-core@5.4.0)(jsonwebtoken@9.0.2)(mongodb@6.17.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(playwright@1.53.1)(weaviate-client@3.6.2)(ws@8.18.2)':
+  '@langchain/community@0.3.47(@browserbasehq/sdk@2.6.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.53.1)(deepmerge@4.3.1)(dotenv@16.5.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(zod@3.25.32))(@huggingface/inference@4.6.1)(@huggingface/transformers@3.7.0)(@ibm-cloud/watsonx-ai@1.6.8)(@langchain/core@0.3.58(openai@5.3.0(ws@8.18.2)(zod@3.25.32)))(@pinecone-database/pinecone@6.1.1)(axios@1.10.0)(chromadb@3.0.3)(ibm-cloud-sdk-core@5.4.0)(jsonwebtoken@9.0.2)(mongodb@6.17.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(playwright@1.53.1)(redis@5.6.1)(weaviate-client@3.6.2)(ws@8.18.2)':
     dependencies:
       '@browserbasehq/stagehand': 1.14.0(@playwright/test@1.53.1)(deepmerge@4.3.1)(dotenv@16.5.0)(openai@5.3.0(ws@8.18.2)(zod@3.25.32))(zod@3.25.32)
       '@ibm-cloud/watsonx-ai': 1.6.8
@@ -3390,13 +3471,14 @@ snapshots:
       zod: 3.25.67
     optionalDependencies:
       '@browserbasehq/sdk': 2.6.0
-      '@huggingface/inference': 4.0.5
-      '@huggingface/transformers': 3.5.2
+      '@huggingface/inference': 4.6.1
+      '@huggingface/transformers': 3.7.0
       '@pinecone-database/pinecone': 6.1.1
       chromadb: 3.0.3
       jsonwebtoken: 9.0.2
       mongodb: 6.17.0
       playwright: 1.53.1
+      redis: 5.6.1
       weaviate-client: 3.6.2
       ws: 8.18.2
     transitivePeerDependencies:
@@ -3649,6 +3731,26 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
+
+  '@redis/bloom@5.6.1(@redis/client@5.6.1)':
+    dependencies:
+      '@redis/client': 5.6.1
+
+  '@redis/client@5.6.1':
+    dependencies:
+      cluster-key-slot: 1.1.2
+
+  '@redis/json@5.6.1(@redis/client@5.6.1)':
+    dependencies:
+      '@redis/client': 5.6.1
+
+  '@redis/search@5.6.1(@redis/client@5.6.1)':
+    dependencies:
+      '@redis/client': 5.6.1
+
+  '@redis/time-series@5.6.1(@redis/client@5.6.1)':
+    dependencies:
+      '@redis/client': 5.6.1
 
   '@swc/counter@0.1.3': {}
 
@@ -4033,6 +4135,8 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
+
+  cluster-key-slot@1.1.2: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -4450,7 +4554,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.10.0(debug@4.4.1))
+      retry-axios: 2.6.0(axios@1.10.0)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -5025,6 +5129,14 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
+  redis@5.6.1:
+    dependencies:
+      '@redis/bloom': 5.6.1(@redis/client@5.6.1)
+      '@redis/client': 5.6.1
+      '@redis/json': 5.6.1(@redis/client@5.6.1)
+      '@redis/search': 5.6.1(@redis/client@5.6.1)
+      '@redis/time-series': 5.6.1(@redis/client@5.6.1)
+
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -5033,7 +5145,7 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
-  retry-axios@2.6.0(axios@1.10.0(debug@4.4.1)):
+  retry-axios@2.6.0(axios@1.10.0):
     dependencies:
       axios: 1.10.0(debug@4.4.1)
 
