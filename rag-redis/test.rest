@@ -45,5 +45,5 @@ POST http://localhost:3000/chat
 Content-Type: application/json
 
 { 
-  "query": "What is the movie featured by Dilum?"
+  "query": "In which year was Forrest Gump released?"
 }

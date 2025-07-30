@@ -26,7 +26,7 @@ $ pnpm add chromadb --filter chromadb
 ### rag-huggingface (Retrieval Augmented Generation) - express app
 - pinecone: Pinecone vector can not be reverse to the original text
 - sentence-transformers: huggingface free embedding model
-- chat endpoint
+- Chat endpoint
 
 ```bash
 # Run chromadb server
@@ -42,4 +42,12 @@ $ pnpm dev:rag-huggingface
 - Insert/update/delete records (TBD)
 
 ### rag-redis (Retrieval Augmented Generation) - express app
+- Find movie information
+- Redis as vector database
+- No memory management
+- chat endpoint
 
+```bash
+# How to run from root
+pnpm dev:rag-redis
+```
