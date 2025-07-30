@@ -1,0 +1,65 @@
+[
+  {
+    "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
+    "metadata": {
+      "name": "Unstoppable",
+      "year": 2010,
+      "actors": "Denzel Washington, Chris Pine, Rosario Dawson",
+      "genre": "Action, Thriller"
+    }
+  },
+  {
+    "text": "Title: The Dark Knight (2008)\nRated: PG-13\nRuntime: 152 min\nGenre: Action, Crime, Drama\nActors: Christian Bale, Heath Ledger, Aaron Eckhart\nPlot: When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham. The Dark Knight must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "metadata": {
+      "name": "The Dark Knight",
+      "year": 2008,
+      "actors": "Christian Bale, Heath Ledger, Aaron Eckhart",
+      "genre": "Action, Crime, Drama"
+    }
+  },
+  {    
+    "text": "Title: Inception (2010)\nRated: PG-13\nRuntime: 148 min\nGenre: Action, Adventure, Sci-Fi\nActors: Leonardo DiCaprio, Marion Cotillard, Tom Hardy\nPlot: A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
+    "metadata": {
+      "name": "Inception",
+      "year": 2010,
+      "actors": "Leonardo DiCaprio, Marion Cotillard, Tom Hardy",
+      "genre": "Action, Adventure, Sci-Fi"
+    }
+  },
+  {  
+    "text": "Title: Pulp Fiction (1994)\nRated: R\nRuntime: 154 min\nGenre: Crime, Drama\nActors: John Travolta, Samuel L. Jackson, Uma Thurman\nPlot: The lives of two mob hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+    "metadata": {
+      "name": "Pulp Fiction",
+      "year": 1994,
+      "actors": "John Travolta, Samuel L. Jackson, Uma Thurman",
+      "genre": "Crime, Drama"
+    }
+  },
+  {
+    "text": "Title: The Shawshank Redemption (1994)\nRated: R\nRuntime: 142 min\nGenre: Drama\nActors: Tim Robbins, Morgan Freeman, Bob Gunton\nPlot: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "metadata": {
+      "name": "The Shawshank Redemption",
+      "year": 1994,
+      "actors": "Tim Robbins, Morgan Freeman, Bob Gunton",
+      "genre": "Drama"
+    }
+  },
+  {
+    "text": "Title: Forrest Gump (1994)\nRated: PG-13\nRuntime: 142 min\nGenre: Drama\nActors: Tom Hanks, Robin Wright, Gary Sinise\nPlot: The presidencies of Kennedy and Johnson, the Vietnam War, and more unfold through the perspective of an Alabama man with an IQ of 75, whose simple outlook on life touches those around him.",
+    "metadata": {
+      "name": "Forrest Gump",
+      "year": 1994,
+      "actors": "Tom Hanks, Robin Wright, Gary Sinise",
+      "genre": "Drama"
+    }
+  },
+  {
+    "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
+    "metadata": {
+      "name": "Crazy AI",
+      "year": 2025,
+      "actors": "Dilum Darshana",
+      "genre": "Action, Thriller"
+    }
+  }
+]
