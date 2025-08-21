@@ -23,7 +23,7 @@ const app = express();
 app.use(express.json());
 
 // Free embedding model
-const embeddingModel = 'sentence-transformers/all-MiniLM-L12-v2';
+const embeddingModel = 'sentence-transformers/all-MiniLM-L12-v2'; // all-MiniLM-L6-v2
 const pineConeIndex = 'my-index';
 
 app.post('/create-index', async (req: Request, res: Response) => {
@@ -106,7 +106,7 @@ app.post('/query', async (req: Request, res: Response) => {
       }
     }
 
-    const index = pcClient.index<{genre: string}>('my-index');
+    const index = pcClient.index<{ genre: string }>('my-index');
 
     const result = await index.query({
       topK: 1,

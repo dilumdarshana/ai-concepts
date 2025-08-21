@@ -219,7 +219,7 @@ app.post('/query', async (req: Request, res: Response) => {
 // Endpoint to flush the Redis database
 app.post('/flush-db', async (req: Request, res: Response) => {
   try {
-    await client.flushDb();
+    await client.flushAll();
     console.log('All data removed from current Redis database');
     res.status(200).json({ message: 'Current database flushed successfully' });
   } catch (error) {
@@ -317,7 +317,7 @@ app.post('/chat', async (req: Request, res: Response) => {
 });
 
 // Start the Express server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, async () => {
   await client.connect();
   console.log(`Express server listening on port ${PORT}`);
