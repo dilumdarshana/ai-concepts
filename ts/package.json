@@ -10,7 +10,8 @@
     "dev:rag-huggingface": "pnpm --filter rag-huggingface dev",
     "dev:langgraph": "pnpm --filter langgraph dev",
     "dev:mcp": "pnpm --filter mcp dev",
-    "dev:rag-redis": "pnpm --filter rag-redis dev"
+    "dev:rag-redis": "pnpm --filter rag-redis dev",
+    "dev:voltagent": "pnpm --filter voltagent dev"
   },
   "keywords": [],
   "author": "",

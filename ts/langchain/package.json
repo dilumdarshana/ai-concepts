@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node index.ts"
+    "dev-chat": "nodemon --exec ts-node chat.ts"
   },
   "keywords": [],
   "author": "",

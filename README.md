@@ -1,0 +1,5 @@
+# AI Concepts
+
+## Typescript
+
+## Python

@@ -6,4 +6,5 @@ packages:
   - 'langgraph'
   - 'mcp'
   - 'rag-redis'
+  - 'voltagent'
   - '*'
