@@ -1,0 +1,33 @@
+{
+  "name": "voltagent",
+  "version": "0.1.0",
+  "description": "A VoltAgent application",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=.env ./src",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "biome check ./src",
+    "lint:fix": "biome check --write ./src",
+    "typecheck": "tsc --noEmit",
+    "volt": "volt"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.19",
+    "@voltagent/cli": "^0.1.9",
+    "@voltagent/core": "^0.1.63",
+    "@voltagent/logger": "^0.1.0",
+    "@voltagent/vercel-ai": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
