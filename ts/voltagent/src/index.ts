@@ -4,7 +4,6 @@ import { VercelAIProvider } from '@voltagent/vercel-ai';
 import { openai } from '@ai-sdk/openai';
 import { githubRepoContributesTool, githubRepoStarsTool } from './tools';
 
-
 // Agent to analyze repository stars
 const starsFetcherAgent = new Agent({
   name: 'StarsFetcher',
