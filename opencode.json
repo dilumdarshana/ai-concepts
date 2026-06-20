@@ -1,0 +1,43 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "ts/langchain/AGENTS.md",
+    "ts/chromadb/AGENTS.md",
+    "ts/rag-json/AGENTS.md",
+    "ts/rag-huggingface/AGENTS.md",
+    "ts/langgraph/AGENTS.md",
+    "ts/mcp/AGENTS.md",
+    "ts/rag-redis/AGENTS.md",
+    "ts/voltagent/AGENTS.md",
+    "ts/mcp-server-mongo/AGENTS.md"
+  ],
+  "agent": {
+    "langchain": {
+      "instructions": ["ts/langchain/AGENTS.md"]
+    },
+    "chromadb": {
+      "instructions": ["ts/chromadb/AGENTS.md"]
+    },
+    "rag-json": {
+      "instructions": ["ts/rag-json/AGENTS.md"]
+    },
+    "rag-huggingface": {
+      "instructions": ["ts/rag-huggingface/AGENTS.md"]
+    },
+    "langgraph": {
+      "instructions": ["ts/langgraph/AGENTS.md"]
+    },
+    "mcp": {
+      "instructions": ["ts/mcp/AGENTS.md"]
+    },
+    "rag-redis": {
+      "instructions": ["ts/rag-redis/AGENTS.md"]
+    },
+    "voltagent": {
+      "instructions": ["ts/voltagent/AGENTS.md"]
+    },
+    "mcp-server-mongo": {
+      "instructions": ["ts/mcp-server-mongo/AGENTS.md"]
+    }
+  }
+}
