@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "ts/langchain/AGENTS.md",
+    "ts/chromadb/AGENTS.md",
+    "ts/rag-json/AGENTS.md",
+    "ts/rag-huggingface/AGENTS.md",
+    "ts/langgraph/AGENTS.md",
+    "ts/mcp/AGENTS.md",
+    "ts/rag-redis/AGENTS.md",
+    "ts/voltagent/AGENTS.md",
+    "ts/mcp-server-mongo/AGENTS.md"
+  ]
+}
