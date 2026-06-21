@@ -28,3 +28,47 @@
 - @langchain/openai
 - @langchain/anthropic
 - @langchain/mistralai
+
+## How to run and test
+
+```sh
+# 1. Copy environment file and add your OpenAI key
+cp .env_example .env
+# Edit .env with your OPENAI_API_KEY
+
+# 2. Install dependencies (from workspace root)
+cd .. && pnpm install && cd langchain
+
+# 3. Start the server
+pnpm dev:langchain
+# Server starts on http://localhost:3000
+
+# 4. Test with curl or VS Code REST Client
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is my name?"}'
+# Response: { "response": { "answer": "...", "confidence": 0.95 } }
+
+# 5. Test with memory
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "My name is Dilum?"}'
+
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is my name?"}'
+# Response: { "response": { "answer": "Your name is Dilum", "confidence": 0.95 } }
+```
+
+## Migration notes
+
+This project was migrated from the deprecated `RunnableWithMessageHistory` pattern to
+LangGraph's `StateGraph` + `MemorySaver` checkpointer.
+
+| Old (deprecated) | New |
+|---|---|
+| `RunnableWithMessageHistory` | `StateGraph` + checkpointer |
+| `sessionId` | `thread_id` (in `configurable`) |
+| `InMemoryChatMessageHistory` | `MemorySaver` (swap for `SqliteSaver`/`PostgresSaver` in prod) |
+
+See inline comments in `chat.ts` for the full migration pattern.
