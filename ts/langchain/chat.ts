@@ -2,13 +2,18 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatMessageHistory } from '@langchain/community/stores/message/in_memory';
+import { InMemoryChatMessageHistory } from '@langchain/core/chat_history';
 import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
-import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+import { z } from 'zod';
 
 // Load environment variables from a .env file
 dotenv.config();
+
+const schema = z.object({
+  answer: z.string(),
+  confidence: z.number(),
+});
 
 // Initialize an Express application
 const app = express();
@@ -19,10 +24,10 @@ const model = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY, // API key for OpenAI
   model: 'gpt-4o', // Model name
   temperature: 0.7, // Temperature setting for response variability
-});
+}).withStructuredOutput(schema);
 
 // Store chat histories for different sessions
-const histories: Record<string, ChatMessageHistory> = {};
+const histories: Record<string, InMemoryChatMessageHistory> = {};
 
 // Define a prompt template for the AI model
 const prompt = ChatPromptTemplate.fromMessages([
@@ -32,19 +37,19 @@ const prompt = ChatPromptTemplate.fromMessages([
 ]);
 
 // Create a processing chain with the prompt and model
-const chain = prompt.pipe(model).pipe(new StringOutputParser());
+const chain = prompt.pipe(model);
 
-// Extend the chain to include message history management
 const chainWithHistory = new RunnableWithMessageHistory({
-  runnable: chain, // Base chain
+  runnable: chain,
   getMessageHistory: (sessionId: string) => {
     if (!histories[sessionId]) {
-      histories[sessionId] = new ChatMessageHistory(); // Initialize history if not present
+      histories[sessionId] = new InMemoryChatMessageHistory();
     }
     return histories[sessionId];
   },
-  inputMessagesKey: 'message', // Key for input messages
-  historyMessagesKey: 'history', // Key for history messages
+  inputMessagesKey: 'message',
+  historyMessagesKey: 'history',
+  outputMessagesKey: 'answer',
 });
 
 // Define a POST endpoint for chat interactions

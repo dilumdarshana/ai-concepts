@@ -16,7 +16,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.7.0",
+  "packageManager": "pnpm@11.5.2",
   "devDependencies": {
     "@types/express": "^5.0.3",
     "nodemon": "^3.1.10",
@@ -34,8 +34,5 @@
     "langchain": "^0.3.28",
     "mcp-currency-converter": "link:mcp-currency-converter",
     "mcp-server-mongo": "link:mcp-server-mongo"
-  },
-  "pnpm": {
-    "overrides": {}
   }
 }
