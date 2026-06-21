@@ -1,6 +1,6 @@
 # AI Concepts
 
-pnpm workspace at `ts/` — Node 24.15 (.nvmrc), pnpm 10.7.0.
+pnpm workspace at `ts/` — Node 24.15 (.nvmrc), pnpm 11.5.2.
 
 ## Commands
 
