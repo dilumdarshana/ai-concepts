@@ -1,38 +1,34 @@
 import { ChatOpenAI } from '@langchain/openai';
-import { PromptTemplate } from '@langchain/core/prompts';
+import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-import { UIMessage as VercelChatMessage } from 'ai';
+import { HumanMessage, AIMessage } from '@langchain/core/messages';
+import type { UIMessage, TextUIPart, UIMessageChunk } from 'ai';
+import { createUIMessageStreamResponse } from 'ai';
 
 export const dynamic = 'force-dynamic';
 
-const formatMessage = (message: VercelChatMessage) => {
-  const text = message.parts.filter(p => p.type === 'text').map(p => p.text).join('');
-  return `${message.role}: ${text}`
-};
+const prompt = ChatPromptTemplate.fromMessages([
+  ['system', 'You are the movie expert. All responses must be in the form of a movie review.'],
+  new MessagesPlaceholder('chat_history'),
+  ['human', '{message}'],
+]);
 
-const messageTemplate = `
-  You are the movie expert. All responses must be in the form of a movie review.
-
-  Current conversation:
-  {chat_history}
-
-  user: {message}
-
-  assistant:
-`;
+function toLangChainMessages(msgs: UIMessage[]) {
+  return msgs.map(m => {
+    const text = m.parts.filter((p): p is TextUIPart => p.type === 'text').map(p => p.text).join('');
+    return m.role === 'user' ? new HumanMessage(text) : new AIMessage(text);
+  });
+}
 
 export async function POST(req: Request) {
   try {
-    // Extract the `messages` from the body of the request
     const { messages } = await req.json();
 
     const message = messages.at(-1).content;
-    const chatHistory = messages.slice(0, -1).map(formatMessage).join('\n');
-
-    const prompt = PromptTemplate.fromTemplate(messageTemplate);
+    const chatHistory = toLangChainMessages(messages.slice(0, -1));
 
     const model = new ChatOpenAI({
-      // streaming: true,
+      streaming: true,
       apiKey: process.env.OPENAI_API_KEY!,
       model: process.env.OPENAI_MODEL!,
       temperature: 0.8,
@@ -42,46 +38,29 @@ export async function POST(req: Request) {
     const parser = new StringOutputParser();
     const chain = prompt.pipe(model).pipe(parser);
 
-    // Get the stream
     const stream = await chain.stream({
       message,
       chat_history: chatHistory,
     });
 
-    // Convert LangChain stream to AI SDK compatible format
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
+    const id = crypto.randomUUID();
+
+    const chunkStream = new ReadableStream<UIMessageChunk>({
       async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            if (chunk) {
-              // Format as AI SDK expects - escape quotes and newlines
-              const escapedChunk = chunk
-                .replace(/\\/g, '\\\\')
-                .replace(/"/g, '\\"')
-                .replace(/\n/g, '\\n')
-                .replace(/\r/g, '\\r');
+        controller.enqueue({ type: 'text-start', id });
 
-              // Format as AI SDK expects (data stream format)
-              const formatted = `0:"${escapedChunk}"\n`;
-              controller.enqueue(encoder.encode(formatted));
-            }
+        for await (const chunk of stream) {
+          if (chunk) {
+            controller.enqueue({ type: 'text-delta', id, delta: chunk });
           }
-          // End the stream
-          controller.enqueue(encoder.encode('d:\n'));
-          controller.close();
-        } catch (error) {
-          controller.error(error);
         }
+
+        controller.enqueue({ type: 'text-end', id });
+        controller.close();
       },
     });
 
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        //'X-Vercel-AI-Data-Stream': 'v1',
-      },
-    });
+    return createUIMessageStreamResponse({ stream: chunkStream });
   } catch (e: any) {
     return Response.json({ error: e.message }, { status: e.status ?? 500 });
   }
