@@ -24,7 +24,8 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    const message = messages.at(-1).content;
+    const last = messages.at(-1);
+    const message = last.parts.filter((p: TextUIPart) => p.type === 'text').map((p: TextUIPart) => p.text).join('');
     const chatHistory = toLangChainMessages(messages.slice(0, -1));
 
     const model = new ChatOpenAI({

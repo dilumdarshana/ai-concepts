@@ -13,7 +13,8 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    const message = messages.at(-1).content;
+    const last = messages.at(-1);
+    const message = last.parts.filter((p: any) => p.type === 'text').map((p: any) => p.text).join('');
 
     const prompt = PromptTemplate.fromTemplate("{message}");
 
