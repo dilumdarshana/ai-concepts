@@ -7,7 +7,7 @@ import { DefaultChatTransport } from 'ai';
 export default function Chat() {
   const [input, setInput] = useState('');
   const { messages, sendMessage } = useChat({
-    transport: new DefaultChatTransport({ api: 'api/chat' }),
+    transport: new DefaultChatTransport({ api: 'api/chat4' }),
     onError: (e: any) => {
       console.log(e)
     },
