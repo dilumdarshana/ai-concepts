@@ -1,14 +1,18 @@
+// LangChain — demonstrates streaming with ChatOpenAI + StringOutputParser,
+// then converts the text stream into the AI SDK v6 SSE format so useChat
+// (DefaultChatTransport) can consume it natively.
+
 import { ChatOpenAI } from '@langchain/openai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
+import { createUIMessageStreamResponse } from 'ai';
+import type { UIMessageChunk } from 'ai';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
-    // Extract the `messages` from the body of the request
     const { messages } = await req.json();
-
     const message = messages.at(-1).content;
 
     const prompt = PromptTemplate.fromTemplate("{message}");
@@ -22,35 +26,32 @@ export async function POST(req: Request) {
 
     const parser = new StringOutputParser();
     const chain = prompt.pipe(model).pipe(parser);
-
-    // Get the stream
     const stream = await chain.stream({ message });
 
-    // Convert LangChain stream to AI SDK compatible format
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
+    // Each text block needs a unique id — used by the client to reconcile
+    // text-start, text-delta, and text-end events into a single message part.
+    const id = crypto.randomUUID();
+
+    const chunkStream = new ReadableStream<UIMessageChunk>({
       async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            // Format as AI SDK expects (data stream format)
-            const formatted = `0:"${chunk.replace(/"/g, '\\"')}"\n`;
-            controller.enqueue(encoder.encode(formatted));
-          }
-          // End the stream
-          controller.enqueue(encoder.encode('d:\n'));
-          controller.close();
-        } catch (error) {
-          controller.error(error);
+        // Signal the beginning of a new text part
+        controller.enqueue({ type: 'text-start', id });
+
+        // Forward each LangChain token as a text-delta chunk
+        for await (const chunk of stream) {
+          controller.enqueue({ type: 'text-delta', id, delta: chunk });
         }
+
+        // Signal the end of this text part
+        controller.enqueue({ type: 'text-end', id });
+        controller.close();
       },
     });
 
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        //'X-Vercel-AI-Data-Stream': 'v1',
-      },
-    });
+    // createUIMessageStreamResponse wraps the chunk stream in SSE format
+    // (text/event-stream) and sets the x-vercel-ai-ui-message-stream header
+    // that DefaultChatTransport.processResponseStream expects.
+    return createUIMessageStreamResponse({ stream: chunkStream });
   } catch (e: any) {
     return Response.json({ error: e.message }, { status: e.status ?? 500 });
   }
