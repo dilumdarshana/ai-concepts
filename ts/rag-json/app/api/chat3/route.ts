@@ -1,12 +1,13 @@
 import { ChatOpenAI } from '@langchain/openai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-import { Message as VercelChatMessage } from 'ai';
+import { UIMessage as VercelChatMessage } from 'ai';
 
 export const dynamic = 'force-dynamic';
 
 const formatMessage = (message: VercelChatMessage) => {
-  return `${message.role}: ${message.content}`
+  const text = message.parts.filter(p => p.type === 'text').map(p => p.text).join('');
+  return `${message.role}: ${text}`
 };
 
 const messageTemplate = `

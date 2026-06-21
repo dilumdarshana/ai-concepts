@@ -1,7 +1,7 @@
 import { ChatOpenAI } from '@langchain/openai';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-import { Message as VercelChatMessage } from 'ai';
+import { UIMessage as VercelChatMessage } from 'ai';
 
 import { JSONLoader } from 'langchain/document_loaders/fs/json';
 // import { CharacterTextSplitter } from 'langchain/text_splitter';
@@ -16,7 +16,8 @@ const loader = new JSONLoader(
 );
 
 const formatMessage = (message: VercelChatMessage) => {
-  return `${message.role}: ${message.content}`;
+  const text = message.parts.filter(p => p.type === 'text').map(p => p.text).join('');
+  return `${message.role}: ${text}`;
 };
 
 const messageTemplate = `

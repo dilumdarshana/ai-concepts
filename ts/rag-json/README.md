@@ -3,7 +3,7 @@
 ## Different Approaches
 
 1. api/chat
-  - Regular chat endpoint
+  - Regular chat endpoint without RAG
 
 2. api/chat2
   - Langchain integration
