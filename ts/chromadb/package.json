@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon --exec ts-node server.ts"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.7.0",
+  "scripts": {
+    "dev": "nodemon --exec ts-node server.ts"
+  },
   "dependencies": {
-    "@chroma-core/openai": "^0.1.7",
-    "chromadb": "^3.0.3",
+    "@chroma-core/openai": "^0.1.10",
+    "chromadb": "^3.4.3",
     "express": "^5.1.0"
   },
   "devDependencies": {

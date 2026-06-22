@@ -1,5 +1,5 @@
-
-import { ChromaClient } from 'chromadb';
+// For Docker/self-hosted, uncomment ChromaClient below and import CloudClient instead.
+import { CloudClient, ChromaClient } from 'chromadb';
 import { OpenAIEmbeddingFunction } from '@chroma-core/openai';
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
@@ -7,18 +7,23 @@ import dotenv from 'dotenv';
 // Load environment variables from .env file
 dotenv.config();
 
-// Connect to your Dockerized ChromaDB server
-const client = new ChromaClient({
-  // here running chroma db docker container in another machine
-  host: process.env.CHROMA_HOST || 'localhost', // with http, this does not work. Do not add port number as well
-  tenant: process.env.CHROMA_TENANT || 'default_tenant',
-  database: process.env.CHROMA_DATABASE || 'default_database',
-  fetchOptions: {
-   headers: {
-    'Content-Type': 'application/json',
-   },
-  },
+// Chroma Cloud client. Requires CHROMA_API_KEY, CHROMA_TENANT, and CHROMA_DATABASE.
+const client = new CloudClient({
+  apiKey: process.env.CHROMA_API_KEY,
+  tenant: process.env.CHROMA_TENANT,
+  database: process.env.CHROMA_DATABASE,
 });
+
+// Docker/self-hosted Chroma client. Uncomment this block and comment out CloudClient above
+// when running Chroma with docker-compose.yml.
+// const client = new ChromaClient({
+//   // Use hostname/IP only. Do not include http:// and keep the port separate.
+//   host: process.env.CHROMA_HOST || 'localhost',
+//   port: Number(process.env.CHROMA_PORT || 8000),
+//   ssl: false,
+//   tenant: process.env.CHROMA_TENANT || 'default_tenant',
+//   database: process.env.CHROMA_DATABASE || 'default_database',
+// });
 
 // Create OpenAI embedding function
 const embedder = new OpenAIEmbeddingFunction({
@@ -55,14 +60,15 @@ app.post('/collections', async (req: Request, res: Response) => {
     });
     res.status(201).json({ message: `Collection ${collection.name} created` });
   } catch (error) {
-    res.status(400).json({ error });``
+    console.error('Error on create collection', error);
+    res.status(400).json({ error });
   }
 });
 
 // Insert data into the collection
 app.post('/collections/:collectionName/add', async (req: Request, res: Response) => {
   try {
-    const { collectionName } = req.params;
+    const collectionName = String(req.params.collectionName);
     const { documents } = req.body;
     const collection = await client.getCollection({ name: collectionName });
 
@@ -85,9 +91,9 @@ app.post('/collections/:collectionName/add', async (req: Request, res: Response)
 // Query the collection
 app.post('/collections/:collectionName/query', async (req: Request, res: Response) => {
   try {
-    const { collectionName } = req.params;
+    const collectionName = String(req.params.collectionName);
     const { query } = req.body;
-  
+
     const collection = await client.getCollection({ name: collectionName });
 
     const result = await collection.query({
@@ -106,10 +112,12 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   console.log(`Express server listening on port ${PORT}`);
 
-  // Verify Chromadb connection on startup
+  // Verify Chromadb connection on startup — heartbeat checks connectivity,
+  // getUserIdentity confirms auth and shows the resolved tenant/databases.
   try {
-    const collections = await client.listCollections();
-    console.log('ChromaDB connection successful. Existing collections: ', collections.length);
+    await client.heartbeat();
+    const identity = await client.getUserIdentity();
+    console.log(`ChromaDB connected (tenant: ${identity.tenant}, databases: ${identity.databases.join(', ')})`);
   } catch (error) {
     console.error('ChromaDB connection failed:', error);
     process.exit(1);

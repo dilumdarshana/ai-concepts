@@ -55,10 +55,10 @@ importers:
   chromadb:
     dependencies:
       '@chroma-core/openai':
-        specifier: ^0.1.7
+        specifier: ^0.1.10
         version: 0.1.10(chromadb@3.4.3)(ws@8.21.0)(zod@3.25.76)
       chromadb:
-        specifier: ^3.0.3
+        specifier: ^3.4.3
         version: 3.4.3
       express:
         specifier: ^5.1.0
@@ -6590,7 +6590,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
       express: 5.2.1(supports-color@5.5.0)
-      express-rate-limit: 8.5.2(express@5.2.1(supports-color@5.5.0))
+      express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.26
       jose: 6.2.3
       json-schema-typed: 8.0.2
@@ -6614,7 +6614,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
       express: 5.2.1(supports-color@5.5.0)
-      express-rate-limit: 8.5.2(express@5.2.1(supports-color@5.5.0))
+      express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.26
       jose: 6.2.3
       json-schema-typed: 8.0.2
@@ -8275,7 +8275,7 @@ snapshots:
     dependencies:
       eventsource-parser: 3.1.0
 
-  express-rate-limit@8.5.2(express@5.2.1(supports-color@5.5.0)):
+  express-rate-limit@8.5.2(express@5.2.1):
     dependencies:
       express: 5.2.1(supports-color@5.5.0)
       ip-address: 10.2.0
