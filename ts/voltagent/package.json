@@ -1,8 +1,15 @@
 {
   "name": "voltagent",
   "version": "0.1.0",
-  "description": "A VoltAgent application",
+  "private": true,
+  "description": "VoltAgent app with GitHub repo analysis and Express API",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
   "type": "module",
+  "keywords": ["ai", "voltagent", "github", "agent", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "tsx watch --env-file=.env ./src",
     "build": "tsc",
@@ -27,8 +34,5 @@
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
-  },
-  "engines": {
-    "node": ">=20.0.0"
   }
 }

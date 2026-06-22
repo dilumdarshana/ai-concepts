@@ -1,15 +1,17 @@
 {
   "name": "rag-huggingface",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Express + Pinecone + HuggingFace embeddings RAG app",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "keywords": ["ai", "rag", "huggingface", "pinecone", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "@huggingface/inference": "^4.0.5",
     "@huggingface/transformers": "^3.5.2",

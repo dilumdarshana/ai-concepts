@@ -1,11 +1,14 @@
 {
   "name": "chromadb",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
+  "private": true,
+  "description": "Express + ChromaDB vector store with OpenAI embeddings",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
+  "keywords": ["ai", "chromadb", "vector-store", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts"
   },

@@ -1,14 +1,17 @@
 {
   "name": "langchain",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Express chat with in-memory session history using LangChain",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "keywords": ["ai", "langchain", "chat", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node chat.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.2.0",

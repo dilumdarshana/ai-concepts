@@ -1,15 +1,17 @@
 {
   "name": "mcp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "MCP client connecting to subprocess MCP servers via LangGraph",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "keywords": ["ai", "mcp", "langgraph", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "@langchain/mcp-adapters": "^0.5.2"
   },

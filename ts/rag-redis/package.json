@@ -1,15 +1,17 @@
 {
   "name": "rag-redis",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "author": "Dilum Darshana<dilum.dar@gmail.com>",
-  "main": "index.js",
+  "private": true,
+  "description": "Express + Redis/RediSearch vector DB RAG app",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
+  "keywords": ["ai", "rag", "redis", "vector-store", "express", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts"
   },
-  "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "@huggingface/inference": "^4.6.1",
     "@huggingface/transformers": "^3.7.0",

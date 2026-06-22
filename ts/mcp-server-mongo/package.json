@@ -1,12 +1,16 @@
 {
   "name": "mcp-server-mongo",
   "version": "1.0.0",
+  "private": true,
   "description": "Model Context Protocol server for MongoDB",
-  "keywords": ["mcp", "mcp mongodb"],
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
-  "main": "dist/index.js",
   "type": "module",
+  "keywords": ["ai", "mcp", "mongodb", "typescript", "pnpm-workspace"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "dist/index.js",
   "bin": {
     "mcp-server-mongo": "./dist/index.js"
   },
@@ -15,7 +19,6 @@
     "dev": "tsc --watch",
     "inspector": "DANGEROUSLY_OMIT_AUTH=true pnpx @modelcontextprotocol/inspector dist/index.js"
   },
-  "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.0",
     "mongodb": "^6.17.0",
