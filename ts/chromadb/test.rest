@@ -5,14 +5,14 @@ POST http://localhost:3000/collections
 Content-Type: application/json
 
 {
-  "name": "test-collection",
+  "name": "test_collection",
   "metadata": {
     "description": "This is a test collection"
   }
 }
 
 ###
-POST http://localhost:3000/collections/test-collection/add
+POST http://localhost:3000/collections/test_collection/add
 Content-Type: application/json
 
 {
@@ -109,7 +109,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/collections/test-collection/query
+POST http://localhost:3000/collections/test_collection/query
 Content-Type: application/json
 
 {
