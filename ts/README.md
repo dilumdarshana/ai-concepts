@@ -1,53 +1,42 @@
-# Generate AI Concepts
+# AI Concepts — Workspace
 
-## There are several projects
+This directory is the pnpm workspace root for all AI/LLM concept projects.
 
-### langchain
+## Commands
 
-### langgraph (agent with multiple tools) - express app
-- langgraph can memorise the privious conversation
-- 
-
-### chromadb (vector database) - express app
-```bash
-# Install npm modules from root
-$ pnpm install
-
-# Run chromadb server
-$ pnpm dev:chromadb
-
-# Add individual npm modules from root
-$ pnpm add chromadb --filter chromadb
+```sh
+pnpm install                   # install all workspace dependencies
+pnpm dev:<project>             # run any project's dev script
+pnpm add <pkg> --filter <name> # add dependency to a specific project
 ```
 
-### rag-json (Retrieval Augmented Generation) - nextjs app
-- data source provided by JSON file
+## Projects
 
-### rag-huggingface (Retrieval Augmented Generation) - express app
-- pinecone: Pinecone vector can not be reverse to the original text
-- sentence-transformers: huggingface free embedding model
-- Chat endpoint
+| Command | Project | Framework | Description |
+|---|---|---|---|
+| `pnpm dev:langchain` | [langchain](langchain/) | Express | Chat with in-memory session history using LangChain |
+| `pnpm dev:langgraph` | [langgraph](langgraph/) | Express | LangGraph agent with 3 tools + Prisma/PostgreSQL memory |
+| `pnpm dev:chromadb` | [chromadb](chromadb/) | Express | ChromaDB vector store (Cloud or Docker) with OpenAI embeddings |
+| `pnpm dev:rag` | [rag-json](rag-json/) | Next.js 15 | 4 chat API routes: basic → LangChain → personalized → RAG with JSONLoader |
+| `pnpm dev:rag-huggingface` | [rag-huggingface](rag-huggingface/) | Express | Pinecone + HuggingFace embeddings (free model) |
+| `pnpm dev:rag-redis` | [rag-redis](rag-redis/) | Express | Redis/RediSearch as vector DB for movie data |
+| `pnpm dev:mcp` | [mcp](mcp/) | Express | MCP client connecting to subprocess MCP servers via LangGraph |
+| `pnpm dev:voltagent` | [voltagent](voltagent/) | VoltAgent | Supervisor + sub-agents for GitHub repo analysis |
+| — | [mcp-server-mongo](mcp-server-mongo/) | MCP SDK | MCP server (stdio) for MongoDB queries |
 
-```bash
-# Run chromadb server
-$ pnpm dev:rag-huggingface
+## Prerequisites
+
+- **Node.js** 20+ (`.nvmrc`)
+- **pnpm** 11.5+
+- **OpenAI API key** (most projects)
+- **Docker** (chromadb: ChromaDB container; rag-redis: Redis with RediSearch)
+
+## Setup
+
+```sh
+pnpm install
+# Copy .env_example → .env for the project you want to run, then add your API keys
+pnpm dev:<project>
 ```
 
-## mcp (MCP Client)
-- Connect multiple MCP servers using langchain mcp adaptor
-
-## mcp-server-mongo (MCP Server)
-- Connecto with given mongodb
-- Query database
-- Insert/update/delete records (TBD)
-
-### rag-redis (Retrieval Augmented Generation) - express app
-- Find movie information
-- Redis as vector database
-- No memory management
-- chat endpoint
-
-```bash
-# How to run from root
-pnpm dev:rag-redis
-```
+Each project has its own `AGENTS.md` and `README.md` with detailed instructions.

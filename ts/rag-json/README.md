@@ -1,4 +1,4 @@
-# rag-json
+# RAG JSON
 
 Next.js 15 RAG app demonstrating 4 progressively complex chat API routes using the AI SDK v6 and LangChain.
 
@@ -12,25 +12,24 @@ Next.js 15 RAG app demonstrating 4 progressively complex chat API routes using t
 
 ## Prerequisites
 
-- Node.js 20+ (see `.nvmrc` at workspace root)
+- Node.js 20+ (`.nvmrc` at workspace root)
 - `pnpm` 11.5+
 - OpenAI API key
 
 ## Setup
 
 ```sh
-# From the workspace root (ts/)
+# From workspace root (ts/)
 pnpm install
 
-# Copy environment config
-cp ts/rag-json/.env.local_example ts/rag-json/.env.local
-# Edit .env.local and set your OPENAI_API_KEY
+# Copy and configure environment
+cp rag-json/.env.local_example rag-json/.env.local
+# Edit .env.local with your OPENAI_API_KEY
 ```
 
 ## Run
 
 ```sh
-# From ts/ (workspace root)
 pnpm dev:rag
 ```
 
@@ -38,22 +37,20 @@ Opens at [http://localhost:3000](http://localhost:3000).
 
 ## Chat Endpoints
 
-All routes accept `POST` with `{ "messages": UIMessage[] }` and stream
-responses in the AI SDK v6 SSE format (`text/event-stream`).
+All routes accept `POST` with `{ "messages": UIMessage[] }` and stream responses in AI SDK v6 SSE format.
 
 | Route | Description |
 |---|---|
 | `/api/chat` | **Basic** — `streamText` from AI SDK v6 via `@ai-sdk/openai` |
 | `/api/chat2` | **LangChain** — `ChatOpenAI` + `StringOutputParser`, simple prompt |
-| `/api/chat3` | **Personalized** — `ChatPromptTemplate` with `MessagesPlaceholder`, movie-expert persona |
-| `/api/chat4` | **RAG** — `JSONLoader` loads `data/movie.json` as context, `RunnableSequence` injects it into prompt |
+| `/api/chat3` | **Personalized** — `ChatPromptTemplate` + `MessagesPlaceholder`, movie-expert persona |
+| `/api/chat4` | **RAG** — `JSONLoader` loads `data/movie.json` as context via `RunnableSequence` |
 
 The UI at `/` uses `useChat` from `@ai-sdk/react` pointing to `/api/chat`.
 
 ## Data Source
 
-`data/movie.json` — JSON file with movie entries (title, genre, actors, year).
-Used by the `/api/chat4` RAG endpoint via `JSONLoader`.
+`data/movie.json` — JSON file with movie entries (title, genre, actors, year). Used by `/api/chat4`.
 
 ## Lint
 
