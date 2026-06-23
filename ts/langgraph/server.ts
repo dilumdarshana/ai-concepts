@@ -23,6 +23,7 @@ app.post('/agent', async (req: Request, res: Response) => {
     res.send(result.messages[result.messages.length - 1].content);
   } catch (error) {
     console.error('Error on agent', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

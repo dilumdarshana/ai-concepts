@@ -2,5 +2,5 @@ POST http://localhost:3000/agent
 Content-Type: application/json
 
 {
-  "message": "What is the question I asked previously?"
+  "message": "Convert 1USD to EUR"
 }
