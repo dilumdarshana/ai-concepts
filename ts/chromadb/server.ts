@@ -1,6 +1,11 @@
 // For Docker/self-hosted, uncomment ChromaClient below and import CloudClient instead.
 import { CloudClient, ChromaClient } from 'chromadb';
 import { OpenAIEmbeddingFunction } from '@chroma-core/openai';
+import { ChatOpenAI } from '@langchain/openai';
+import { RunnableSequence } from '@langchain/core/runnables';
+import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
+import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 
@@ -30,6 +35,16 @@ const embedder = new OpenAIEmbeddingFunction({
   apiKey: process.env.OPENAI_API_KEY || '',
   modelName: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
 });
+
+// In-memory chat history store: sessionId -> messages
+const chatHistories = new Map<string, (HumanMessage | AIMessage)[]>();
+
+function getChatHistory(sessionId: string): (HumanMessage | AIMessage)[] {
+  if (!chatHistories.has(sessionId)) {
+    chatHistories.set(sessionId, []);
+  }
+  return chatHistories.get(sessionId)!;
+}
 
 // Express setup
 const app = express();
@@ -104,6 +119,66 @@ app.post('/collections/:collectionName/query', async (req: Request, res: Respons
     res.json(result);
   } catch (error) {
     res.status(400).json({ error });
+  }
+});
+
+// Chat with RAG (streaming SSE + in-memory chat history)
+app.post('/chat', async (req: Request, res: Response) => {
+  try {
+    const { query, sessionId = 'default', collectionName = 'test_collection', nResults = 5 } = req.body;
+
+    // 1. Retrieve relevant documents from ChromaDB
+    const collection = await client.getCollection({ name: collectionName });
+    const results = await collection.query({
+      queryTexts: [query],
+      nResults,
+    });
+
+    const context = results.documents[0]
+      ?.map((doc, i) => `Document ${i + 1}:\n${doc}`)
+      .join('\n\n') || '';
+
+    // 2. Build prompt with chat history and retrieved context
+    const prompt = ChatPromptTemplate.fromMessages([
+      ['system', `Answer the user's questions based only on the following context.
+If the answer is not in the context, reply politely that you do not have that information.
+Do not mention that you retrieved data from context.
+===================
+Context: {context}
+===================`],
+      new MessagesPlaceholder('chat_history'),
+      ['human', '{input}'],
+    ]);
+
+    const model = new ChatOpenAI({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      model: process.env.LLM_MODEL || 'gpt-4o',
+      temperature: 0.7,
+    });
+
+    const chain = RunnableSequence.from([
+      {
+        input: () => query,
+        context: () => context,
+        chat_history: () => getChatHistory(sessionId),
+      },
+      prompt,
+      model,
+      new StringOutputParser(),
+    ]);
+
+    // 3. Generate response
+    const answer = await chain.invoke({});
+
+    // 4. Save to chat history
+    const history = getChatHistory(sessionId);
+    history.push(new HumanMessage(query));
+    history.push(new AIMessage(answer));
+
+    res.json({ answer });
+  } catch (error) {
+    console.error('Error in chat endpoint:', error);
+    res.status(500).json({ error: 'Failed to process chat request' });
   }
 });
 

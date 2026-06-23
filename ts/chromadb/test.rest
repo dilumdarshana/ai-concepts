@@ -116,3 +116,25 @@ Content-Type: application/json
   "query": "1971 movies?"
 }
 
+###
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "query": "Tell me about animated movies from 2010",
+  "sessionId": "test-session",
+  "collectionName": "test_collection",
+  "nResults": 3
+}
+
+###
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "query": "What actors star in them?",
+  "sessionId": "test-session",
+  "collectionName": "test_collection",
+  "nResults": 3
+}
+
