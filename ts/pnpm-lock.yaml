@@ -111,8 +111,8 @@ importers:
         specifier: ^6.10.1
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.76
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -6590,7 +6590,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
       express: 5.2.1(supports-color@5.5.0)
-      express-rate-limit: 8.5.2(express@5.2.1)
+      express-rate-limit: 8.5.2(express@5.2.1(supports-color@5.5.0))
       hono: 4.12.26
       jose: 6.2.3
       json-schema-typed: 8.0.2
@@ -6614,7 +6614,7 @@ snapshots:
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
       express: 5.2.1(supports-color@5.5.0)
-      express-rate-limit: 8.5.2(express@5.2.1)
+      express-rate-limit: 8.5.2(express@5.2.1(supports-color@5.5.0))
       hono: 4.12.26
       jose: 6.2.3
       json-schema-typed: 8.0.2
@@ -8275,7 +8275,7 @@ snapshots:
     dependencies:
       eventsource-parser: 3.1.0
 
-  express-rate-limit@8.5.2(express@5.2.1):
+  express-rate-limit@8.5.2(express@5.2.1(supports-color@5.5.0)):
     dependencies:
       express: 5.2.1(supports-color@5.5.0)
       ip-address: 10.2.0
