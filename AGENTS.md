@@ -7,6 +7,8 @@ pnpm workspace at `ts/` — Node 24.15 (.nvmrc), pnpm 11.5.2.
 ```sh
 cd ts && pnpm install          # install all workspace dependencies
 pnpm dev:<name>                # run any project's dev script
+pnpm format                    # format all projects with Prettier (single quotes)
+pnpm format:check              # check formatting without writing
 ```
 
 ## Projects
