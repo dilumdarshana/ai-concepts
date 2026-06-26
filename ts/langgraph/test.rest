@@ -2,5 +2,5 @@ POST http://localhost:3000/agent
 Content-Type: application/json
 
 {
-  "message": "Convert 1USD to EUR"
+  "message": "What tables exist in the database and what are their columns?"
 }

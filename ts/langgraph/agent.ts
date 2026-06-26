@@ -1,7 +1,7 @@
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { ChatOpenAI } from '@langchain/openai';
 import { convertCurrency } from './tools/currencyTool';
-import { getUserByName, getAllUsers } from './tools/postgressTool';
+import { getDatabaseSchema, queryDatabase } from './tools/databaseTool';
 
 const model = new ChatOpenAI({
   model: 'gpt-4o-mini',
@@ -9,5 +9,5 @@ const model = new ChatOpenAI({
 
 export const agent = createReactAgent({
   llm: model,
-  tools: [convertCurrency, getUserByName, getAllUsers],
+  tools: [convertCurrency, getDatabaseSchema, queryDatabase],
 });
