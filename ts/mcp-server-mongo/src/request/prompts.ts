@@ -55,17 +55,19 @@ export async function handleGetPromptRequest({
         return match;
       }
       return String(value);
-    }
+    },
   );
 
   return {
     description: found.description,
-    messages: [{
-      role: 'user',
-      content: {
-        type: 'text',
-        text: filledPrompt,
+    messages: [
+      {
+        role: 'user',
+        content: {
+          type: 'text',
+          text: filledPrompt,
+        },
       },
-    }]
+    ],
   };
 }

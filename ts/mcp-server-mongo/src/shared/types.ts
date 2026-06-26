@@ -7,8 +7,8 @@ export interface PromptArgument {
   required: boolean;
 }
 export interface PromptTemplate {
-  name: string;           // unique key
-  description: string;    // brief summary
-  template: string;       // the actual prompt text (can include placeholders)
+  name: string; // unique key
+  description: string; // brief summary
+  template: string; // the actual prompt text (can include placeholders)
   arguments: PromptArgument[];
-};
+}

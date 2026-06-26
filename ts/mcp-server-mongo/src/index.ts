@@ -13,14 +13,16 @@ async function main() {
   // Parse command-line arguments (e.g., for future extensions)
   const args = process.argv.slice(2);
   console.warn('args', args);
-  const connectionUrlArg = args.find(arg => arg.startsWith('--url='));
+  const connectionUrlArg = args.find((arg) => arg.startsWith('--url='));
   const readOnlyArg = args.includes('--readonly');
 
   // Determine if read-only mode is enabled
-  const readOnlyMode = readOnlyArg || process.env.MCP_MONGODB_READONLY === 'true';
+  const readOnlyMode =
+    readOnlyArg || process.env.MCP_MONGODB_READONLY === 'true';
 
   // Get MongoDB connection URL from env
-  const connectionUrl = connectionUrlArg ? connectionUrlArg.split('=')[1] 
+  const connectionUrl = connectionUrlArg
+    ? connectionUrlArg.split('=')[1]
     : process.env.MCP_MONGODB_URI || '';
 
   // If no connection URL from command line, use environment variable

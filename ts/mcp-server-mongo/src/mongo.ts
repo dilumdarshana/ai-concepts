@@ -9,10 +9,11 @@ export async function getMongoConnection(
   db: Db | null;
   client: MongoClient | null;
 }> {
-
   try {
     if (!client) {
-      const options = readOnly ? { readPreference: ReadPreference.SECONDARY } : {};
+      const options = readOnly
+        ? { readPreference: ReadPreference.SECONDARY }
+        : {};
 
       client = new MongoClient(url, options);
       await client.connect();

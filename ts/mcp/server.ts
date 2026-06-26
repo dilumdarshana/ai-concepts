@@ -21,7 +21,7 @@ const client = new MultiServerMCPClient({
   prefixToolNameWithServerName: true,
   // Optional additional prefix for tool names (optional, default: 'mcp')
   additionalToolNamePrefix: 'mcp',
-  
+
   // Use standardized content block format in tool outputs
   useStandardContentBlocks: true,
 
@@ -46,8 +46,8 @@ const client = new MultiServerMCPClient({
       args: ['mcp-server-mongo'],
       env: {
         MCP_MONGODB_URI: process.env.MONGODB_URL as string,
-        MCP_MONGODB_READONLY: 'true'
-      }
+        MCP_MONGODB_READONLY: 'true',
+      },
     },
     // currencyConverter: {
     //   command: 'mcp-currency-converter',
@@ -56,7 +56,7 @@ const client = new MultiServerMCPClient({
     //     FREE_CURRENCY_KEY: process.env.FREE_CURRENCY_KEY as string,
     //   },
     // },
-  }
+  },
 });
 
 // Chat with agent
@@ -80,11 +80,9 @@ app.post('/chat', async (req: Request, res: Response) => {
       llm: model,
       tools,
     });
-    
+
     const result = await agent.invoke({
-      messages: [
-        new HumanMessage(message)
-      ],
+      messages: [new HumanMessage(message)],
     });
     // Get just the text content
     res.send(result.messages[result.messages.length - 1].content);

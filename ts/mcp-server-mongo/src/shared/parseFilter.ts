@@ -15,8 +15,10 @@ export function parseFilter(
 
   function transform(value: unknown): unknown {
     // ObjectId conversion
-    if ( typeof value === 'string' && /^[a-f\d]{24}$/i.test(value) 
-      && (mode === 'auto' || mode === 'force')
+    if (
+      typeof value === 'string' &&
+      /^[a-f\d]{24}$/i.test(value) &&
+      (mode === 'auto' || mode === 'force')
     ) {
       try {
         return new ObjectId(value);
@@ -44,7 +46,7 @@ export function parseFilter(
     if (value && typeof value === 'object') {
       const obj = value as Record<string, unknown>;
       return Object.fromEntries(
-        Object.entries(obj).map(([key, val]) => [key, transform(val)])
+        Object.entries(obj).map(([key, val]) => [key, transform(val)]),
       );
     }
 

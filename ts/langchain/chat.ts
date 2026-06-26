@@ -2,8 +2,17 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
-import { Annotation, MemorySaver, MessagesAnnotation, StateGraph, START } from '@langchain/langgraph';
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
+import {
+  Annotation,
+  MemorySaver,
+  MessagesAnnotation,
+  StateGraph,
+  START,
+} from '@langchain/langgraph';
 import { z } from 'zod';
 
 dotenv.config();
@@ -51,7 +60,9 @@ const prompt = ChatPromptTemplate.fromMessages([
  * Returns partial state update — LangGraph merges this with existing state and
  * persists via the checkpointer.
  */
-const callModel = async (state: typeof MessagesAnnotation.State & { skill: string; message: string }) => {
+const callModel = async (
+  state: typeof MessagesAnnotation.State & { skill: string; message: string },
+) => {
   const chain = prompt.pipe(model);
   const response = await chain.invoke({
     skill: state.skill,

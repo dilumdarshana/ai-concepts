@@ -2,14 +2,22 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
 const currencySchema = z.object({
-  fromCurrency: z.string().describe('The currency to convert from (e.g., USD, EUR)'),
-  toCurrency: z.string().describe('The currency to convert to (e.g., USD, EUR)'),
+  fromCurrency: z
+    .string()
+    .describe('The currency to convert from (e.g., USD, EUR)'),
+  toCurrency: z
+    .string()
+    .describe('The currency to convert to (e.g., USD, EUR)'),
   amount: z.number().positive().describe('The amount to convert'),
 });
 
 type CurrencyInput = z.infer<typeof currencySchema>;
 
-const toolFunction = async ({ fromCurrency, toCurrency, amount }: CurrencyInput) => {
+const toolFunction = async ({
+  fromCurrency,
+  toCurrency,
+  amount,
+}: CurrencyInput) => {
   const currencyFinderKey = process.env.FREE_CURRENCY_KEY;
 
   const controller = new AbortController(); // fresh signal per request
@@ -25,7 +33,7 @@ const toolFunction = async ({ fromCurrency, toCurrency, amount }: CurrencyInput)
   const exchangeRate = data.data[toCurrency];
   const convertedAmount = exchangeRate * amount;
 
-  return  {
+  return {
     fromCurrency,
     toCurrency,
     amount,
@@ -34,9 +42,7 @@ const toolFunction = async ({ fromCurrency, toCurrency, amount }: CurrencyInput)
   };
 };
 
-export const convertCurrency = tool(
-  toolFunction, 
-  {
+export const convertCurrency = tool(toolFunction, {
   name: 'convertCurrency',
   description: 'Convert currency to another currency',
   schema: currencySchema as any,

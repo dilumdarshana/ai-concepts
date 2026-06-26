@@ -5,7 +5,14 @@
   "description": "Next.js 15 RAG app with JSON data source",
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
-  "keywords": ["ai", "rag", "nextjs", "langchain", "typescript", "pnpm-workspace"],
+  "keywords": [
+    "ai",
+    "rag",
+    "nextjs",
+    "langchain",
+    "typescript",
+    "pnpm-workspace"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

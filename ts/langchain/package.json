@@ -5,7 +5,14 @@
   "description": "Express chat with in-memory session history using LangChain",
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
-  "keywords": ["ai", "langchain", "chat", "express", "typescript", "pnpm-workspace"],
+  "keywords": [
+    "ai",
+    "langchain",
+    "chat",
+    "express",
+    "typescript",
+    "pnpm-workspace"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

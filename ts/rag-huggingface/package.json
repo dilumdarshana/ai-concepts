@@ -5,7 +5,15 @@
   "description": "Express + Pinecone + HuggingFace embeddings RAG app",
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
-  "keywords": ["ai", "rag", "huggingface", "pinecone", "express", "typescript", "pnpm-workspace"],
+  "keywords": [
+    "ai",
+    "rag",
+    "huggingface",
+    "pinecone",
+    "express",
+    "typescript",
+    "pnpm-workspace"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

@@ -1,6 +1,4 @@
-import type {
-  ListResourcesRequest,
-} from '@modelcontextprotocol/sdk/types.js';
+import type { ListResourcesRequest } from '@modelcontextprotocol/sdk/types.js';
 import type { MongoClient, Db, CollectionInfo } from 'mongodb';
 
 export async function handleListResourcesRequest({

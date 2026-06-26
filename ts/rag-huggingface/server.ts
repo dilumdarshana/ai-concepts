@@ -75,11 +75,13 @@ app.post('/embeddings', async (req: Request, res: Response) => {
 
     const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
-    await index.upsert([{
-      id: uniqueId,
-      values: embeddingArray as number[],
-      metadata,
-    }]);
+    await index.upsert([
+      {
+        id: uniqueId,
+        values: embeddingArray as number[],
+        metadata,
+      },
+    ]);
     res.status(201).json({ message: `Record created`, embedding });
   } catch (error) {
     console.log('Error', error);
@@ -146,7 +148,8 @@ app.post('/chat', async (req: Request, res: Response) => {
     });
 
     // Only metadata can be get from Pinecode as readable inject to LLM
-    const context = results.matches?.map(m => JSON.stringify(m.metadata)).join('\n') || '';
+    const context =
+      results.matches?.map((m) => JSON.stringify(m.metadata)).join('\n') || '';
 
     // Step 3: Create prompt
     const prompt = PromptTemplate.fromTemplate(`

@@ -9,20 +9,23 @@ export default function Chat() {
   const { messages, sendMessage } = useChat({
     transport: new DefaultChatTransport({ api: 'api/chat4' }),
     onError: (e: any) => {
-      console.log(e)
+      console.log(e);
     },
   });
-  const chatParent = useRef<HTMLUListElement>(null)
+  const chatParent = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const domNode = chatParent.current
+    const domNode = chatParent.current;
     if (domNode) {
-      domNode.scrollTop = domNode.scrollHeight
+      domNode.scrollTop = domNode.scrollHeight;
     }
   });
 
-  function messageText(msg: typeof messages[number]) {
-    return msg.parts.filter(p => p.type === 'text').map(p => p.text).join('');
+  function messageText(msg: (typeof messages)[number]) {
+    return msg.parts
+      .filter((p) => p.type === 'text')
+      .map((p) => p.text)
+      .join('');
   }
 
   return (
@@ -32,13 +35,14 @@ export default function Chat() {
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`rounded-lg px-4 py-2 max-w-[80%] text-base shadow-md ${msg.role === "user"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                  }`}
+                className={`rounded-lg px-4 py-2 max-w-[80%] text-base shadow-md ${
+                  msg.role === 'user'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                }`}
               >
                 {messageText(msg)}
               </div>
@@ -58,7 +62,7 @@ export default function Chat() {
           <input
             type="text"
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Type your question..."
             className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 px-4 py-3 text-base bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
             autoFocus

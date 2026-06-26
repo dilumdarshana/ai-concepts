@@ -1,7 +1,7 @@
-import express, { Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { HumanMessage } from '@langchain/core/messages';
-import { agent } from  './agent';
+import { agent } from './agent';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -15,9 +15,7 @@ app.post('/agent', async (req: Request, res: Response) => {
 
   try {
     const result = await agent.invoke({
-      messages: [
-        new HumanMessage(message)
-      ],
+      messages: [new HumanMessage(message)],
     });
 
     res.send(result.messages[result.messages.length - 1].content);

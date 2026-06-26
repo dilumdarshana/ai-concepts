@@ -3,7 +3,10 @@
 // format so useChat (DefaultChatTransport) can consume it natively.
 
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import type { UIMessage, TextUIPart, UIMessageChunk } from 'ai';
@@ -15,10 +18,12 @@ import { formatDocumentsAsString } from 'langchain/util/document';
 
 export const dynamic = 'force-dynamic';
 
-const loader = new JSONLoader(
-  'data/movie.json',
-  ['/title', '/genre', '/actors', '/year'],
-);
+const loader = new JSONLoader('data/movie.json', [
+  '/title',
+  '/genre',
+  '/actors',
+  '/year',
+]);
 
 // ChatPromptTemplate with MessagesPlaceholder sends prior messages with
 // proper role boundaries (human/assistant) instead of raw text, preventing
@@ -39,10 +44,13 @@ Context: {context}
 ]);
 
 function toLangChainMessages(msgs: UIMessage[]) {
-  return msgs.map(m => {
+  return msgs.map((m) => {
     // AI SDK v6 UIMessage uses .parts (not .content) — extract text from
     // the TextUIPart entries.
-    const text = m.parts.filter((p): p is TextUIPart => p.type === 'text').map(p => p.text).join('');
+    const text = m.parts
+      .filter((p): p is TextUIPart => p.type === 'text')
+      .map((p) => p.text)
+      .join('');
     return m.role === 'user' ? new HumanMessage(text) : new AIMessage(text);
   });
 }
@@ -53,7 +61,10 @@ export async function POST(req: Request) {
 
     // Last message is the current user prompt; everything before is history.
     const last = messages.at(-1);
-    const message = last.parts.filter((p: TextUIPart) => p.type === 'text').map((p: TextUIPart) => p.text).join('');
+    const message = last.parts
+      .filter((p: TextUIPart) => p.type === 'text')
+      .map((p: TextUIPart) => p.text)
+      .join('');
     const chatHistory = toLangChainMessages(messages.slice(0, -1));
 
     const docs = await loader.load();

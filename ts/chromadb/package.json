@@ -5,7 +5,14 @@
   "description": "Express + ChromaDB vector store with OpenAI embeddings",
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
-  "keywords": ["ai", "chromadb", "vector-store", "express", "typescript", "pnpm-workspace"],
+  "keywords": [
+    "ai",
+    "chromadb",
+    "vector-store",
+    "express",
+    "typescript",
+    "pnpm-workspace"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

@@ -1,5 +1,5 @@
 /**
- * MCP client use this request to check if the server is alive. 
+ * MCP client use this request to check if the server is alive.
  * If the server is not available, MCP client will not send this tool to LLM
  */
 import type { PingRequest } from '@modelcontextprotocol/sdk/types.js';

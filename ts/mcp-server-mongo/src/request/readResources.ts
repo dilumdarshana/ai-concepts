@@ -1,11 +1,5 @@
-import type {
-  ReadResourceRequest,
-} from '@modelcontextprotocol/sdk/types.js';
-import type {
-  MongoClient,
-  Db,
-  IndexDescriptionInfo,
-} from 'mongodb';
+import type { ReadResourceRequest } from '@modelcontextprotocol/sdk/types.js';
+import type { MongoClient, Db, IndexDescriptionInfo } from 'mongodb';
 
 interface SchemaResult {
   fields: FieldSummary[];
@@ -65,18 +59,22 @@ export async function handleReadResourceRequest({
       documentCount = await Promise.race<number>([
         collection.countDocuments(),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Count operation timed out')), 5000)
+          setTimeout(
+            () => reject(new Error('Count operation timed out')),
+            5000,
+          ),
         ),
       ]);
     } catch (countError) {
       console.warn(
         `[WARN] Count op failed or timed out for "${collectionName}":`,
-        countError
+        countError,
       );
       // Fallback: use collStats.count if available
       try {
         const stats = await db.command({ collStats: collectionName });
-        documentCount = typeof stats.count === 'number' ? stats.count : 'unknown';
+        documentCount =
+          typeof stats.count === 'number' ? stats.count : 'unknown';
       } catch {
         documentCount = 'unknown (collStats failed)';
       }
@@ -84,7 +82,7 @@ export async function handleReadResourceRequest({
 
     // Set sample size for schema inference
     const sampleSize = 100;
-    
+
     // Fetch a sample of documents
     const samples = await collection.find({}).limit(sampleSize).toArray();
 
@@ -103,9 +101,7 @@ export async function handleReadResourceRequest({
           existing.nullable = true;
         } else {
           existing.types.add(
-            typeof value === 'object'
-              ? value.constructor.name
-              : typeof value
+            typeof value === 'object' ? value.constructor.name : typeof value,
           );
           if (existing.examples.length < 3) {
             existing.examples.push(value);
@@ -115,7 +111,7 @@ export async function handleReadResourceRequest({
       }
     }
 
-    const fields: FieldSummary[] = Array.from(fieldMap.values()).map(f => ({
+    const fields: FieldSummary[] = Array.from(fieldMap.values()).map((f) => ({
       name: f.name,
       types: Array.from(f.types),
       nullable: f.nullable,

@@ -1,7 +1,4 @@
-import {
-  Collection,
-  CountDocumentsOptions,
-} from 'mongodb';
+import { Collection, CountDocumentsOptions } from 'mongodb';
 import { ObjectIdConversionMode } from '../shared/types.js';
 import { formatResponse } from '../shared/formatResponse.js';
 import { handleError } from '../shared/handleError.js';
@@ -27,12 +24,12 @@ export async function handleCountTool(
     }
 
     const options: CountDocumentsOptions = {
-      ...(typeof limit     === 'number' && { limit: limit }),
-      ...(typeof skip      === 'number' && { skip: skip }),
-    }
+      ...(typeof limit === 'number' && { limit: limit }),
+      ...(typeof skip === 'number' && { skip: skip }),
+    };
 
     const count = await collection.countDocuments(filter, options);
-  
+
     return formatResponse({
       count,
       ok: 1,

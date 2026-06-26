@@ -44,15 +44,15 @@ export function handleCallToolRequest({
   let collection: Collection<Document> | null = null;
 
   const objectIdMode = (args.objectIdMode as ObjectIdConversionMode) || 'auto';
-  
+
   // Collection not needed for every operations
   if (COLLECTION_OPERATIONS.includes(operation)) {
     const collectionName = args.collection as string;
-  
+
     if (!collectionName) {
       throw new Error('Missing required argument: collection');
     }
-    
+
     // Get collection only if the operation requires it
     collection = db.collection(collectionName);
   }

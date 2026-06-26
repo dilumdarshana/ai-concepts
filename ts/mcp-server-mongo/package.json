@@ -6,7 +6,13 @@
   "author": "Dilum Darshana <dilum.dar@gmail.com>",
   "license": "ISC",
   "type": "module",
-  "keywords": ["ai", "mcp", "mongodb", "typescript", "pnpm-workspace"],
+  "keywords": [
+    "ai",
+    "mcp",
+    "mongodb",
+    "typescript",
+    "pnpm-workspace"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },

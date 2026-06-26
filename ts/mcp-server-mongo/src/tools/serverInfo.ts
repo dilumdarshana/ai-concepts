@@ -2,10 +2,7 @@ import type { Db } from 'mongodb';
 import { formatResponse } from '../shared/formatResponse.js';
 import { handleError } from '../shared/handleError.js';
 
-export async function handleServerInfoTool(
-  db: Db,
-  isReadOnlyMode: boolean,
-) {
+export async function handleServerInfoTool(db: Db, isReadOnlyMode: boolean) {
   try {
     // Get basic server information using buildInfo command
     const buildInfo = await db.command({ buildInfo: 1 });

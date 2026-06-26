@@ -3,7 +3,7 @@ services:
     image: chromadb/chroma:latest
     container_name: chromadb-server
     ports:
-      - "8000:8000"
+      - '8000:8000'
     volumes:
       - ./chromadb-data:/chroma/chroma
     environment:

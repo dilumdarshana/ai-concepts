@@ -9,9 +9,5 @@ const model = new ChatOpenAI({
 
 export const agent = createReactAgent({
   llm: model,
-  tools: [
-    convertCurrency,
-    getUserByName,
-    getAllUsers,
-  ],
+  tools: [convertCurrency, getUserByName, getAllUsers],
 });

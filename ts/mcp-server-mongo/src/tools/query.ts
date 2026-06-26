@@ -1,8 +1,4 @@
-import {
-  Collection,
-  FindOptions,
-  ObjectId,
-} from 'mongodb';
+import { Collection, FindOptions, ObjectId } from 'mongodb';
 import { formatResponse } from '../shared/formatResponse.js';
 import { handleError } from '../shared/handleError.js';
 import { ObjectIdConversionMode } from '../shared/types.js';

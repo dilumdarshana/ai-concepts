@@ -3,7 +3,10 @@ import { CloudClient, ChromaClient } from 'chromadb';
 import { OpenAIEmbeddingFunction } from '@chroma-core/openai';
 import { ChatOpenAI } from '@langchain/openai';
 import { RunnableSequence } from '@langchain/core/runnables';
-import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import express, { Request, Response } from 'express';
@@ -50,7 +53,6 @@ function getChatHistory(sessionId: string): (HumanMessage | AIMessage)[] {
 const app = express();
 app.use(express.json());
 
-
 // Health check API
 app.get('/health', async (req: Request, res: Response) => {
   try {
@@ -81,51 +83,66 @@ app.post('/collections', async (req: Request, res: Response) => {
 });
 
 // Insert data into the collection
-app.post('/collections/:collectionName/add', async (req: Request, res: Response) => {
-  try {
-    const collectionName = String(req.params.collectionName);
-    const { documents } = req.body;
-    const collection = await client.getCollection({ name: collectionName });
+app.post(
+  '/collections/:collectionName/add',
+  async (req: Request, res: Response) => {
+    try {
+      const collectionName = String(req.params.collectionName);
+      const { documents } = req.body;
+      const collection = await client.getCollection({ name: collectionName });
 
-    for (const document of documents) {
-      const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-      await collection.add({
-        ids: [uniqueId],
-        documents: [document.document],
-        metadatas: [document.metadata],
-      });
+      for (const document of documents) {
+        const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+        await collection.add({
+          ids: [uniqueId],
+          documents: [document.document],
+          metadatas: [document.metadata],
+        });
+      }
+
+      res
+        .status(201)
+        .json({
+          message: `Documents inserted into collection ${collectionName}`,
+        });
+    } catch (error) {
+      console.log('error', error);
+      res.status(400).json({ error });
     }
-
-    res.status(201).json({ message: `Documents inserted into collection ${collectionName}` });
-  } catch (error) {
-    console.log('error', error);
-    res.status(400).json({ error });
-  }
-});
+  },
+);
 
 // Query the collection
-app.post('/collections/:collectionName/query', async (req: Request, res: Response) => {
-  try {
-    const collectionName = String(req.params.collectionName);
-    const { query } = req.body;
+app.post(
+  '/collections/:collectionName/query',
+  async (req: Request, res: Response) => {
+    try {
+      const collectionName = String(req.params.collectionName);
+      const { query } = req.body;
 
-    const collection = await client.getCollection({ name: collectionName });
+      const collection = await client.getCollection({ name: collectionName });
 
-    const result = await collection.query({
-      queryTexts: [query],
-      nResults: 1,
-    });
+      const result = await collection.query({
+        queryTexts: [query],
+        nResults: 1,
+      });
 
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ error });
-  }
-});
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  },
+);
 
 // Chat with RAG (streaming SSE + in-memory chat history)
 app.post('/chat', async (req: Request, res: Response) => {
   try {
-    const { query, sessionId = 'default', collectionName = 'test_collection', nResults = 5 } = req.body;
+    const {
+      query,
+      sessionId = 'default',
+      collectionName = 'test_collection',
+      nResults = 5,
+    } = req.body;
 
     // 1. Retrieve relevant documents from ChromaDB
     const collection = await client.getCollection({ name: collectionName });
@@ -134,18 +151,22 @@ app.post('/chat', async (req: Request, res: Response) => {
       nResults,
     });
 
-    const context = results.documents[0]
-      ?.map((doc, i) => `Document ${i + 1}:\n${doc}`)
-      .join('\n\n') || '';
+    const context =
+      results.documents[0]
+        ?.map((doc, i) => `Document ${i + 1}:\n${doc}`)
+        .join('\n\n') || '';
 
     // 2. Build prompt with chat history and retrieved context
     const prompt = ChatPromptTemplate.fromMessages([
-      ['system', `Answer the user's questions based only on the following context.
+      [
+        'system',
+        `Answer the user's questions based only on the following context.
 If the answer is not in the context, reply politely that you do not have that information.
 Do not mention that you retrieved data from context.
 ===================
 Context: {context}
-===================`],
+===================`,
+      ],
       new MessagesPlaceholder('chat_history'),
       ['human', '{input}'],
     ]);
@@ -192,7 +213,9 @@ app.listen(PORT, async () => {
   try {
     await client.heartbeat();
     const identity = await client.getUserIdentity();
-    console.log(`ChromaDB connected (tenant: ${identity.tenant}, databases: ${identity.databases.join(', ')})`);
+    console.log(
+      `ChromaDB connected (tenant: ${identity.tenant}, databases: ${identity.databases.join(', ')})`,
+    );
   } catch (error) {
     console.error('ChromaDB connection failed:', error);
     process.exit(1);

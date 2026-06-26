@@ -14,7 +14,10 @@ import { handleListToolsRequest } from './request/tools.js';
 import { handleCallToolRequest } from './request/callToolRequest.js';
 import { handleListResourcesRequest } from './request/listResources.js';
 import { handleReadResourceRequest } from './request/readResources.js';
-import { handleGetPromptRequest, handleListPromptsRequest } from './request/prompts.js';
+import {
+  handleGetPromptRequest,
+  handleListPromptsRequest,
+} from './request/prompts.js';
 
 /**
  * Creates and configures an MCP server instance for MongoDB.
@@ -25,7 +28,7 @@ import { handleGetPromptRequest, handleListPromptsRequest } from './request/prom
  * @param options - Optional configuration for MCP server (e.g. name, version).
  * @returns An initialized MCP server ready to handle requests.
  */
-export function createMCPServer (
+export function createMCPServer(
   dbClient: MongoClient,
   db: Db,
   readOnly = true,
@@ -41,16 +44,16 @@ export function createMCPServer (
     {
       capabilities: {
         resources: {}, // Can be populated with static data resources
-        tools: {},     // Tools will be dynamically discovered from handlers
-        prompts: {},   // Optional: Add prompt templates here
+        tools: {}, // Tools will be dynamically discovered from handlers
+        prompts: {}, // Optional: Add prompt templates here
       },
       ...options, // Allow customizing capabilities further
     },
   );
 
   // Register handler for PingRequest (used in Inspector > Ping tab)
-  server.setRequestHandler(PingRequestSchema, (request) => 
-    handlePingRequest({ request, dbClient, db, readOnly })
+  server.setRequestHandler(PingRequestSchema, (request) =>
+    handlePingRequest({ request, dbClient, db, readOnly }),
   );
 
   // Register handler for ListToolsRequest (Inspector > Tools tab)

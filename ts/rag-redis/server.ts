@@ -35,7 +35,7 @@ const client = createClient({
   socket: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-  }
+  },
 });
 
 // Initialize the ChatOpenAI model with API key and configuration
@@ -45,9 +45,8 @@ const chtModel = new ChatOpenAI({
   temperature: 0.7,
 });
 
-
 // Handle Redis client errors
-client.on('error', err => console.log('Redis Client Error', err));
+client.on('error', (err) => console.log('Redis Client Error', err));
 
 // Set up Express application
 const app = express();
@@ -60,16 +59,19 @@ const embeddings = new OpenAIEmbeddings({
 
 // Function to generate embeddings using OpenAI
 async function generateOpenAIEmbedding(text: string): Promise<number[]> {
-  return embeddings.embedQuery(text).then(embedding => {
-    if (Array.isArray(embedding)) {
-      return embedding;
-    } else {
-      throw new Error('Unexpected embedding format from OpenAI');
-    }
-  }).catch(error => {
-    console.error('Error generating OpenAI embedding:', error);
-    throw error;
-  });
+  return embeddings
+    .embedQuery(text)
+    .then((embedding) => {
+      if (Array.isArray(embedding)) {
+        return embedding;
+      } else {
+        throw new Error('Unexpected embedding format from OpenAI');
+      }
+    })
+    .catch((error) => {
+      console.error('Error generating OpenAI embedding:', error);
+      throw error;
+    });
 }
 
 // Function to generate embeddings using Hugging Face
@@ -108,18 +110,19 @@ async function findSimilarMovies(query: string) {
 
     const results = await client.ft.search(
       'idx:movies_json',
-      '*=>[KNN 10 @embedding $query_vec AS score]', {
-      PARAMS: {
-        'query_vec': queryBuffer
+      '*=>[KNN 10 @embedding $query_vec AS score]',
+      {
+        PARAMS: {
+          query_vec: queryBuffer,
+        },
+        SORTBY: 'score',
+        LIMIT: {
+          from: 0,
+          size: 10,
+        },
+        RETURN: ['name', 'year', 'text', 'genre', 'actors', 'score'],
+        DIALECT: 2,
       },
-      SORTBY: 'score',
-      LIMIT: {
-        from: 0,
-        size: 10,
-      },
-      RETURN: ['name', 'year', 'text', 'genre', 'actors', 'score'],
-      DIALECT: 2,
-    },
     );
 
     return results;
@@ -132,42 +135,46 @@ async function findSimilarMovies(query: string) {
 // Endpoint to create a Redis index for movie data
 app.post('/create-index', async (req: Request, res: Response) => {
   try {
-    await client.ft.create('idx:movies_json', {
-      // Define schema fields with JSONPath
-      '$.text': {
-        type: SCHEMA_FIELD_TYPE.TEXT,
-        AS: 'text' // Alias for querying
+    await client.ft.create(
+      'idx:movies_json',
+      {
+        // Define schema fields with JSONPath
+        '$.text': {
+          type: SCHEMA_FIELD_TYPE.TEXT,
+          AS: 'text', // Alias for querying
+        },
+        '$.metadata.name': {
+          type: SCHEMA_FIELD_TYPE.TEXT,
+          AS: 'name',
+          SORTABLE: true,
+        },
+        '$.metadata.year': {
+          type: SCHEMA_FIELD_TYPE.NUMERIC,
+          AS: 'year',
+          SORTABLE: true,
+        },
+        '$.genre': {
+          type: SCHEMA_FIELD_TYPE.TAG,
+          AS: 'genre',
+        },
+        '$.actors': {
+          type: SCHEMA_FIELD_TYPE.TEXT,
+          AS: 'actors',
+        },
+        '$.embedding': {
+          type: SCHEMA_FIELD_TYPE.VECTOR,
+          TYPE: 'FLOAT32',
+          ALGORITHM: 'HNSW',
+          DISTANCE_METRIC: 'COSINE',
+          DIM: 1536, // Embedding dimensions
+          AS: 'embedding',
+        },
       },
-      '$.metadata.name': {
-        type: SCHEMA_FIELD_TYPE.TEXT,
-        AS: 'name',
-        SORTABLE: true
+      {
+        ON: 'JSON',
+        PREFIX: 'movie:',
       },
-      '$.metadata.year': {
-        type: SCHEMA_FIELD_TYPE.NUMERIC,
-        AS: 'year',
-        SORTABLE: true
-      },
-      '$.genre': {
-        type: SCHEMA_FIELD_TYPE.TAG,
-        AS: 'genre'
-      },
-      '$.actors': {
-        type: SCHEMA_FIELD_TYPE.TEXT,
-        AS: 'actors'
-      },
-      '$.embedding': {
-        type: SCHEMA_FIELD_TYPE.VECTOR,
-        TYPE: 'FLOAT32',
-        ALGORITHM: 'HNSW',
-        DISTANCE_METRIC: 'COSINE',
-        DIM: 1536, // Embedding dimensions
-        AS: 'embedding'
-      }
-    }, {
-      ON: 'JSON',
-      PREFIX: 'movie:'
-    });
+    );
     res.status(201).json('JSON movie index created successfully');
   } catch (error) {
     console.log('Error', error);
@@ -189,7 +196,7 @@ app.post('/store-embeddings', async (req: Request, res: Response) => {
       metadata,
       genre: metadata.genre || 'Unknown',
       actors: metadata.actors || 'Unknown',
-      embedding: embeddingArray // Store as array in JSON
+      embedding: embeddingArray, // Store as array in JSON
     };
 
     // Store as JSON document
@@ -260,7 +267,7 @@ app.post('/records', async (req: Request, res: Response) => {
         from: 0,
         size: 10,
       },
-      RETURN: ['name', 'year', 'text', 'genre', 'actors']
+      RETURN: ['name', 'year', 'text', 'genre', 'actors'],
     });
 
     res.status(200).json({ records });
@@ -277,9 +284,10 @@ app.post('/chat', async (req: Request, res: Response) => {
   try {
     const redisResponse = await findSimilarMovies(query);
 
-    const context = (redisResponse as RedisResponse)?.documents
-      ?.map(doc => JSON.stringify(doc.value, null, 2))
-      .join('\n') || '';
+    const context =
+      (redisResponse as RedisResponse)?.documents
+        ?.map((doc) => JSON.stringify(doc.value, null, 2))
+        .join('\n') || '';
 
     // Create a prompt template for the chat model
     const prompt = PromptTemplate.fromTemplate(`

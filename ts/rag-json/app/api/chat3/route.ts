@@ -4,7 +4,10 @@
 // format so useChat (DefaultChatTransport) can consume it natively.
 
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatPromptTemplate, MessagesPlaceholder } from '@langchain/core/prompts';
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { HumanMessage, AIMessage } from '@langchain/core/messages';
 import type { UIMessage, TextUIPart, UIMessageChunk } from 'ai';
@@ -16,16 +19,22 @@ export const dynamic = 'force-dynamic';
 // proper role boundaries (human/assistant) instead of raw text, preventing
 // the model from treating the full history as one continuous narrative.
 const prompt = ChatPromptTemplate.fromMessages([
-  ['system', 'You are the movie expert. All responses must be in the form of a movie review.'],
+  [
+    'system',
+    'You are the movie expert. All responses must be in the form of a movie review.',
+  ],
   new MessagesPlaceholder('chat_history'),
   ['human', '{message}'],
 ]);
 
 function toLangChainMessages(msgs: UIMessage[]) {
-  return msgs.map(m => {
+  return msgs.map((m) => {
     // AI SDK v6 UIMessage uses .parts (not .content) — extract text from
     // the TextUIPart entries.
-    const text = m.parts.filter((p): p is TextUIPart => p.type === 'text').map(p => p.text).join('');
+    const text = m.parts
+      .filter((p): p is TextUIPart => p.type === 'text')
+      .map((p) => p.text)
+      .join('');
     return m.role === 'user' ? new HumanMessage(text) : new AIMessage(text);
   });
 }
@@ -36,7 +45,10 @@ export async function POST(req: Request) {
 
     // Last message is the current user prompt; everything before is history.
     const last = messages.at(-1);
-    const message = last.parts.filter((p: TextUIPart) => p.type === 'text').map((p: TextUIPart) => p.text).join('');
+    const message = last.parts
+      .filter((p: TextUIPart) => p.type === 'text')
+      .map((p: TextUIPart) => p.text)
+      .join('');
     const chatHistory = toLangChainMessages(messages.slice(0, -1));
 
     const model = new ChatOpenAI({
