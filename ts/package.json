@@ -14,12 +14,15 @@
     "dev:langgraph": "pnpm --filter langgraph dev",
     "dev:mcp": "pnpm --filter mcp dev",
     "dev:rag-redis": "pnpm --filter rag-redis dev",
-    "dev:voltagent": "pnpm --filter voltagent dev"
+    "dev:voltagent": "pnpm --filter voltagent dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "packageManager": "pnpm@11.5.2",
   "devDependencies": {
     "@types/express": "^5.0.3",
     "nodemon": "^3.1.10",
+    "prettier": "^3.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
