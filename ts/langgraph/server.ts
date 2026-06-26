@@ -1,10 +1,11 @@
-import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+
+// Load env vars BEFORE local imports so Prisma gets DATABASE_URL
+dotenv.config();
+
+import express, { Request, Response } from 'express';
 import { HumanMessage } from '@langchain/core/messages';
 import { agent } from './agent';
-
-// Load environment variables from .env file
-dotenv.config();
 
 // Express setup
 const app = express();

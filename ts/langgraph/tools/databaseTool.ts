@@ -68,7 +68,11 @@ export const queryDatabase = tool(
 
     try {
       const result = await prisma.$queryRawUnsafe(query);
-      return JSON.stringify(result, null, 2);
+      return JSON.stringify(
+        result,
+        (_key, value) => (typeof value === 'bigint' ? Number(value) : value),
+        2,
+      );
     } catch (error) {
       console.error('Error executing query:', error);
       return `Failed to execute query: ${error instanceof Error ? error.message : 'Unknown error'}`;
