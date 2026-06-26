@@ -14,11 +14,14 @@
     "dev": "nodemon --exec ts-node server.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.10.1",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "pg": "^8.13.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "prisma": "^6.10.1"
+    "@types/pg": "^8.11.0",
+    "prisma": "^7.8.0"
   }
 }
