@@ -14,6 +14,7 @@ interface TableInfo {
 
 export const getDatabaseSchema = tool(
   async () => {
+    console.log('Start calling getDatabaseSchema tool...');
     try {
       const rows = await prisma.$queryRawUnsafe<TableInfo[]>(
         `SELECT
@@ -61,6 +62,8 @@ export const getDatabaseSchema = tool(
 
 export const queryDatabase = tool(
   async ({ query }: { query: string }) => {
+    console.log('Start calling queryDatabase tool...');
+
     const trimmed = query.trim().toUpperCase();
     if (!trimmed.startsWith('SELECT')) {
       return 'Only SELECT queries are allowed for read-only access';

@@ -2,5 +2,5 @@ POST http://localhost:3000/agent
 Content-Type: application/json
 
 {
-  "message": "What tables exist in the database and what are their columns?"
+  "message": "Show all records from the country table"
 }
