@@ -2,6 +2,7 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 
+// Row shape returned by the information_schema introspection query.
 interface TableInfo {
   table_name: string;
   table_type: string;
@@ -12,10 +13,13 @@ interface TableInfo {
   ordinal_position: number;
 }
 
+// Introspect the connected PostgreSQL database and return its full schema
+// (tables, columns, types, nullability, defaults).
 export const getDatabaseSchema = tool(
   async () => {
     console.log('Start calling getDatabaseSchema tool...');
     try {
+      // Query PostgreSQL's information_schema for the public schema.
       const rows = await prisma.$queryRawUnsafe<TableInfo[]>(
         `SELECT
           t.table_name,
@@ -32,11 +36,26 @@ export const getDatabaseSchema = tool(
         ORDER BY t.table_name, c.ordinal_position`,
       );
 
-      const schema: Record<string, { type: string; columns: Array<{ name: string; type: string; nullable: boolean; default: string | null }> }> = {};
+      // Group rows by table_name into a structured object.
+      const schema: Record<
+        string,
+        {
+          type: string;
+          columns: Array<{
+            name: string;
+            type: string;
+            nullable: boolean;
+            default: string | null;
+          }>;
+        }
+      > = {};
 
       for (const row of rows) {
         if (!schema[row.table_name]) {
-          schema[row.table_name] = { type: row.table_type, columns: [] };
+          schema[row.table_name] = {
+            type: row.table_type,
+            columns: [],
+          };
         }
         schema[row.table_name].columns.push({
           name: row.column_name,
@@ -60,10 +79,12 @@ export const getDatabaseSchema = tool(
   },
 );
 
+// Execute a read-only SQL SELECT query and return the results as JSON.
 export const queryDatabase = tool(
   async ({ query }: { query: string }) => {
     console.log('Start calling queryDatabase tool...');
 
+    // Safety guard — only allow SELECT statements.
     const trimmed = query.trim().toUpperCase();
     if (!trimmed.startsWith('SELECT')) {
       return 'Only SELECT queries are allowed for read-only access';
@@ -71,6 +92,8 @@ export const queryDatabase = tool(
 
     try {
       const result = await prisma.$queryRawUnsafe(query);
+      // BigInt values (e.g., COUNT(*)) are not serializable by
+      // JSON.stringify by default, so coerce them to Number.
       return JSON.stringify(
         result,
         (_key, value) => (typeof value === 'bigint' ? Number(value) : value),

@@ -1,6 +1,8 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
+// Define the expected input shape using Zod — the LLM fills these from
+// the user's natural language (e.g., "100 USD to EUR").
 const currencySchema = z.object({
   fromCurrency: z
     .string()
@@ -20,10 +22,12 @@ const toolFunction = async ({
 }: CurrencyInput) => {
   const currencyFinderKey = process.env.FREE_CURRENCY_KEY;
 
-  const controller = new AbortController(); // fresh signal per request
+  // Fresh AbortController per request so each call has its own signal.
+  const controller = new AbortController();
 
   console.log('Start calling convertCurrency tool...');
 
+  // Free Currency API — returns real-time exchange rates.
   const response = await fetch(
     `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyFinderKey}&base_currency=${fromCurrency}&currencies=${toCurrency}`,
     { signal: controller.signal },
@@ -42,6 +46,7 @@ const toolFunction = async ({
   };
 };
 
+// Register as a LangChain tool so the agent discovers it automatically.
 export const convertCurrency = tool(toolFunction, {
   name: 'convertCurrency',
   description: 'Convert currency to another currency',
