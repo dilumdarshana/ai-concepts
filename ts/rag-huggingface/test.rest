@@ -1,22 +1,21 @@
 POST http://localhost:3000/embeddings
 Content-Type: application/json
 
-# {
-#   "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
-#   "metadata": {
-#     "name": "Unstoppable",
-#     "year": 2010,
-#     "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe."
-#   }
-# }
 {
-  "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
+  "text": "Title: Unstoppable (2010)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Denzel Washington, Chris Pine, Rosario Dawson\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
   "metadata": {
-    "name": "Crazy AI",
-    "year": 2025,
-    "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe."
+    "name": "Unstoppable",
+    "year": 2010
   }
 }
+
+# {
+#   "text": "Title: Crazy AI (2025)\nRated: PG-13\nRuntime: 98 min\nGenre: Action, Thriller\nActors: Dilum Darshana\nPlot: With an unmanned, half-mile-long freight train barreling toward a city, a veteran engineer and a young conductor race against the clock to prevent a catastrophe.",
+#   "metadata": {
+#     "name": "Crazy AI",
+#     "year": 2025
+#   }
+# }
 
 ###
 POST http://localhost:3000/create-index
@@ -31,7 +30,7 @@ POST http://localhost:3000/query
 Content-Type: application/json
 
 { 
-  "query": "What movies names you have in 2010?"
+  "query": "Any moview with AI?"
 }
 
 ###

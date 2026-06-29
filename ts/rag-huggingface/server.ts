@@ -71,23 +71,31 @@ app.post('/embeddings', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Invalid embedding output' });
     }
 
-    const index = pcClient.index<{ genre: string }>('my-index');
+    const index = pcClient.index<{ genre: string }>({ name: 'my-index' });
 
     const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
-    await index.upsert([
-      {
-        id: uniqueId,
-        values: embeddingArray as number[],
-        metadata,
-      },
-    ]);
+    await index.upsert({
+      records: [
+        {
+          id: uniqueId,
+          values: embeddingArray as number[],
+          metadata,
+        },
+      ],
+    });
     res.status(201).json({ message: `Record created`, embedding });
   } catch (error) {
     console.log('Error', error);
     res.status(400).json({ error });
   }
 });
+
+// Extract year from query string (e.g. "movies in 2010" -> 2010)
+function extractYear(text: string): number | undefined {
+  const match = text.match(/\b(19|20)\d{2}\b/);
+  return match ? Number(match[0]) : undefined;
+}
 
 // Query from the database
 app.post('/query', async (req: Request, res: Response) => {
@@ -108,13 +116,14 @@ app.post('/query', async (req: Request, res: Response) => {
       }
     }
 
-    const index = pcClient.index<{ genre: string }>('my-index');
+    const index = pcClient.index<{ genre: string }>({ name: 'my-index' });
 
+    const year = extractYear(query);
     const result = await index.query({
-      topK: 1,
+      topK: 5,
       vector: embeddingArray as number[],
       includeMetadata: true,
-      // includeValues: true,
+      filter: year ? { year: { $eq: year } } : undefined,
     });
 
     res.status(200).json(result);
@@ -139,12 +148,14 @@ app.post('/chat', async (req: Request, res: Response) => {
       : embeddingResult;
 
     // Step 2: Search Pinecone for relevant documents
-    const index = pcClient.index<{ genre: string }>(pineConeIndex);
+    const index = pcClient.index<{ genre: string }>({ name: pineConeIndex });
+    const year = extractYear(query);
     const results = await index.query({
       vector: embeddingArray as number[],
       topK: 3,
       includeMetadata: true,
       includeValues: true,
+      filter: year ? { year: { $eq: year } } : undefined,
     });
 
     // Only metadata can be get from Pinecode as readable inject to LLM
