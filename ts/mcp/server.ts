@@ -41,13 +41,16 @@ const client = new MultiServerMCPClient({
     //   }
     // },
     mongodb: {
-      // command: 'pnpx',
       command: 'mcp-server-mongo',
       args: ['mcp-server-mongo'],
-      env: {
-        MCP_MONGODB_URI: process.env.MONGODB_URL as string,
-        MCP_MONGODB_READONLY: 'true',
-      },
+      ...(process.env.MONGODB_URL
+        ? {
+            env: {
+              MCP_MONGODB_URI: process.env.MONGODB_URL,
+              MCP_MONGODB_READONLY: 'true',
+            },
+          }
+        : {}),
     },
     // currencyConverter: {
     //   command: 'mcp-currency-converter',

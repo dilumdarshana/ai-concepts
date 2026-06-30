@@ -20,10 +20,10 @@
     "dev": "nodemon --exec ts-node server.ts"
   },
   "dependencies": {
-    "@langchain/mcp-adapters": "^0.5.2"
+    "@langchain/mcp-adapters": "^1.1.3"
   },
   "devDependencies": {
-    "@modelcontextprotocol/server-filesystem": "^2025.7.1",
-    "mcp-mongo-server": "^1.3.0"
+    "@modelcontextprotocol/server-filesystem": "^2026.1.14",
+    "mcp-mongo-server": "^2.0.2"
   }
 }
