@@ -2,5 +2,5 @@ POST http://localhost:3000/chat
 Content-Type: application/json
 
 { 
-  "message": "Im my mcp-server-mongo MCP server, I defiend resources and prompts. Can you access them?"
+  "message": "How many documents have in company collection"
 }

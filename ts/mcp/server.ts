@@ -33,16 +33,11 @@ const client = new MultiServerMCPClient({
     //   args: ['@modelcontextprotocol/server-filesystem', './'],
     // },
     mongodb: {
-      command: 'mcp-server-mongo',
-      args: ['mcp-server-mongo'],
-      ...(process.env.MONGODB_URL
-        ? {
-            env: {
-              MCP_MONGODB_URI: process.env.MONGODB_URL,
-              MCP_MONGODB_READONLY: 'true',
-            },
-          }
-        : {}),
+      command: 'pnpx',
+      args: ['-y', 'mongodb-mcp-server', '--readOnly'],
+      env: {
+        MDB_MCP_CONNECTION_STRING: process.env.MONGODB_URL!
+      }
     },
     // currencyConverter: {
     //   command: 'mcp-currency-converter',
