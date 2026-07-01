@@ -17,7 +17,7 @@ packages:
   - 'rag-json'
   - 'rag-huggingface'
   - 'langgraph'
-  - 'mcp'
+  - 'mcp-client'
   - 'rag-redis'
   - 'voltagent'
   - '*'
