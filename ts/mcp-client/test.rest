@@ -2,5 +2,5 @@ POST http://localhost:3000/chat
 Content-Type: application/json
 
 { 
-  "message": "How many documents have in company collection"
+  "message": "How many documents have in company collection in uk_companies database"
 }
