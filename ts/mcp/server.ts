@@ -32,14 +32,6 @@ const client = new MultiServerMCPClient({
     //   command: 'pnpx',
     //   args: ['@modelcontextprotocol/server-filesystem', './'],
     // },
-    // mongodb: {
-    //   command: 'pnpx',
-    //   args: ['mcp-mongo-server'],
-    //   env: {
-    //     MCP_MONGODB_URI: process.env.MONGODB_URL as string,
-    //     MCP_MONGODB_READONLY: 'true'
-    //   }
-    // },
     mongodb: {
       command: 'mcp-server-mongo',
       args: ['mcp-server-mongo'],
@@ -90,8 +82,8 @@ app.post('/chat', async (req: Request, res: Response) => {
     // Get just the text content
     res.send(result.messages[result.messages.length - 1].content);
   } catch (error) {
-    console.log('Error', error);
-    res.status(400).json({ error });
+    console.error('Chat error:', error instanceof Error ? error.message : error, (error as any).cause ?? '');
+    res.status(400).json({ error: error instanceof Error ? { name: error.name, message: error.message, serverName: (error as any).serverName } : String(error) });
   }
 });
 
