@@ -1,6 +1,39 @@
+### Filesystem: list files
 POST http://localhost:3000/chat
 Content-Type: application/json
 
-{ 
-  "message": "How many documents have in company collection in uk_companies database"
+{
+  "message": "how many files in the current folder?"
+}
+
+### Filesystem: list .ts files
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "message": "list all .ts files and show their sizes"
+}
+
+### MongoDB: list databases
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "message": "list databases I have"
+}
+
+### MongoDB: count documents
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "message": "how many documents in the company collection in uk_companies database?"
+}
+
+### Currency: convert
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "message": "convert 100 USD to EUR"
 }

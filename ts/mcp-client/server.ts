@@ -1,31 +1,21 @@
-import express, { Request, Response } from 'express';
+import express, { type Request, type Response } from 'express';
 import dotenv from 'dotenv';
 import { ChatOpenAI } from '@langchain/openai';
 import { MultiServerMCPClient } from '@langchain/mcp-adapters';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { HumanMessage } from '@langchain/core/messages';
 
-// Load environment variables from .env file
 dotenv.config();
 
-// Express setup
 const app = express();
 app.use(express.json());
 
-// Create client and connect to server
 const client = new MultiServerMCPClient({
-  // Global tool configuration options
-  // Whether to throw on errors if a tool fails to load (optional, default: true)
   throwOnLoadError: true,
-  // Whether to prefix tool names with the server name (optional, default: true)
   prefixToolNameWithServerName: true,
-  // Optional additional prefix for tool names (optional, default: 'mcp')
   additionalToolNamePrefix: 'mcp',
-
-  // Use standardized content block format in tool outputs
   useStandardContentBlocks: true,
 
-  // Server configuration
   mcpServers: {
     filesystem: {
       command: 'mcp-server-filesystem',
@@ -35,8 +25,8 @@ const client = new MultiServerMCPClient({
       command: 'pnpx',
       args: ['-y', 'mongodb-mcp-server', '--readOnly'],
       env: {
-        MDB_MCP_CONNECTION_STRING: process.env.MONGODB_URL!
-      }
+        MDB_MCP_CONNECTION_STRING: process.env.MONGODB_URL!,
+      },
     },
     currencyConverter: {
       command: 'pnpx',
@@ -49,41 +39,32 @@ const client = new MultiServerMCPClient({
   },
 });
 
-// Chat with agent
 app.post('/chat', async (req: Request, res: Response) => {
   try {
     const { message } = req.body;
-
     const tools = await client.getTools();
-
-    // console.log('Available tools', tools)
-
-    // Free models did not work well. Uisng Open AI model
     const model = new ChatOpenAI({
       openAIApiKey: process.env.OPENAI_API_KEY,
       model: 'gpt-4o',
       temperature: 0,
     });
-
-    // Create the React agent
-    const agent = createReactAgent({
-      llm: model,
-      tools,
-    });
-
+    const agent = createReactAgent({ llm: model, tools });
     const result = await agent.invoke({
       messages: [new HumanMessage(message)],
     });
-    // Get just the text content
     res.send(result.messages[result.messages.length - 1].content);
   } catch (error) {
-    console.error('Chat error:', error instanceof Error ? error.message : error, (error as any).cause ?? '');
-    res.status(400).json({ error: error instanceof Error ? { name: error.name, message: error.message, serverName: (error as any).serverName } : String(error) });
+    console.error('Chat error:', error);
+    res.status(400).json({
+      error:
+        error instanceof Error
+          ? { name: error.name, message: error.message, serverName: (error as any).serverName }
+          : String(error),
+    });
   }
 });
 
-// Start Express server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Express server listening on port ${PORT}`);
 });
