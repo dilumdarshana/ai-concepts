@@ -35,7 +35,7 @@
     "@langchain/core": "^0.3.58",
     "@langchain/langgraph": "^0.3.5",
     "@langchain/openai": "^0.5.12",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "langchain": "^0.3.28"
   }
