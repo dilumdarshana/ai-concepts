@@ -26,18 +26,9 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.2.1(supports-color@5.5.0)
-      global:
-        specifier: link:../../../../../Users/dilum/Library/pnpm/global/5/node_modules/global
-        version: link:../../../../../Users/dilum/Library/pnpm/global/5/node_modules/global
       langchain:
         specifier: ^0.3.28
         version: 0.3.37(@langchain/core@0.3.80(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(openai@6.44.0(ws@8.21.0)(zod@3.25.76)))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.8.0(@opentelemetry/api@1.9.1))(axios@1.18.0)(handlebars@4.7.9)(openai@6.44.0(ws@8.21.0)(zod@3.25.76))(ws@8.21.0)
-      mcp-currency-converter:
-        specifier: link:mcp-currency-converter
-        version: link:mcp-currency-converter
-      mcp-server-mongo:
-        specifier: link:mcp-server-mongo
-        version: link:mcp-server-mongo
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.2.0
