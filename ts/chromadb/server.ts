@@ -100,11 +100,9 @@ app.post(
         });
       }
 
-      res
-        .status(201)
-        .json({
-          message: `Documents inserted into collection ${collectionName}`,
-        });
+      res.status(201).json({
+        message: `Documents inserted into collection ${collectionName}`,
+      });
     } catch (error) {
       console.log('error', error);
       res.status(400).json({ error });

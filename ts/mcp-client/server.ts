@@ -105,7 +105,11 @@ app.post('/chat', async (req: Request, res: Response) => {
     res.status(400).json({
       error:
         error instanceof Error
-          ? { name: error.name, message: error.message, serverName: (error as any).serverName }
+          ? {
+              name: error.name,
+              message: error.message,
+              serverName: (error as any).serverName,
+            }
           : String(error),
     });
   }

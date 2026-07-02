@@ -17,8 +17,8 @@ const mcpClient = new MultiServerMCPClient({
       type: 'http',
       url: 'https://api.githubcopilot.com/mcp/',
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_AUTH_TOKEN}`
-      }
+        Authorization: `Bearer ${process.env.GITHUB_AUTH_TOKEN}`,
+      },
     },
   },
 });
