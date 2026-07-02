@@ -25,4 +25,19 @@ pnpm format:check              # check formatting without writing
 | `pnpm dev:voltagent` | `ts/voltagent/` | VoltAgent app with Biome lint + typecheck |
 | — | `ts/mcp-server-mongo/` | MCP server (stdio) for MongoDB (requires build) |
 
+## Commit conventions
+
+All commits **must** follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+feat: add MCP server support
+feat(agent): add MCP tool integration
+fix: handle null in currency conversion
+chore(deps): upgrade langchain to v0.3.50
+docs: update README with MCP examples
+refactor: extract database tool into separate file
+```
+
+A `commit-msg` git hook enforces this via `commitlint` (config: `ts/commitlint.config.cjs`). If the hook blocks your commit, fix the message — not the hook.
+
 No CI/CD, no unit tests. Most projects have a `test.rest` file for manual HTTP testing.

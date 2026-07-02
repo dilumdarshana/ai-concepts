@@ -16,13 +16,17 @@
     "dev:rag-redis": "pnpm --filter rag-redis dev",
     "dev:voltagent": "pnpm --filter voltagent dev",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "commitlint": "commitlint --edit"
   },
   "packageManager": "pnpm@11.5.2",
   "devDependencies": {
+    "@commitlint/cli": "^21.2.0",
+    "@commitlint/config-conventional": "^21.2.0",
     "@types/express": "^5.0.3",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.0",
+    "simple-git-hooks": "^2.13.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

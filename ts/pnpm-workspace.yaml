@@ -7,6 +7,7 @@ allowBuilds:
   prisma: true
   protobufjs: true
   sharp: true
+  simple-git-hooks: true
 
 minimumReleaseAgeExclude:
   - uuid@14.0.1
