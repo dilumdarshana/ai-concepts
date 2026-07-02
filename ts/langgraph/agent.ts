@@ -23,11 +23,14 @@ const mcpClient = new MultiServerMCPClient({
   },
 });
 
+// Cached agent instance — built once on first call, reused thereafter.
 let agentInstance: Awaited<ReturnType<typeof createReactAgent>> | null = null;
 
 export async function getAgent() {
   if (agentInstance) return agentInstance;
 
+  // Fetch tool definitions from every configured MCP server.
+  // Each server advertises its own set of tools (e.g. "github_*").
   const mcpTools = await mcpClient.getTools();
 
   // createReactAgent wires the LLM plus available tools into a

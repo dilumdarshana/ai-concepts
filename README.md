@@ -14,7 +14,7 @@ All projects live under [`ts/`](ts/) and are managed from the workspace root.
 | [rag-json](ts/rag-json/) | Next.js 15, AI SDK v6, LangChain | 4 chat endpoints with increasing RAG complexity |
 | [rag-huggingface](ts/rag-huggingface/) | Express, Pinecone, HuggingFace | RAG with free embedding model |
 | [rag-redis](ts/rag-redis/) | Express, Redis/RediSearch | RAG with Redis vector DB |
-| [mcp](ts/mcp/) | Express, LangGraph MCP adapters | MCP client connecting to subprocess servers |
+| [mcp-client](ts/mcp-client/) | Express, LangGraph MCP adapters | MCP client connecting to subprocess servers |
 | [mcp-server-mongo](ts/mcp-server-mongo/) | MCP SDK, MongoDB | MCP server for MongoDB queries |
 | [voltagent](ts/voltagent/) | VoltAgent, GitHub API | Supervisor + sub-agents for repo analysis |
 
