@@ -5,7 +5,7 @@ dotenv.config();
 
 import express, { Request, Response } from 'express';
 import { HumanMessage } from '@langchain/core/messages';
-import { agent } from './agent';
+import { getAgent } from './agent';
 
 const app = express();
 app.use(express.json());
@@ -14,6 +14,8 @@ app.post('/agent', async (req: Request, res: Response) => {
   const { message } = req.body;
 
   try {
+    const agent = await getAgent();
+
     // Forward the user message to the LangGraph agent, which decides
     // which tool(s) to call based on the conversation context.
     const result = await agent.invoke({
