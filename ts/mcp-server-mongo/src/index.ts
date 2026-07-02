@@ -13,7 +13,7 @@ async function main() {
   // Parse command-line arguments (e.g., for future extensions)
   const args = process.argv.slice(2);
   console.warn('args', args);
-  const connectionUrlArg = args.find((arg) => arg.startsWith('--url='));
+  const connectionUrlArg = args.find((arg: string) => arg.startsWith('--url='));
   const readOnlyArg = args.includes('--readonly');
 
   // Determine if read-only mode is enabled
@@ -46,7 +46,7 @@ async function main() {
     }
 
     // Initialize the MCP server with MongoDB handlers
-    const server = createMCPServer(client, db, readOnlyMode);
+    const server = createMCPServer(client!, db!, readOnlyMode);
     const transport = new StdioServerTransport();
 
     // Start MCP server via stdio transport
