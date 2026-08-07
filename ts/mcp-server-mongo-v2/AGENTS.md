@@ -23,6 +23,14 @@ MCP server for MongoDB, built on the v2 `@modelcontextprotocol/server` SDK.
 - **TypeScript 6.0**: `tsconfig.json` must include `"types": ["node", "express", "cors"]` — these are no longer auto-included
 - **v2 imports**: import `McpServer`, `createMcpHandler` from `@modelcontextprotocol/server`; `serveStdio` from `@modelcontextprotocol/server/stdio`; `toNodeHandler` from `@modelcontextprotocol/node`. Do NOT import from `@modelcontextprotocol/sdk`
 
+## Statelessness (SEP-2575)
+
+MCP is **stateless-first**: the `initialize` handshake is removed and every request is self-contained (per-request `MCP-Protocol-Version` header + `_meta`, per-request client capabilities, `server/discover` for discovery). `createMcpHandler` serves legacy 2025-era traffic statelessly by default.
+
+- The **factory pattern is mandatory** — never share one server instance across requests; the SDK calls the factory per request/connection
+- `db` and `readOnly` are **immutable shared config** captured in the factory closure — do not mutate them per request
+- **Never hold mutable per-request state in the server.** If stateful features are needed later (chat history, per-user context, etc.), externalize them (MongoDB, Redis, cache) keyed by something the client sends — the server instance cannot carry state
+
 ## Tests
 
 ```bash
