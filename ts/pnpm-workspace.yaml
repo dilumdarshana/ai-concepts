@@ -21,6 +21,7 @@ packages:
   - 'langgraph'
   - 'mcp-client'
   - 'mcp-server-mongo'
+  - 'mcp-server-mongo-v2'
   - 'rag-redis'
   - 'voltagent'
   - '*'

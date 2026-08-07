@@ -1,0 +1,54 @@
+{
+  "name": "mcp-server-mongo-v2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Model Context Protocol (MCP) server for MongoDB (v2 @modelcontextprotocol/server)",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "type": "module",
+  "keywords": [
+    "ai",
+    "mcp",
+    "mongodb",
+    "typescript",
+    "pnpm-workspace"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-server-mongo-v2": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "build:watch": "tsc --watch",
+    "build:dev": "tsx --watch src/index.ts",
+    "dev": "tsc --watch",
+    "mcp:stdio": "pnpm build && TRANSPORT=stdio node dist/index.js",
+    "mcp:http": "pnpm build && TRANSPORT=http node dist/index.js",
+    "inspector": "pnpm build && DANGEROUSLY_OMIT_AUTH=true mcp-inspector node dist/index.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.5.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "^2.1.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22",
+    "@vitest/coverage-v8": "^4.1.4",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  }
+}
