@@ -61,6 +61,87 @@ pnpm inspector
 
 This launches the MCP Inspector so you can exercise tools, resources, and prompts interactively.
 
+## Integrate with an MCP client
+
+This server is not published to npm, so clients launch the local build (`dist/index.js`). Build it first with `pnpm build`, then point your client at the absolute path.
+
+### Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mongodb": {
+      "command": "node",
+      "args": ["/path/to/mcp-server-mongo/dist/index.js"],
+      "env": {
+        "TRANSPORT": "stdio",
+        "MCP_MONGODB_URI": "mongodb+srv://user:password@cluster.mongodb.net/dbname",
+        "MCP_MONGODB_READONLY": "true"
+      }
+    }
+  }
+}
+```
+
+### VS Code GitHub Copilot
+
+Edit VS Code's `mcp.json` (`.vscode/mcp.json` in your project or the global User `mcp.json`):
+
+```json
+{
+  "servers": {
+    "mongodb": {
+      "command": "node",
+      "args": ["/path/to/mcp-server-mongo/dist/index.js"],
+      "env": {
+        "TRANSPORT": "stdio",
+        "MCP_MONGODB_URI": "mongodb+srv://user:password@cluster.mongodb.net/dbname",
+        "MCP_MONGODB_READONLY": "true"
+      }
+    }
+  }
+}
+```
+
+Using HTTP transport (works well with VS Code Copilot Agent):
+
+```json
+{
+  "servers": {
+    "mongodb": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp",
+      "env": {
+        "TRANSPORT": "http",
+        "MCP_MONGODB_URI": "mongodb+srv://user:password@cluster.mongodb.net/dbname"
+      }
+    }
+  }
+}
+```
+
+### OpenCode
+
+Add to your `opencode.json` or `.opencode.json`:
+
+```json
+{
+  "mcp": {
+    "mongodb": {
+      "type": "local",
+      "command": ["node", "/path/to/mcp-server-mongo/dist/index.js"],
+      "environment": {
+        "TRANSPORT": "stdio",
+        "MCP_MONGODB_URI": "mongodb+srv://user:password@cluster.mongodb.net/dbname",
+        "MCP_MONGODB_READONLY": "true"
+      }
+    }
+  }
+}
+```
+
 ## Tools
 
 | Tool | Description |

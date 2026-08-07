@@ -28,7 +28,7 @@
     "mcp:stdio": "pnpm build && TRANSPORT=stdio node dist/index.js",
     "mcp:http": "pnpm build && TRANSPORT=http node dist/index.js",
     "mcp:sse": "pnpm build && TRANSPORT=sse node dist/index.js",
-    "inspector": "pnpm build && DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector",
+    "inspector": "pnpm build && DANGEROUSLY_OMIT_AUTH=true mcp-inspector node dist/index.js",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "coverage": "vitest run --coverage"
@@ -42,7 +42,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@modelcontextprotocol/inspector": "^0.22.0",
+    "@modelcontextprotocol/inspector": "^2.1.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^22",
