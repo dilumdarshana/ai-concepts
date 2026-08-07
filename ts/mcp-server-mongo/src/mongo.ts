@@ -13,17 +13,13 @@ export async function getMongoConnection(
     if (!client) {
       client = new MongoClient(
         url,
-        readOnly
-          ? ({ readPreference: ReadPreference.SECONDARY } as any)
-          : {},
+        readOnly ? ({ readPreference: ReadPreference.SECONDARY } as any) : {},
       );
 
       await client.connect();
     }
 
     const db = client.db(); // Use the default DB from URI
-
-    // console.log(`Connected with Mongodb: ${db.databaseName}`);
 
     return {
       client,

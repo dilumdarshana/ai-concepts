@@ -1,8 +1,11 @@
 #!/usr/bin/env node
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 import { getMongoConnection } from './mongo.js';
-import { createMCPServer } from './server.js';
+import { createMcpServer } from './server.js';
+
+// Load environment variables from .env file
+dotenv.config({ quiet: true });
 
 let mongoClient: MongoClient | null = null;
 
@@ -12,7 +15,6 @@ let mongoClient: MongoClient | null = null;
 async function main() {
   // Parse command-line arguments (e.g., for future extensions)
   const args = process.argv.slice(2);
-  console.warn('args', args);
   const connectionUrlArg = args.find((arg: string) => arg.startsWith('--url='));
   const readOnlyArg = args.includes('--readonly');
 
@@ -45,13 +47,8 @@ async function main() {
       process.exit(1);
     }
 
-    // Initialize the MCP server with MongoDB handlers
-    const server = createMCPServer(client!, db!, readOnlyMode);
-    const transport = new StdioServerTransport();
-
-    // Start MCP server via stdio transport
-    await server.connect(transport);
-    console.warn('MCP Server connected and ready (mcp-server-mongo)');
+    // Initialize and start the MCP server with MongoDB handlers
+    createMcpServer(db, readOnlyMode);
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
     if (mongoClient) {

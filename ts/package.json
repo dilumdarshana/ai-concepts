@@ -12,6 +12,7 @@
     "dev:rag": "pnpm --filter rag dev",
     "dev:rag-huggingface": "pnpm --filter rag-huggingface dev",
     "dev:langgraph": "pnpm --filter langgraph dev",
+    "dev:server-mongo": "pnpm --filter mcp-server-mongo dev",
     "dev:mcp-client": "pnpm --filter mcp-client dev",
     "dev:rag-redis": "pnpm --filter rag-redis dev",
     "dev:voltagent": "pnpm --filter voltagent dev",

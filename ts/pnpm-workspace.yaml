@@ -19,6 +19,7 @@ packages:
   - 'rag-huggingface'
   - 'langgraph'
   - 'mcp-client'
+  - 'mcp-server-mongo'
   - 'rag-redis'
   - 'voltagent'
   - '*'

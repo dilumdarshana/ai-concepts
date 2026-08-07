@@ -1,17 +1,19 @@
-import type { ReadResourceRequest } from '@modelcontextprotocol/sdk/types.js';
-import type { MongoClient, Db, IndexDescriptionInfo } from 'mongodb';
-
-interface SchemaResult {
-  fields: FieldSummary[];
-}
+import type { ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
+import type { Db } from 'mongodb';
+import { Logger } from '../utils/logger.js';
 
 interface FieldSummary {
   name: string;
   types: string[];
   nullable: boolean;
-  // prevalence: string;
   examples: unknown[];
-  nestedSchema?: SchemaResult;
+}
+
+interface FieldAccumulator {
+  name: string;
+  types: Set<string>;
+  nullable: boolean;
+  examples: unknown[];
 }
 
 interface CollectionSchema {
@@ -32,20 +34,20 @@ interface CollectionSchema {
  *  - Counts documents
  *  - Grabs a small sample
  *  - Infers a basic schema summary (field names, types, nullability, examples)
+ *
+ * @param uri The URI for the resource being accessed (contains collection name)
+ * @param db The connected MongoDB database object
+ * @param readOnly Whether the server is running in read-only mode
+ * @param logger Logger instance for logging messages and errors
+ * @returns A promise resolving to a ReadResourceResult with the schema summary
  */
-export async function handleReadResourceRequest({
-  request,
-  dbClient,
-  db,
-  readOnly,
-}: {
-  request: ReadResourceRequest;
-  dbClient: MongoClient;
-  db: Db;
-  readOnly: boolean;
-}) {
-  const url = new URL(request.params.uri);
-  const collectionName = url.pathname.replace(/^\//, '');
+export async function readCollection(
+  uri: URL,
+  db: Db,
+  _readOnly: boolean,
+  logger: Logger,
+): Promise<ReadResourceResult> {
+  const collectionName = uri.pathname.replace(/^\//, '');
 
   try {
     const collection = db.collection(collectionName);
@@ -66,9 +68,8 @@ export async function handleReadResourceRequest({
         ),
       ]);
     } catch (countError) {
-      console.warn(
-        `[WARN] Count op failed or timed out for "${collectionName}":`,
-        countError,
+      logger.warn(
+        `Count op failed or timed out for "${collectionName}": ${countError}`,
       );
       // Fallback: use collStats.count if available
       try {
@@ -87,13 +88,13 @@ export async function handleReadResourceRequest({
     const samples = await collection.find({}).limit(sampleSize).toArray();
 
     // Build a simple field summary from the samples
-    const fieldMap = new Map<string, FieldSummary>();
+    const fieldMap = new Map<string, FieldAccumulator>();
 
     for (const doc of samples) {
       for (const [key, value] of Object.entries(doc)) {
         const existing = fieldMap.get(key) ?? {
           name: key,
-          types: new Set<string>() as any,
+          types: new Set<string>(),
           nullable: false,
           examples: [] as unknown[],
         };
@@ -123,7 +124,7 @@ export async function handleReadResourceRequest({
       type: 'collection',
       name: collectionName,
       fields,
-      indexes: indexes.map((idx: IndexDescriptionInfo) => ({
+      indexes: indexes.map((idx) => ({
         name: idx.name,
         keys: idx.key,
       })),
@@ -132,23 +133,18 @@ export async function handleReadResourceRequest({
       lastUpdated: new Date().toISOString(),
     };
 
+    logger.info(`Read schema for collection ${collectionName}`);
     return {
       contents: [
         {
-          uri: request.params.uri,
+          uri: uri.toString(),
           mimeType: 'application/json',
           text: JSON.stringify(schema, null, 2),
         },
       ],
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(
-        `Failed to read collection ${collectionName}: ${error.message}`,
-      );
-    }
-    throw new Error(
-      `Failed to read collection ${collectionName}: Unknown error`,
-    );
+    logger.error(`Error reading collection ${collectionName}: ${error}`);
+    throw new Error(`Failed to read collection ${collectionName}: ${error}`);
   }
 }

@@ -1,13 +1,34 @@
+import { z } from 'zod';
 import type { Db } from 'mongodb';
-import { formatResponse } from '../shared/formatResponse.js';
-import { handleError } from '../shared/handleError.js';
+import { Logger } from '../utils/logger.js';
+import { formatResponse } from '../utils/mcpResponse.js';
 
-export async function handleServerInfoTool(db: Db, isReadOnlyMode: boolean) {
+// Define the schema for the serverInfo tool input (no arguments)
+export const serverInfoSchema = z.object({});
+
+// Define the TypeScript type for the input based on the schema
+export type ServerInfoInput = z.infer<typeof serverInfoSchema>;
+
+/**
+ * Gets MongoDB server information including version, storage engine,
+ * and connection details.
+ *
+ * @param input The validated tool input (empty)
+ * @param db The connected MongoDB database object
+ * @param readOnly Whether the server is running in read-only mode
+ * @param logger Logger instance for logging messages and errors
+ * @returns A promise resolving to an MCP tool result with server info
+ */
+export async function handleServerInfoTool(
+  _input: ServerInfoInput,
+  db: Db,
+  readOnly: boolean,
+  logger: Logger,
+) {
   try {
     // Get basic server information using buildInfo command
     const buildInfo = await db.command({ buildInfo: 1 });
 
-    // Construct the response
     const serverInfo = {
       version: buildInfo.version,
       gitVersion: buildInfo.gitVersion,
@@ -22,15 +43,16 @@ export async function handleServerInfoTool(db: Db, isReadOnlyMode: boolean) {
       buildEnvironment: buildInfo.buildEnvironment,
       bits: buildInfo.bits,
       ok: buildInfo.ok,
-      status: {},
       connectionInfo: {
-        readOnlyMode: isReadOnlyMode,
-        readPreference: isReadOnlyMode ? 'secondary' : 'primary',
+        readOnlyMode: readOnly,
+        readPreference: readOnly ? 'secondary' : 'primary',
       },
     };
 
+    logger.info('Retrieved MongoDB server information');
     return formatResponse(serverInfo);
   } catch (error) {
-    return handleError(error, 'get server information');
+    logger.error(`Error getting server information: ${error}`);
+    return formatResponse({ error: `Error: ${error}` });
   }
 }

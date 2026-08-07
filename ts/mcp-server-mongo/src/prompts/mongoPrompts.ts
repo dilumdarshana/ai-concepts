@@ -1,16 +1,22 @@
-import { PromptTemplate } from './types';
+import { z } from 'zod';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { Logger } from '../utils/logger.js';
+import { formatMessageResponse } from '../utils/mcpResponse.js';
 
-export const PROMPT_TEMPLATES: PromptTemplate[] = [
+const collectionArg = z.string().describe('Name of the collection');
+
+interface PromptDef {
+  name: string;
+  description: string;
+  schema: z.ZodObject<any>;
+  template: string;
+}
+
+const PROMPT_DEFS: PromptDef[] = [
   {
     name: 'analyse-collection',
     description: 'Analyse a MongoDB collection structure and provide insights',
-    arguments: [
-      {
-        name: 'collection',
-        description: 'Name of the collection to analyse',
-        required: true,
-      },
-    ],
+    schema: z.object({ collection: collectionArg }),
     template: `Analyse the MongoDB collection "{{collection}}" and provide:
       1. Schema overview (field types and structure)
       2. Data quality insights
@@ -22,18 +28,10 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
   {
     name: 'query-helper',
     description: 'Get help writing MongoDB queries for a specific collection',
-    arguments: [
-      {
-        name: 'collection',
-        description: 'Name of the collection to query',
-        required: true,
-      },
-      {
-        name: 'goal',
-        description: 'What you want to achieve with the query',
-        required: true,
-      },
-    ],
+    schema: z.object({
+      collection: collectionArg,
+      goal: z.string().describe('What you want to achieve with the query'),
+    }),
     template: `Help me write a MongoDB query for the "{{collection}}" collection.
       Goal: {{goal}}
 
@@ -48,13 +46,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
   {
     name: 'data-exploration',
     description: 'Explore and summarise data in a collection',
-    arguments: [
-      {
-        name: 'collection',
-        description: 'Name of the collection to explore',
-        required: true,
-      },
-    ],
+    schema: z.object({ collection: collectionArg }),
     template: `Explore the "{{collection}}" collection and provide a data summary including:
       1. Total document count
       2. Sample documents
@@ -67,13 +59,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
   {
     name: 'performance-review',
     description: 'Review collection performance and suggest optimisations',
-    arguments: [
-      {
-        name: 'collection',
-        description: 'Name of the collection to review',
-        required: true,
-      },
-    ],
+    schema: z.object({ collection: collectionArg }),
     template: `Review the performance of the "{{collection}}" collection:
       1. Check existing indexes
       2. Analyze collection size and document structure
@@ -86,18 +72,13 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
   {
     name: 'find-recent',
     description: 'Find recent documents in a collection',
-    arguments: [
-      {
-        name: 'collection',
-        description: 'Name of the collection to search',
-        required: true,
-      },
-      {
-        name: 'days',
-        description: 'Number of days to look back (default: 7)',
-        required: false,
-      },
-    ],
+    schema: z.object({
+      collection: collectionArg,
+      days: z
+        .string()
+        .optional()
+        .describe('Number of days to look back (default: 7)'),
+    }),
     template: `Find documents in the "{{collection}}" collection from the last {{days}} days.
 
       First examine the collection to identify date fields, then query for recent documents.
@@ -106,3 +87,34 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
       Use the available MongoDB tools to inspect and query the collection.`,
   },
 ];
+
+/**
+ * Registers all MongoDB prompts to the MCP server.
+ *
+ * @param server The MCP server instance
+ * @param logger Logger instance for logging messages and errors
+ */
+export function registerPrompts(server: McpServer, logger: Logger) {
+  for (const def of PROMPT_DEFS) {
+    server.registerPrompt(
+      def.name,
+      {
+        description: def.description,
+        argsSchema: def.schema.shape,
+      },
+      (args: Record<string, string | undefined>) => {
+        logger.info(`Prompt received: ${JSON.stringify(args)}`);
+        const resolved: Record<string, string | undefined> = {
+          days: '7',
+          ...args,
+        };
+        const filledPrompt = def.template.replace(
+          /\{\{(\w+)\}\}/g,
+          (match: string, key: string) =>
+            resolved[key] != null ? String(resolved[key]) : match,
+        );
+        return formatMessageResponse(filledPrompt);
+      },
+    );
+  }
+}

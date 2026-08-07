@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import type { ObjectIdConversionMode } from './types.js';
+import type { ObjectIdConversionMode } from '../types.js';
 
 /**
  * Recursively transforms any string values in `filter` that look like
@@ -50,7 +50,7 @@ export function parseFilter(
       );
     }
 
-    // Everything else: return as‑is
+    // Everything else: return as-is
     return value;
   }
 

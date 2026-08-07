@@ -1,91 +1,65 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import type { MongoClient, Db } from 'mongodb';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import dotenv from 'dotenv';
+import type { Db } from 'mongodb';
+import { PACKAGE_NAME, VERSION } from './utils/constants.js';
+import { createHttpTransport } from './transport/httpTransport.js';
+import { createStdioTransport } from './transport/stdioTransport.js';
+import { createSseTransport } from './transport/sseTransport.js';
+import { Logger } from './utils/logger.js';
 import {
-  PingRequestSchema,
-  ListToolsRequestSchema,
-  CallToolRequestSchema,
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-  ListPromptsRequestSchema,
-  GetPromptRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
-import { handlePingRequest } from './request/ping.js';
-import { handleListToolsRequest } from './request/tools.js';
-import { handleCallToolRequest } from './request/callToolRequest.js';
-import { handleListResourcesRequest } from './request/listResources.js';
-import { handleReadResourceRequest } from './request/readResources.js';
-import {
-  handleGetPromptRequest,
-  handleListPromptsRequest,
-} from './request/prompts.js';
+  registerPrompts,
+  registerResources,
+  registerTools,
+} from './utils/registrations.js';
+
+// Load environment variables from .env file to configure the application
+dotenv.config({ quiet: true });
 
 /**
- * Creates and configures an MCP server instance for MongoDB.
+ * Creates and initializes the MCP server with the chosen transport.
+ * This function sets up the server, registers tools and resources, and
+ * configures the transport layer based on the TRANSPORT environment variable.
  *
- * @param dbClient - An active MongoDB client instance.
- * @param db - The connected MongoDB database object.
- * @param readOnly - If true, restricts tool access to read-only operations.
- * @param options - Optional configuration for MCP server (e.g. name, version).
- * @returns An initialized MCP server ready to handle requests.
+ * @param dbClient An active MongoDB client instance
+ * @param db The connected MongoDB database object
+ * @param readOnly If true, restricts tool access to read-only operations
  */
-export function createMCPServer(
-  dbClient: MongoClient,
-  db: Db,
-  readOnly = true,
-  options = {},
-) {
-  // Initialize the MCP server with metadata and capabilities.
-  const server = new Server(
+export function createMcpServer(db: Db, readOnly = true) {
+  // Initialize logger for logging server activities
+  const logger = Logger.log();
+
+  // Create the MCP server instance with basic configuration
+  const server = new McpServer(
     {
-      name: 'mongodb', // Name of the MCP server (used in Inspector)
-      version: '1.0.0',
-      ...options, // Allow overriding name/version/etc.
+      name: PACKAGE_NAME,
+      version: VERSION,
     },
     {
       capabilities: {
-        resources: {}, // Can be populated with static data resources
-        tools: {}, // Tools will be dynamically discovered from handlers
-        prompts: {}, // Optional: Add prompt templates here
+        resources: {},
+        tools: {},
+        prompts: {},
       },
-      ...options, // Allow customizing capabilities further
     },
   );
 
-  // Register handler for PingRequest (used in Inspector > Ping tab)
-  server.setRequestHandler(PingRequestSchema, (request) =>
-    handlePingRequest({ request, dbClient, db, readOnly }),
-  );
+  // Register tools, resources, and prompts to the server
+  registerTools(server, db, readOnly, logger);
+  registerResources(server, db, readOnly, logger);
+  registerPrompts(server, logger);
 
-  // Register handler for ListToolsRequest (Inspector > Tools tab)
-  // Lists available tools.
-  server.setRequestHandler(ListToolsRequestSchema, (request) =>
-    handleListToolsRequest(),
-  );
-
-  // Register handler for CallToolRequest (Inspector > Tools > Call Tool tab)
-  server.setRequestHandler(CallToolRequestSchema, (request) =>
-    handleCallToolRequest({ request, dbClient, db, readOnly }),
-  );
-
-  // Register handler for listing available collections as resources.
-  server.setRequestHandler(ListResourcesRequestSchema, (request) =>
-    handleListResourcesRequest({ request, dbClient, db, readOnly }),
-  );
-
-  // Register handler for reading specific resources (collections/documents).
-  server.setRequestHandler(ReadResourceRequestSchema, (request) =>
-    handleReadResourceRequest({ request, dbClient, db, readOnly }),
-  );
-
-  // Register handler for listing available prompts. (Inspector > Prompts tab)
-  server.setRequestHandler(ListPromptsRequestSchema, (request) =>
-    handleListPromptsRequest(),
-  );
-
-  // Register handler for getting a specific prompt template.
-  server.setRequestHandler(GetPromptRequestSchema, (request) =>
-    handleGetPromptRequest({ request }),
-  );
-
-  return server;
+  // Configure the transport layer based on the TRANSPORT environment variable
+  if (process.env.TRANSPORT === 'http') {
+    createHttpTransport(server, logger);
+  } else if (process.env.TRANSPORT === 'stdio') {
+    const transport = createStdioTransport();
+    server.connect(transport);
+  } else if (process.env.TRANSPORT === 'sse') {
+    createSseTransport(server, logger);
+  } else {
+    logger.error(
+      'Invalid transport specified. Please set TRANSPORT to http | stdio | sse',
+    );
+    process.exit(1);
+  }
 }
