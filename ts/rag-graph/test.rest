@@ -1,14 +1,14 @@
 ### Health check
-GET http://localhost:3000/health
+GET http://localhost:6000/health
 
 ###
 ### Ingest the bundled sample dataset
-POST http://localhost:3000/ingest-sample
+POST http://localhost:6000/ingest-sample
 Content-Type: application/json
 
 ###
 ### Ingest a single document
-POST http://localhost:3000/ingest
+POST http://localhost:6000/ingest
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ###
 ### Hybrid retrieval only (vector + graph context)
-POST http://localhost:3000/query
+POST http://localhost:6000/query
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ###
 ### Full GraphRAG chat
-POST http://localhost:3000/chat
+POST http://localhost:6000/chat
 Content-Type: application/json
 
 {
@@ -36,7 +36,7 @@ Content-Type: application/json
 
 ###
 ### Graph traversal question (needs graph expansion, not just vector match)
-POST http://localhost:3000/chat
+POST http://localhost:6000/chat
 Content-Type: application/json
 
 {
@@ -45,9 +45,9 @@ Content-Type: application/json
 
 ###
 ### Graph stats
-GET http://localhost:3000/graph
+GET http://localhost:6000/graph
 
 ###
 ### Wipe the graph
-POST http://localhost:3000/clear
+POST http://localhost:6000/clear
 Content-Type: application/json

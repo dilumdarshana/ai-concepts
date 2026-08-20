@@ -178,12 +178,26 @@ app.get('/health', async (_req: Request, res: Response) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
+const PORT = process.env.PORT || 6000;
+
+// Express 5 invokes the listen callback on bind errors too, so guard it.
+const server = app.listen(PORT, async (err?: Error) => {
+  if (err) return;
   try {
     await createVectorIndex();
     console.log(`Express server listening on port ${PORT} (Neo4j connected)`);
   } catch (error) {
     console.error('Could not create vector index — is Neo4j running?', error);
   }
+});
+
+server.on('error', (err: NodeJS.ErrnoException) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(
+      `Port ${PORT} is already in use — stop the process using it or set PORT in .env to a free port.`,
+    );
+  } else {
+    console.error('Server error:', err);
+  }
+  process.exit(1);
 });
