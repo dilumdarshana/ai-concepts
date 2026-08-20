@@ -1,0 +1,31 @@
+{
+  "name": "rag-graph",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Express + Neo4j GraphRAG — knowledge-graph RAG with hybrid retrieval",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "ai",
+    "rag",
+    "graphrag",
+    "neo4j",
+    "knowledge-graph",
+    "express",
+    "typescript",
+    "pnpm-workspace"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon --exec ts-node server.ts"
+  },
+  "dependencies": {
+    "neo4j-driver": "^6.2.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24"
+  }
+}

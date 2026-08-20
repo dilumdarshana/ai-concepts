@@ -14,6 +14,7 @@ All projects live under [`ts/`](ts/) and are managed from the workspace root.
 | [rag-json](ts/rag-json/) | Next.js 15, AI SDK v6, LangChain | 4 chat endpoints with increasing RAG complexity |
 | [rag-huggingface](ts/rag-huggingface/) | Express, Pinecone, HuggingFace | RAG with free embedding model |
 | [rag-redis](ts/rag-redis/) | Express, Redis/RediSearch | RAG with Redis vector DB |
+| [rag-graph](ts/rag-graph/) | Express, Neo4j, LangChain | GraphRAG — knowledge graph + hybrid vector/graph retrieval |
 | [mcp-client](ts/mcp-client/) | Express, LangGraph MCP adapters | MCP client connecting to subprocess servers |
 | [mcp-server-mongo](ts/mcp-server-mongo/) | MCP SDK v1, MongoDB | MCP server for MongoDB queries |
 | [mcp-server-mongo-v2](ts/mcp-server-mongo-v2/) | MCP Server v2, MongoDB | MCP server for MongoDB queries (v2 SDK) |
@@ -24,7 +25,7 @@ All projects live under [`ts/`](ts/) and are managed from the workspace root.
 - **Node.js** 20+ (see `.nvmrc` in `ts/`)
 - **pnpm** 11.5+
 - **OpenAI API key** (most projects)
-- **Docker** (chromadb, rag-redis)
+- **Docker** (chromadb, rag-redis, rag-graph)
 
 ## Quick Start
 

@@ -1,0 +1,53 @@
+### Health check
+GET http://localhost:3000/health
+
+###
+### Ingest the bundled sample dataset
+POST http://localhost:3000/ingest-sample
+Content-Type: application/json
+
+###
+### Ingest a single document
+POST http://localhost:3000/ingest
+Content-Type: application/json
+
+{
+  "text": "Nimbus Labs acquired DataForge in 2023 to strengthen its data pipeline team. DataForge was founded by Lena Fischer and specialized in ETL tooling.",
+  "source": "acquisitions.md"
+}
+
+###
+### Hybrid retrieval only (vector + graph context)
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "query": "Who works on Project Borealis?"
+}
+
+###
+### Full GraphRAG chat
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "query": "Who works on Project Borealis?"
+}
+
+###
+### Graph traversal question (needs graph expansion, not just vector match)
+POST http://localhost:3000/chat
+Content-Type: application/json
+
+{
+  "query": "Which technologies does Tom Okafor work with?"
+}
+
+###
+### Graph stats
+GET http://localhost:3000/graph
+
+###
+### Wipe the graph
+POST http://localhost:3000/clear
+Content-Type: application/json

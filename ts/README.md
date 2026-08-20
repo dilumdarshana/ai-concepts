@@ -20,6 +20,7 @@ pnpm add <pkg> --filter <name> # add dependency to a specific project
 | `pnpm dev:rag` | [rag-json](rag-json/) | Next.js 15 | 4 chat API routes: basic → LangChain → personalized → RAG with JSONLoader |
 | `pnpm dev:rag-huggingface` | [rag-huggingface](rag-huggingface/) | Express | Pinecone + HuggingFace embeddings (free model) |
 | `pnpm dev:rag-redis` | [rag-redis](rag-redis/) | Express | Redis/RediSearch as vector DB for movie data |
+| `pnpm dev:rag-graph` | [rag-graph](rag-graph/) | Express | Neo4j GraphRAG — knowledge graph + hybrid vector/graph retrieval |
 | `pnpm dev:mcp` | [mcp](mcp/) | Express | MCP client connecting to subprocess MCP servers via LangGraph |
 | `pnpm dev:voltagent` | [voltagent](voltagent/) | VoltAgent | Supervisor + sub-agents for GitHub repo analysis |
 | — | [mcp-server-mongo](mcp-server-mongo/) | MCP SDK | MCP server (stdio) for MongoDB queries |

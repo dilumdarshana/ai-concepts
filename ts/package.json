@@ -16,6 +16,7 @@
     "dev:server-mongo-v2": "pnpm --filter mcp-server-mongo-v2 dev",
     "dev:mcp-client": "pnpm --filter mcp-client dev",
     "dev:rag-redis": "pnpm --filter rag-redis dev",
+    "dev:rag-graph": "pnpm --filter rag-graph dev",
     "dev:voltagent": "pnpm --filter voltagent dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

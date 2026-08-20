@@ -1,0 +1,18 @@
+[
+  {
+    "source": "employees.md",
+    "text": "Nimbus Labs is a cloud infrastructure company founded in 2015 by CEO Priya Sharma. The engineering team is led by CTO Marcus Chen. Senior engineer Aisha Khan works on the core platform, while DevOps engineer Tom Okafor manages the Kubernetes clusters. The data science team, headed by Dr. Elena Petrova, builds the recommendation engine. Product manager Sofia Rossi coordinates between engineering and design."
+  },
+  {
+    "source": "projects.md",
+    "text": "Project Atlas is Nimbus Labs' flagship serverless compute platform, built with Go and running on Kubernetes. Project Borealis is the real-time data pipeline, developed in Rust by Tom Okafor and Aisha Khan, using Apache Kafka for stream processing. The recommendation engine, Project Cirrus, uses Python and TensorFlow, and is led by Dr. Elena Petrova. All projects are deployed through the internal CI/CD system called Forge."
+  },
+  {
+    "source": "technologies.md",
+    "text": "Nimbus Labs standardizes on Go and Rust for backend services. Kubernetes orchestrates all production workloads, managed by DevOps engineer Tom Okafor. Apache Kafka powers the event streaming layer for Project Borealis. TensorFlow is used for the machine learning models in Project Cirrus. The Forge CI/CD system, built internally, integrates with GitHub and deploys to AWS."
+  },
+  {
+    "source": "history.md",
+    "text": "Nimbus Labs was founded in 2015 by Priya Sharma after leaving a large cloud provider. The company raised its Series A in 2017 and Series B in 2019. In 2021, Marcus Chen joined as CTO and restructured the engineering organization into platform, data, and product teams. By 2024, Nimbus Labs served over 500 enterprise customers and processed 2 billion events per day through Project Borealis."
+  }
+]

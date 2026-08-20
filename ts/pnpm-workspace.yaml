@@ -23,5 +23,6 @@ packages:
   - 'mcp-server-mongo'
   - 'mcp-server-mongo-v2'
   - 'rag-redis'
+  - 'rag-graph'
   - 'voltagent'
   - '*'
