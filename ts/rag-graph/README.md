@@ -2,6 +2,8 @@
 
 A knowledge-graph RAG demo. Documents are chunked, then an LLM extracts entities and relationships which are stored as a graph in Neo4j alongside vector embeddings. Queries are answered via **hybrid retrieval**: vector similarity finds the most relevant chunks, then graph traversal expands to neighbouring entities and their chunks.
 
+> Want the *why* behind the design? See [**CONCEPTS.md**](CONCEPTS.md) — diagrams of the graph model, ingestion, and hybrid retrieval.
+
 ## Setup
 
 ```sh
