@@ -1,0 +1,44 @@
+{
+  "name": "rag-hybrid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Express + ChromaDB hybrid retrieval: dense vectors + sparse BM25 + RRF fusion + cross-encoder reranking",
+  "author": "Dilum Darshana <dilum.dar@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "ai",
+    "chromadb",
+    "hybrid-search",
+    "bm25",
+    "reranking",
+    "rrf",
+    "rag",
+    "express",
+    "typescript",
+    "pnpm-workspace"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chroma-core/openai": "^0.1.10",
+    "@huggingface/transformers": "^4.2.0",
+    "@langchain/core": "^1.2.9",
+    "@langchain/openai": "^1.5.10",
+    "chromadb": "^3.5.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^24",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3"
+  }
+}

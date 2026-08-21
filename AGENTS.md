@@ -23,6 +23,7 @@ pnpm format:check              # check formatting without writing
 | `pnpm dev:mcp-client` | `ts/mcp-client/` | MCP client connecting to subprocess MCP servers |
 | `pnpm dev:rag-redis` | `ts/rag-redis/` | Express + Redis/RediSearch vector DB |
 | `pnpm dev:rag-graph` | `ts/rag-graph/` | Express + Neo4j GraphRAG (requires Docker) |
+| `pnpm dev:rag-hybrid` | `ts/rag-hybrid/` | Express + ChromaDB hybrid retrieval: dense + BM25 + RRF + reranking (requires Docker) |
 | `pnpm dev:voltagent` | `ts/voltagent/` | VoltAgent app with Biome lint + typecheck |
 | — | `ts/mcp-server-mongo/` | MCP server (stdio) for MongoDB (requires build) |
 

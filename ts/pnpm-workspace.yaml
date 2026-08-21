@@ -12,6 +12,7 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - uuid@14.0.1
+  - '@langchain/openai@1.5.10'
 
 packages:
   - 'langchain'
@@ -24,5 +25,6 @@ packages:
   - 'mcp-server-mongo-v2'
   - 'rag-redis'
   - 'rag-graph'
+  - 'rag-hybrid'
   - 'voltagent'
   - '*'
