@@ -1,6 +1,30 @@
+# ============================================================
+# chromadb - manual API tests
+#
+# Prerequisites:
+#   1. docker compose up -d       -> Chroma server on :8000
+#   2. pnpm dev:chromadb          -> Express API on :3000
+#   3. .env with OPENAI_API_KEY   -> embeddings + chat model
+#
+# Run each request with "Send Request" (VS Code REST Client).
+# On first run execute in order: 1 -> 2 -> 3 -> 4/5.
+# ============================================================
+
+# ------------------------------------------------------------
+# 1. Health check
+# Verifies Express is up and Chroma answers its heartbeat.
+# Expected 200: { "status": "healthy", "chroma": "connected" }
+# ------------------------------------------------------------
 GET http://localhost:3000/health
 
 ###
+
+# ------------------------------------------------------------
+# 2. Create collection "test_collection"
+# Body: { name, metadata? }
+# Expected 201: { "message": "Collection test_collection created" }
+# Re-running fails with 400 because the collection already exists.
+# ------------------------------------------------------------
 POST http://localhost:3000/collections
 Content-Type: application/json
 
@@ -12,6 +36,14 @@ Content-Type: application/json
 }
 
 ###
+
+# ------------------------------------------------------------
+# 3. Insert documents into "test_collection"
+# Body: { documents: [{ document, metadata }] }
+# Each document gets a RANDOM id server-side, so re-running this
+# request inserts duplicates instead of updating existing rows.
+# Expected 201: { "message": "Documents inserted into collection ..." }
+# ------------------------------------------------------------
 POST http://localhost:3000/collections/test_collection/add
 Content-Type: application/json
 
@@ -109,6 +141,14 @@ Content-Type: application/json
 }
 
 ###
+
+# ------------------------------------------------------------
+# 4. Semantic query (raw vector search)
+# Body: { query } - always returns the TOP-1 match (nResults is
+# hardcoded to 1) as the raw ChromaDB result shape:
+# { ids, documents, metadatas, distances } per query batch.
+# Expected: A Clockwork Orange (the only 1971 movie).
+# ------------------------------------------------------------
 POST http://localhost:3000/collections/test_collection/query
 Content-Type: application/json
 
@@ -117,6 +157,17 @@ Content-Type: application/json
 }
 
 ###
+
+# ------------------------------------------------------------
+# 5. Chat with RAG (streamed SSE)
+# Body: { query, sessionId?, collectionName?, nResults? }
+# Defaults: sessionId="default", collectionName="test_collection",
+# nResults=5. Retrieves top-n documents, then streams the answer
+# while keeping history under the given sessionId IN MEMORY
+# (history resets when the server restarts).
+# Expected: answer about animated movies from 2010 (Toy Story 3,
+# Tangled, Despicable Me).
+# ------------------------------------------------------------
 POST http://localhost:3000/chat
 Content-Type: application/json
 
@@ -128,6 +179,13 @@ Content-Type: application/json
 }
 
 ###
+
+# ------------------------------------------------------------
+# 6. Follow-up question (tests session memory)
+# Same sessionId as request 5: "them" must resolve via the stored
+# chat history to the animated movies from the previous turn.
+# Expected: actors from Toy Story 3 / Tangled / Despicable Me.
+# ------------------------------------------------------------
 POST http://localhost:3000/chat
 Content-Type: application/json
 
@@ -137,4 +195,3 @@ Content-Type: application/json
   "collectionName": "test_collection",
   "nResults": 3
 }
-

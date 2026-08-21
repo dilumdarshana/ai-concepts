@@ -398,7 +398,7 @@ Common pattern: store binary/int8 vectors in the index for fast coarse search, t
 
 | Database | Type | Hybrid? | Notes |
 |---|---|---|---|
-| **ChromaDB** | embedded/server | basic | simplest start; used in `chromadb` |
+| **ChromaDB** | embedded/server | ✓ (BM25/SPLADE sparse + server-side RRF via `Search()` API) | simplest start; used in `chromadb`, `rag-hybrid` |
 | **Pinecone** | managed cloud | ✓ | serverless, zero ops; used in `rag-huggingface` |
 | **Redis + RediSearch** | in-memory | ✓ (RRF built-in) | microsecond latency; used in `rag-redis` |
 | **Neo4j** | graph + vector | via Cypher | vector index + graph traversal; used in `rag-graph` |
