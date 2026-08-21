@@ -159,12 +159,13 @@ Content-Type: application/json
 ###
 
 # ------------------------------------------------------------
-# 5. Chat with RAG (streamed SSE)
+# 5. Chat with RAG
 # Body: { query, sessionId?, collectionName?, nResults? }
 # Defaults: sessionId="default", collectionName="test_collection",
-# nResults=5. Retrieves top-n documents, then streams the answer
-# while keeping history under the given sessionId IN MEMORY
-# (history resets when the server restarts).
+# nResults=5. Retrieves top-n documents, answers with GPT-4o from
+# that context only, and keeps history under the given sessionId
+# IN MEMORY (history resets when the server restarts).
+# Returns JSON: { "answer": "..." }
 # Expected: answer about animated movies from 2010 (Toy Story 3,
 # Tangled, Despicable Me).
 # ------------------------------------------------------------

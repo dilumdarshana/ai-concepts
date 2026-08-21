@@ -31,7 +31,7 @@ The server connects to `api.trychroma.com` using `CHROMA_API_KEY`, `CHROMA_TENAN
 
 ### Docker / Self-hosted
 
-1. Start ChromaDB:
+1. Start ChromaDB (pinned to `chromadb/chroma:1.5.9`):
    ```sh
    cd chromadb
    docker compose up -d
@@ -53,7 +53,10 @@ Server starts on `http://localhost:3000`.
 | `GET` | `/health` | Health check + ChromaDB connection status |
 | `POST` | `/collections` | Create a new collection (body: `{ name, metadata? }`) |
 | `POST` | `/collections/:name/add` | Insert documents (body: `{ documents: [{ document, metadata }] }`) |
-| `POST` | `/collections/:name/query` | Query collection (body: `{ query: string }`) |
+| `POST` | `/collections/:name/query` | Query collection (body: `{ query: string }`, always top-1) |
+| `POST` | `/chat` | RAG chat (body: `{ query, sessionId?, collectionName?, nResults? }`) |
+
+`/chat` retrieves the top-n documents from the collection, answers with GPT-4o based only on that context, and keeps conversation history per `sessionId` in memory (resets on restart). Returns JSON: `{ answer }`.
 
 ## Testing
 
