@@ -81,19 +81,26 @@ Two practical notes:
 
 ---
 
-## 5. Why BM25 lives outside Chroma
+## 5. Two execution paths: local Docker vs Chroma Cloud
 
 Chroma's announcement of sparse vectors / `Search()` / server-side `Rrf` describes **Chroma Cloud** capabilities. Self-hosted single-node (1.5.9) rejects sparse indexes: *"Sparse vector indexing is not enabled in local"* ([chroma-core/chroma#6185](https://github.com/chroma-core/chroma/issues/6185)) — local support needs a storage refactor and is "planned".
 
-So this project implements the identical pipeline app-side:
+This project is **dual-provider** — same API, auto-detected by env vars:
 
-| Stage | Cloud Chroma would do | This project does |
+| Stage | Local Docker (default) | Chroma Cloud |
 |---|---|---|
-| Sparse index | `SparseVectorIndexConfig(bm25)` server-side | `Bm25Index` in-process |
-| Query embedding | client sparse EF → server KNN | dot products in `bm25.ts` |
-| Fusion | `Rrf({ ranks, weights })` server-side | `rrfFuse()` in `fusion.ts` |
+| Sparse index | `Bm25Index` in-process | inverted index over per-record vectors under `bm25_vector` key |
+| Query embedding | dot products in `bm25.ts` | `Knn({ query: sparseVector })` server-side |
+| Fusion | `rrfFuse()` in Node | native `Rrf({ ranks, weights })` in the query |
 
-Same concepts, same math — just executed in Node. When Chroma ships local sparse support, only these two modules swap out.
+The BM25 **math is shared** — one `Bm25Index` instance serves both modes: locally it *is* the search engine; on cloud it produces the sparse vectors stored at ingest and embeds queries into that space. Only where matching and fusion execute differs.
+
+Cloud-mode lessons encoded in the code (each cost a debugging round-trip):
+
+- Collection-level config and `schema` are mutually exclusive → embedding function lives inside `VectorIndexConfig`.
+- Sparse vector indices must be sorted ascending or upsert validation rejects the record.
+- Search API scores come back distance-like (lower = better) → negated to preserve the higher-is-better contract.
+- A collection handle from `createCollection()` returns rows without documents on cloud → always re-fetch via `getOrCreateCollection()` after creating.
 
 ---
 

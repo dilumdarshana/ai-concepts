@@ -2,12 +2,17 @@
 # rag-hybrid - manual API tests
 #
 # Prerequisites:
-#   1. docker compose up -d       -> Chroma on :8100
+#   1. LOCAL mode: docker compose up -d  -> Chroma on :8100
+#      CLOUD mode: nothing to run (set CHROMA_API_KEY,
+#      CHROMA_TENANT, CHROMA_DATABASE in .env)
 #   2. pnpm dev:rag-hybrid        -> Express API on :6200
 #   3. .env with OPENAI_API_KEY   -> embeddings + chat model
 #
+# GET /health reports "provider": "cloud" | "local" so you know
+# which backend is serving. Both run the identical API below.
+#
 # Run each request with "Send Request" (VS Code REST Client).
-# On first run execute in order: 1 -> 2 -> 3..6.
+# On first run execute in order: 1 -> 2 -> 3..7.
 #
 # The reranker model (~90MB) downloads on first /query with
 # "rerank": true or /chat call, then is cached in .cache/.

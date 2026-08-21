@@ -23,6 +23,24 @@ flowchart LR
 
 > **Why is BM25 client-side?** Chroma's sparse vector indexes and server-side `Search()`/`Rrf` API are **Chroma Cloud only** — self-hosted 1.5.9 rejects them with "Sparse vector indexing is not enabled in local" ([issue #6185](https://github.com/chroma-core/chroma/issues/6185)). This project implements the same pipeline app-side instead.
 
+## Dual provider: local Docker or Chroma Cloud
+
+The same API runs against either backend — pick with env vars (see `.env_example`):
+
+| Provider | Trigger | Sparse channel | Fusion |
+|---|---|---|---|
+| **Local** (default) | no cloud vars set | hand-rolled BM25, dot products in Node | app-side RRF (`fusion.ts`) |
+| **Cloud** | `CHROMA_API_KEY` + `CHROMA_TENANT` + `CHROMA_DATABASE` set | native inverted index; BM25 vectors stored per-record under a schema-declared key | server-side `Search(Rrf(Knn(dense), Knn(sparse)))` |
+
+In both modes the BM25 math is identical (`src/bm25.ts`) — only where matching and fusion execute differs. `/health` reports which provider is active.
+
+Cloud-mode gotchas baked into the code:
+
+- Collection config and `schema` are mutually exclusive — the embedding function must live inside `VectorIndexConfig`.
+- Sparse vector indices must be **sorted ascending** or upsert validation fails.
+- The Search API scores are distance-like (lower = better); they're negated to keep the higher-is-better contract.
+- Use a freshly re-fetched collection handle after create — `createCollection()`-returned instances return rows without documents.
+
 ## Run
 
 ```sh

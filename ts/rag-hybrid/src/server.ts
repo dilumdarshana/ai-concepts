@@ -1,11 +1,12 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import type { Metadata } from 'chromadb';
 import { ChatOpenAI } from '@langchain/openai';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { StringOutputParser } from '@langchain/core/output_parsers';
-import { COLLECTION_NAME, getChromaClient, getCollection, loadMovies, movieId, recreateCollection } from './store.js';
-import { retrieve, type RetrievalMode } from './retrieval.js';
+import { COLLECTION_NAME, chromaProvider, getChromaClient, getCollection, isCloudConfigured, loadMovies, movieId, recreateCollection, SPARSE_KEY } from './store.js';
+import { docSparseVectors, retrieve, type RetrievalMode } from './retrieval.js';
 import { isRerankerReady, preloadReranker, rerank, rerankerModel } from './rerank.js';
 
 dotenv.config({ quiet: true });
@@ -27,6 +28,7 @@ app.get('/health', async (_req: Request, res: Response) => {
     const collection = await getCollection();
     res.json({
       status: 'healthy',
+      provider: chromaProvider(),
       chroma: heartbeat > 0 ? 'connected' : 'not connected',
       collection: COLLECTION_NAME,
       documents: await collection.count(),
@@ -43,17 +45,24 @@ app.get('/health', async (_req: Request, res: Response) => {
  *
  * Dense: recreates the Chroma collection and upserts every movie with a
  *        deterministic id ("title-year"), so re-running never duplicates.
- * Sparse: nothing to do here — the BM25 index is rebuilt automatically on
- *         server start from the same file.
+ * Sparse (local): nothing to do — the BM25 index is rebuilt automatically on
+ *        server start from the same file.
+ * Sparse (cloud): each record's metadata additionally carries its BM25
+ *        sparse vector under SPARSE_KEY, which the cloud schema indexes.
  */
 app.post('/ingest', async (_req: Request, res: Response) => {
   try {
     const movies = loadMovies();
+    const sparseVectors = docSparseVectors();
     const collection = await recreateCollection();
     await collection.upsert({
       ids: movies.map((movie) => movieId(movie)),
       documents: movies.map((movie) => movie.text),
-      metadatas: movies.map((movie) => movie.metadata),
+      metadatas: movies.map((movie, i) =>
+        isCloudConfigured()
+          ? ({ ...movie.metadata, [SPARSE_KEY]: sparseVectors[i] } as Metadata)
+          : movie.metadata,
+      ),
     });
     res.status(201).json({ ingested: movies.length, collection: COLLECTION_NAME });
   } catch (error) {
@@ -208,7 +217,11 @@ server.on('error', (error) => {
 void (async () => {
   try {
     await getChromaClient().heartbeat();
-    console.log(`ChromaDB connected at ${process.env.CHROMA_URL || 'http://localhost:8100'}`);
+    console.log(
+      isCloudConfigured()
+        ? `Chroma Cloud connected (tenant ${process.env.CHROMA_TENANT}, db ${process.env.CHROMA_DATABASE})`
+        : `ChromaDB connected at ${process.env.CHROMA_URL || 'http://localhost:8100'}`,
+    );
   } catch (error) {
     console.error('ChromaDB connection failed — run: docker compose up -d', error);
     process.exit(1);

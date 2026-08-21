@@ -1,6 +1,17 @@
 import { tokenize } from './tokenize.js';
 
 /**
+ * Wire format Chroma expects for a sparse vector: parallel arrays of
+ * dimension indices and their weights. This is what gets stored in the
+ * collection's sparse-indexed metadata key (cloud mode) — the server builds
+ * an inverted index over these vectors and answers KNN queries natively.
+ */
+export interface SparseVector {
+  indices: number[];
+  values: number[];
+}
+
+/**
  * BM25 tuning parameters (the classic defaults):
  *
  * K1 = 1.2 — term-frequency saturation. Controls how quickly a term stops
@@ -118,6 +129,38 @@ export class Bm25Index {
 
   private queryVector(query: string): Map<number, number> {
     return this.weightTokens(tokenize(query));
+  }
+
+  /**
+   * Converts an internal sparse weight map into Chroma's SparseVector wire
+   * format. Entries are emitted in ASCENDING index order — the wire format
+   * (and Chroma Cloud's validation) expects sorted indices, but Map iteration
+   * follows token-occurrence order, so an explicit sort is required.
+   */
+  private toSparseVector(weights: Map<number, number>): SparseVector {
+    return {
+      indices: [...weights.keys()].sort((a, b) => a - b),
+      values: [...weights.keys()].sort((a, b) => a - b).map((index) => weights.get(index)!),
+    };
+  }
+
+  /**
+   * Precomputed sparse vectors for every corpus document, in the same order
+   * the index was constructed. Used at ingest: cloud mode stores one per
+   * record in the sparse-indexed metadata key.
+   */
+  docSparseVectors(): SparseVector[] {
+    return this.docVectors.map((vector) => this.toSparseVector(vector));
+  }
+
+  /**
+   * Embeds a query into the same vector space as docSparseVectors(). Terms
+   * unknown to the corpus vocabulary are dropped (they have no IDF and no
+   * document could match them anyway). Returns null when nothing overlaps.
+   */
+  querySparseVector(query: string): SparseVector | null {
+    const qvec = this.queryVector(query);
+    return qvec.size > 0 ? this.toSparseVector(qvec) : null;
   }
 
   /**
