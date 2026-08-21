@@ -4,6 +4,8 @@ A pnpm workspace of TypeScript projects exploring AI/LLM patterns — LangChain,
 
 All projects live under [`ts/`](ts/) and are managed from the workspace root.
 
+📚 **Concept docs**: see [`docs/README.md`](docs/README.md) — the knowledge base index covering RAG, vector search, agents, MCP, and production.
+
 ## Projects
 
 | Project | Stack | What it does |
