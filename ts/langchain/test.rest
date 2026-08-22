@@ -1,7 +1,221 @@
+# ============================================================
+# langchain - manual API tests for LangChain concept demos
+#
+# Prerequisites:
+#   1. pnpm dev:langchain   -> Express API on :3000
+#   2. .env with OPENAI_API_KEY
+#
+# Each request maps 1:1 to a LangChain concept route. Run with
+# "Send Request" (VS Code REST Client). /stream needs the
+# streaming toggle (or -N via curl) to see live tokens.
+# ============================================================
+
+# ------------------------------------------------------------
+# 0. Index
+# Verifies the server is up and lists every concept route.
+# Expected 200: { "name": "langchain", "routes": [...] }
+# ------------------------------------------------------------
+GET http://localhost:3000/
+
 ###
-POST http://localhost:3000/chat
+
+# ------------------------------------------------------------
+# 1. /messages - message roles
+# Concept: SystemMessage/HumanMessage are role-tagged, not raw
+# strings. Returns the roles used and the model's reply.
+# Expected: { "roles": ["SystemMessage","HumanMessage"], ... }
+# ------------------------------------------------------------
+POST http://localhost:3000/messages
 Content-Type: application/json
 
 {
-  "message": "What is my name?"
+  "message": "Explain vector databases in one line."
+}
+
+###
+
+# ------------------------------------------------------------
+# 2. /prompt - string PromptTemplate with a variable
+# Concept: {topic} and {audience} placeholders filled at invoke.
+# Returns both the rendered prompt and the model's output.
+# Expected: { "prompt": "Write a short intro to RAG...", "output": "..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/prompt
+Content-Type: application/json
+
+{
+  "topic": "RAG",
+  "audience": "beginners"
+}
+
+###
+
+# ------------------------------------------------------------
+# 3. /chat-prompt - ChatPromptTemplate + MessagesPlaceholder
+# Concept: role-tagged messages plus a history placeholder that
+# would hold prior turns. {role} changes the persona.
+# Expected: { "output": "Imagine you're baking a cake..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/chat-prompt
+Content-Type: application/json
+
+{
+  "message": "What is the difference between RAG and fine-tuning?",
+  "role": "tutor"
+}
+
+###
+
+# ------------------------------------------------------------
+# 4. /structured - withStructuredOutput + Zod schema
+# Concept: the model must return { answer: string,
+# confidence: number } - enforced by the schema, not prose.
+# Expected: { "answer": "...", "confidence": 0.95 }
+# ------------------------------------------------------------
+POST http://localhost:3000/structured
+Content-Type: application/json
+
+{
+  "question": "In one sentence, what is a vector database?"
+}
+
+###
+
+# ------------------------------------------------------------
+# 5. /chain - LCEL: .pipe() and RunnableSequence
+# Concept: prompt -> model -> parser composed as a single chain.
+# Expected: { "output": "MCP stands for..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/chain
+Content-Type: application/json
+
+{
+  "topic": "MCP"
+}
+
+###
+
+# ------------------------------------------------------------
+# 6. /lc - Runnable primitives: Passthrough + Lambda
+# Concept: RunnablePassthrough.assign adds fields, RunnableLambda
+# wraps a plain function as a runnable. No model call.
+# Expected: { "word": "synergy", "length": 7, "upper": "SYNERGY" }
+# ------------------------------------------------------------
+POST http://localhost:3000/lc
+Content-Type: application/json
+
+{
+  "word": "synergy"
+}
+
+###
+
+# ------------------------------------------------------------
+# 7. /stream - streaming tokens
+# Concept: .stream() yields tokens as they are generated instead of
+# waiting for the full answer. Use the streaming toggle (or curl -N)
+# to observe incremental chunk delivery.
+# Expected: plain text, e.g. one number per line.
+# ------------------------------------------------------------
+POST http://localhost:3000/stream
+Content-Type: application/json
+
+{
+  "message": "Count from 1 to 5, one number per line."
+}
+
+###
+
+# ------------------------------------------------------------
+# 8. /tools - tool calling with @tool + bindTools
+# Concept: the model decides to invoke multiply/add, then a ToolMessage
+# feeds the result back so the model can form its answer.
+# Expected: { "steps": 2, "answer": "7 times 8 is 56." }
+# ------------------------------------------------------------
+POST http://localhost:3000/tools
+Content-Type: application/json
+
+{
+  "message": "What is 7 times 8?"
+}
+
+###
+
+# ------------------------------------------------------------
+# 8b. /tools - multi-step tool chain
+# Concept: the model chains two tool calls (4+6, then double).
+# Expected: { "steps": 2, "answer": "4 plus 6 is 10, doubling gives 20." }
+# ------------------------------------------------------------
+POST http://localhost:3000/tools
+Content-Type: application/json
+
+{
+  "message": "What is 4 plus 6, then double the result?"
+}
+
+###
+
+# ------------------------------------------------------------
+# 9. /memory - LangGraph StateGraph + MemorySaver (set name)
+# Concept: state persists across requests keyed by thread_id.
+# Run 9 then 9b with the SAME thread_id to observe recall.
+# Expected: { "response": "Hello, Dilum! ... Node.js?" }
+# ------------------------------------------------------------
+POST http://localhost:3000/memory
+Content-Type: application/json
+
+{
+  "message": "My name is Dilum",
+  "thread_id": "demo"
+}
+
+###
+
+# ------------------------------------------------------------
+# 9b. /memory - recall a prior turn (same thread_id)
+# Concept: the conversation is remembered from 9's thread_id.
+# Expected: { "response": "Your name is Dilum..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/memory
+Content-Type: application/json
+
+{
+  "message": "What is my name?",
+  "thread_id": "demo"
+}
+
+###
+
+# ------------------------------------------------------------
+# 9c. /memory - skill override changes the persona
+# Concept: {skill} fills the system prompt; using "python" here
+# changes the assistant's character for the same thread.
+# Expected: { "response": "...one-line tip for Python..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/memory
+Content-Type: application/json
+
+{
+  "message": "Give me a one-line tip",
+  "skill": "python",
+  "thread_id": "demo"
+}
+
+###
+
+# ------------------------------------------------------------
+# 10. /trim - trimMessages bounds a growing history
+# Concept: keeps only the most recent tokens (40 here), preserving
+# the system message and the latest human turn. No model call.
+# Expected: { "original": 4, "remaining": < 4 }
+# ------------------------------------------------------------
+POST http://localhost:3000/trim
+Content-Type: application/json
+
+{
+  "history": [
+    { "role": "user", "content": "This is a long first message that should be trimmed away." },
+    { "role": "assistant", "content": "A long assistant reply that fills the budget." },
+    { "role": "user", "content": "A short recent prompt that survives." }
+  ]
 }
