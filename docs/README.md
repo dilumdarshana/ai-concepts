@@ -12,8 +12,9 @@ Concept overviews for everything in this workspace: RAG, vector search, agents, 
 6. [`document-processing.md`](document-processing.md) — the other half: chunking, metadata, and where embeddings live.
 7. [`ai-agents.md`](ai-agents.md) — ReAct, tool calling, and memory.
 8. [`what-is-mcp.md`](what-is-mcp.md) — the protocol for connecting tools and data to agents.
-9. [`multi-agent-orchestration.md`](multi-agent-orchestration.md) — supervisor + sub-agents and workflows.
-10. [`production-rag.md`](production-rag.md) — evaluation, observability, guardrails: shipping it for real.
+9. [`langchain-vs-langgraph.md`](langchain-vs-langgraph.md) — chains vs stateful graphs, and when to use each.
+10. [`multi-agent-orchestration.md`](multi-agent-orchestration.md) — supervisor + sub-agents and workflows.
+11. [`production-rag.md`](production-rag.md) — evaluation, observability, guardrails: shipping it for real.
 
 ## Find a concept
 
@@ -31,6 +32,7 @@ Concept overviews for everything in this workspace: RAG, vector search, agents, 
 | Reranking (cross-encoder) | `vector-search.md` §9 |
 | GraphRAG / knowledge graphs | `ts/rag-graph/CONCEPTS.md` |
 | AI agents, ReAct, tool calling | `ai-agents.md` |
+| LangChain vs LangGraph (chains vs graphs) | `langchain-vs-langgraph.md` |
 | Prompt templates, LCEL, streaming | `langchain-fundamentals.md` |
 | MCP tools/resources/prompts | `what-is-mcp.md` |
 | Multiple agents / supervisor | `multi-agent-orchestration.md` |
