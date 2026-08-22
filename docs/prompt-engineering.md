@@ -173,8 +173,8 @@ The through-line: the strongest prompts in this repo combine a clear role, an ex
 
 ## Further reading
 
-- `docs/llm-fundamentals.md` — why prompts steer probabilities, and temperature
-- `docs/langchain-fundamentals.md` — the template mechanics
-- `docs/ai-agents.md` §5 — tool schemas as prompts
-- `docs/production-rag.md` §7 — prompt injection, the failure mode of §4
+- [llm-fundamentals.md](llm-fundamentals.md) — why prompts steer probabilities, and temperature
+- [langchain-fundamentals.md](langchain-fundamentals.md) — the template mechanics
+- [ai-agents.md](ai-agents.md#5-tool-schemas-with-zod) — tool schemas as prompts
+- [production-rag.md](production-rag.md#7-guardrails--safety) — prompt injection, the failure mode of §4
 - [OpenAI prompt engineering guide](https://platform.openai.com/docs/guides/prompt-engineering)
