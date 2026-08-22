@@ -168,7 +168,7 @@ The expense workflow encodes a business rule — *expenses over $500 need a mana
 
 ## Further reading
 
-- `docs/ai-agents.md` — the single-agent ReAct loop this builds on
-- `ts/voltagent/AGENTS.md` — project setup, lint, typecheck
+- [ai-agents.md](ai-agents.md) — the single-agent ReAct loop this builds on
+- [ts/voltagent/AGENTS.md](../ts/voltagent/AGENTS.md) — project setup, lint, typecheck
 - [VoltAgent](https://voltagent.ai/) — the framework used here
 - [Multi-agent systems](https://langchain-ai.github.io/langgraph/concepts/multi_agent/) (LangGraph) — the same idea in a different framework

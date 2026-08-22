@@ -157,7 +157,7 @@ If you internalize tokens, the window, and temperature, the rest of the knowledg
 
 ## Further reading
 
-- `docs/langchain-fundamentals.md` — prompts, messages, LCEL
-- `docs/ai-agents.md` — what runs on top of the model
-- `docs/production-rag.md` — cost, caching, and reliability in practice
+- [langchain-fundamentals.md](langchain-fundamentals.md) — prompts, messages, LCEL
+- [ai-agents.md](ai-agents.md) — what runs on top of the model
+- [production-rag.md](production-rag.md) — cost, caching, and reliability in practice
 - [OpenAI tokenizer](https://platform.openai.com/tokenizer) — see tokens interactively

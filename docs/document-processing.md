@@ -198,7 +198,8 @@ flowchart LR
 
 ## Further reading
 
-- `docs/vector-search.md` §8 (chunking strategies) and §10 (metadata filtering)
-- `docs/production-rag.md` §6 (ingestion as a pipeline)
-- `ts/rag-graph/CONCEPTS.md` — entity extraction in depth
+- [vector-search.md](vector-search.md#8-chunking-strategies) — chunking strategies
+- [vector-search.md](vector-search.md#10-metadata-filtering) — metadata filtering
+- [production-rag.md](production-rag.md#6-ingestion-pipeline) — ingestion as a pipeline
+- [ts/rag-graph/CONCEPTS.md](../ts/rag-graph/CONCEPTS.md) — entity extraction in depth
 - [pgvector](https://github.com/pgvector/pgvector) — embeddings in Postgres

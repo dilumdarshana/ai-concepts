@@ -241,9 +241,9 @@ The workspace gives you every *Serve* box. Ingest and Observe are the two you bu
 
 ## Further reading
 
-- `docs/vector-search.md` — the retrieval theory behind §3
-- `docs/ai-agents.md` — the ReAct loop a production RAG agent would use
-- `ts/rag-hybrid/CONCEPTS.md` — the closest workspace project to production retrieval
+- [vector-search.md](vector-search.md) — the retrieval theory behind §3
+- [ai-agents.md](ai-agents.md) — the ReAct loop a production RAG agent would use
+- [ts/rag-hybrid/CONCEPTS.md](../ts/rag-hybrid/CONCEPTS.md) — the closest workspace project to production retrieval
 - [RAGAS](https://docs.ragas.io/) — open-source evaluation framework
 - [Langfuse](https://langfuse.com/) / [LangSmith](https://smith.langchain.com/) — tracing & eval platforms
 - [OWASP LLM Top 10](https://genai.owasp.org/) — the safety checklist behind §7

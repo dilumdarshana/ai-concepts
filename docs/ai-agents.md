@@ -188,8 +188,8 @@ const agent = createReactAgent({ llm: model, tools: […, ...mcpTools] });
 
 ## Further reading
 
-- `docs/what-is-mcp.md` — the protocol behind §7
-- `docs/multi-agent-orchestration.md` — scaling one agent into many
-- `ts/langgraph/README.md` — the agent project in detail
+- [what-is-mcp.md](what-is-mcp.md) — the protocol behind §7
+- [multi-agent-orchestration.md](multi-agent-orchestration.md) — scaling one agent into many
+- [ts/langgraph/README.md](../ts/langgraph/README.md) — the agent project in detail
 - [LangGraph prebuilt agents](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/)
 - [ReAct paper](https://arxiv.org/abs/2210.03629)

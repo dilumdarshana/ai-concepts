@@ -194,8 +194,8 @@ For the full picture on state and checkpointer choices, see [ai-agents.md §6](a
 
 ## Further reading
 
-- `docs/ai-agents.md` — what sits on top of chains (ReAct, tools)
-- `docs/introduction-to-rag.md` — the RAG levels built with these runnables
-- `ts/rag-json/AGENTS.md` — the four routes in detail
+- [ai-agents.md](ai-agents.md) — what sits on top of chains (ReAct, tools)
+- [introduction-to-rag.md](introduction-to-rag.md) — the RAG levels built with these runnables
+- [ts/rag-json/AGENTS.md](../ts/rag-json/AGENTS.md) — the four routes in detail
 - [LangChain expression language](https://python.langchain.com/docs/concepts/lcel/)
 - [LangChain JS runnables](https://js.langchain.com/docs/concepts/runnables/)
