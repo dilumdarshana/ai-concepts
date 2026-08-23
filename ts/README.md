@@ -14,16 +14,18 @@ pnpm add <pkg> --filter <name> # add dependency to a specific project
 
 | Command | Project | Framework | Description |
 |---|---|---|---|
-| `pnpm dev:langchain` | [langchain](langchain/) | Express | Chat with in-memory session history using LangChain |
+| `pnpm dev:langchain` | [langchain](langchain/) | Express | 10 route-per-concept demos: prompts, LCEL, streaming, tools, memory |
 | `pnpm dev:langgraph` | [langgraph](langgraph/) | Express | LangGraph agent with 3 tools + Prisma/PostgreSQL memory |
 | `pnpm dev:chromadb` | [chromadb](chromadb/) | Express | ChromaDB vector store (Cloud or Docker) with OpenAI embeddings |
 | `pnpm dev:rag` | [rag-json](rag-json/) | Next.js 15 | 4 chat API routes: basic → LangChain → personalized → RAG with JSONLoader |
 | `pnpm dev:rag-huggingface` | [rag-huggingface](rag-huggingface/) | Express | Pinecone + HuggingFace embeddings (free model) |
 | `pnpm dev:rag-redis` | [rag-redis](rag-redis/) | Express | Redis/RediSearch as vector DB for movie data |
 | `pnpm dev:rag-graph` | [rag-graph](rag-graph/) | Express | Neo4j GraphRAG — knowledge graph + hybrid vector/graph retrieval |
-| `pnpm dev:mcp` | [mcp](mcp/) | Express | MCP client connecting to subprocess MCP servers via LangGraph |
+| `pnpm dev:rag-hybrid` | [rag-hybrid](rag-hybrid/) | Express | Hybrid retrieval: dense + BM25 + RRF + reranking |
+| `pnpm dev:mcp-client` | [mcp-client](mcp-client/) | Express | MCP client connecting to subprocess MCP servers via LangGraph |
+| `pnpm dev:server-mongo` | [mcp-server-mongo](mcp-server-mongo/) | MCP SDK | MCP server (stdio) for MongoDB queries |
+| `pnpm dev:server-mongo-v2` | [mcp-server-mongo-v2](mcp-server-mongo-v2/) | MCP Server v2 | MCP server for MongoDB queries (v2 SDK) |
 | `pnpm dev:voltagent` | [voltagent](voltagent/) | VoltAgent | Supervisor + sub-agents for GitHub repo analysis |
-| — | [mcp-server-mongo](mcp-server-mongo/) | MCP SDK | MCP server (stdio) for MongoDB queries |
 
 ## Prerequisites
 
