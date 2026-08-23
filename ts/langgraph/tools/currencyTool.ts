@@ -20,28 +20,29 @@ const toolFunction = async ({
   toCurrency,
   amount,
 }: CurrencyInput) => {
-  const currencyFinderKey = process.env.FREE_CURRENCY_KEY;
-
-  // Fresh AbortController per request so each call has its own signal.
-  const controller = new AbortController();
+  const apiKey = process.env.FREE_CURRENCY_KEY;
+  if (!apiKey) {
+    return 'FREE_CURRENCY_KEY is not set — cannot convert currency';
+  }
 
   console.log('Start calling convertCurrency tool...');
 
   // Free Currency API — returns real-time exchange rates.
   const response = await fetch(
-    `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyFinderKey}&base_currency=${fromCurrency}&currencies=${toCurrency}`,
-    { signal: controller.signal },
+    `https://api.freecurrencyapi.com/v1/latest?apikey=${apiKey}&base_currency=${fromCurrency}&currencies=${toCurrency}`,
   );
   const data = await response.json();
 
-  const exchangeRate = data.data[toCurrency];
-  const convertedAmount = exchangeRate * amount;
+  const exchangeRate = data.data?.[toCurrency];
+  if (typeof exchangeRate !== 'number') {
+    return `Could not find an exchange rate for ${fromCurrency} -> ${toCurrency}`;
+  }
 
   return {
     fromCurrency,
     toCurrency,
     amount,
-    convertedAmount,
+    convertedAmount: exchangeRate * amount,
     exchangeRate,
   };
 };

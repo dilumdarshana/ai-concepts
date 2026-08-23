@@ -23,7 +23,7 @@ Two of the most confused terms in the LangChain ecosystem. This doc explains wha
 
 ## 1. TL;DR
 
-**LangChain** is the framework of composable building blocks for LLM apps — models, prompts, output parsers, LCEL pipelines, tools. It builds **linear, predictable** flows. **LangGraph** is an orchestration layer for LLM apps that need **state, cycles, and persistence** — agents, multi-step workflows, human-in-the-loop. LangGraph is built *on top of* LangChain, so it uses LangChain's models, prompts, and runnables.
+**LangChain** is the framework of composable building blocks for LLM apps — models, prompts, output parsers, LCEL pipelines, tools. It builds **linear, predictable** flows. **LangGraph** is an orchestration layer for LLM apps that need **state, cycles, and persistence** — agents, multi-step workflows, human-in-the-loop. LangGraph is built _on top of_ LangChain, so it uses LangChain's models, prompts, and runnables.
 
 - One-shot or fixed pipeline → **LangChain**
 - Multi-step, self-determined, or long-running with memory → **LangGraph**
@@ -32,7 +32,7 @@ Two of the most confused terms in the LangChain ecosystem. This doc explains wha
 
 ## 2. What LangChain is
 
-LangChain provides the *building blocks*: a uniform runnable interface so you can compose `prompt → model → parser` with `.pipe()`, plus the message system, output parsers, tools, and integration packages (`@langchain/openai`, etc.).
+LangChain provides the _building blocks_: a uniform runnable interface so you can compose `prompt → model → parser` with `.pipe()`, plus the message system, output parsers, tools, and integration packages (`@langchain/openai`, etc.).
 
 ```mermaid
 flowchart LR
@@ -42,20 +42,20 @@ flowchart LR
 
 It is the foundation the `langchain` project demonstrates: `/prompt`, `/chain`, `/lc`, `/structured`, `/messages`. Every route is a **chain** — a fixed sequence of steps you define.
 
-| Building block | What it gives you | Project route |
-|---|---|---|
-| `PromptTemplate` / `ChatPromptTemplate` | inject variables, build role-tagged messages | `/prompt`, `/chat-prompt` |
-| Chat models | `ChatOpenAI` (temp, tools, structured output) | all |
-| LCEL (`.pipe()`, `RunnableSequence`) | compose steps | `/chain`, `/lc` |
-| Output parsers | `StringOutputParser`, `withStructuredOutput` | `/structured` |
-| `@tool` + `bindTools` | function calling | `/tools` |
-| Messages | `HumanMessage`/`AIMessage`/`SystemMessage`/`ToolMessage` | `/messages`, `/tools` |
+| Building block                          | What it gives you                                        | Project route             |
+| --------------------------------------- | -------------------------------------------------------- | ------------------------- |
+| `PromptTemplate` / `ChatPromptTemplate` | inject variables, build role-tagged messages             | `/prompt`, `/chat-prompt` |
+| Chat models                             | `ChatOpenAI` (temp, tools, structured output)            | all                       |
+| LCEL (`.pipe()`, `RunnableSequence`)    | compose steps                                            | `/chain`, `/lc`           |
+| Output parsers                          | `StringOutputParser`, `withStructuredOutput`             | `/structured`             |
+| `@tool` + `bindTools`                   | function calling                                         | `/tools`                  |
+| Messages                                | `HumanMessage`/`AIMessage`/`SystemMessage`/`ToolMessage` | `/messages`, `/tools`     |
 
 ---
 
 ## 3. What LangGraph is
 
-LangGraph is orchestration for **stateful, graph-shaped** workflows. You model an app as a *graph of nodes and edges*; each node is a function that reads/writes **shared state**, and the graph decides which node runs next. Critically, it supports **cycles** (a node can run twice), and a **checkpointer** that persists state between invocations.
+LangGraph is orchestration for **stateful, graph-shaped** workflows. You model an app as a _graph of nodes and edges_; each node is a function that reads/writes **shared state**, and the graph decides which node runs next. Critically, it supports **cycles** (a node can run twice), and a **checkpointer** that persists state between invocations.
 
 ```mermaid
 flowchart TD
@@ -66,7 +66,7 @@ flowchart TD
     N2 -->|"done"| END((END))
 ```
 
-LangGraph is not a competitor to LangChain — it consumes LangChain. The `langchain/server.ts` memory route uses `StateGraph` + `MemorySaver` with a `ChatPromptTemplate` inside the node, and `langgraph/agent.ts` uses `createReactAgent` (a LangGraph prebuilt) that takes a LangChain LLM and tools.
+LangGraph is not a competitor to LangChain — it consumes LangChain. The `langchain/server.ts` memory route uses `StateGraph` + `MemorySaver` with a `ChatPromptTemplate` inside the node, and `langgraph/agent.ts` uses `createAgent` (the prebuilt agent from the `langchain` package, successor of `createReactAgent`) that takes a model and tools.
 
 ---
 
@@ -74,15 +74,15 @@ LangGraph is not a competitor to LangChain — it consumes LangChain. The `langc
 
 The one question that decides everything: **is your control flow fixed or dynamic?**
 
-| | LangChain (chain) | LangGraph (graph) |
-|---|---|---|
-| Control flow | fixed, you write it | the model/graph decides at runtime |
-| Shape | linear (A → B → C) | cyclic (nodes can repeat) |
-| State | passing inputs along | shared, mutable state |
-| Persistence | none built-in | checkpointer (`thread_id`) |
-| Loops | not native | native (cycle = loop) |
-| Human-in-the-loop | not native | interrupt/resume |
-| Best at | RAG, deterministic pipelines | agents, complex multi-step |
+|                   | LangChain (chain)            | LangGraph (graph)                  |
+| ----------------- | ---------------------------- | ---------------------------------- |
+| Control flow      | fixed, you write it          | the model/graph decides at runtime |
+| Shape             | linear (A → B → C)           | cyclic (nodes can repeat)          |
+| State             | passing inputs along         | shared, mutable state              |
+| Persistence       | none built-in                | checkpointer (`thread_id`)         |
+| Loops             | not native                   | native (cycle = loop)              |
+| Human-in-the-loop | not native                   | interrupt/resume                   |
+| Best at           | RAG, deterministic pipelines | agents, complex multi-step         |
 
 ```mermaid
 flowchart LR
@@ -101,16 +101,16 @@ A chain cannot "go back". A graph can — the `n2 → n1` edge is a loop, which 
 
 ## 5. Side by side
 
-| Dimension | LangChain | LangGraph |
-|---|---|---|
-| What it is | framework (building blocks + LCEL) | orchestration layer (graph runtime) |
-| Depends on | `@langchain/core` | `@langchain/core` (and LangChain models/tools) |
-| Unit of work | a `Runnable` chain | a graph of nodes + state |
-| Function calls | help you build them | wire them into a loop |
-| Memory | manual (you pass history) | built-in checkpointing |
-| Streaming | `chain.stream()` | per-node, includes intermediate steps |
-| Debuggability | linear, easy to reason about | richer; you must visualize the graph |
-| Package used here | `@langchain/core`, `@langchain/openai` | `@langchain/langgraph` |
+| Dimension         | LangChain                              | LangGraph                                      |
+| ----------------- | -------------------------------------- | ---------------------------------------------- |
+| What it is        | framework (building blocks + LCEL)     | orchestration layer (graph runtime)            |
+| Depends on        | `@langchain/core`                      | `@langchain/core` (and LangChain models/tools) |
+| Unit of work      | a `Runnable` chain                     | a graph of nodes + state                       |
+| Function calls    | help you build them                    | wire them into a loop                          |
+| Memory            | manual (you pass history)              | built-in checkpointing                         |
+| Streaming         | `chain.stream()`                       | per-node, includes intermediate steps          |
+| Debuggability     | linear, easy to reason about           | richer; you must visualize the graph           |
+| Package used here | `@langchain/core`, `@langchain/openai` | `@langchain/langgraph`                         |
 
 ---
 
@@ -131,27 +131,27 @@ In this workspace, `rag-json`, `chromadb`, `rag-redis` are essentially LangChain
 
 Reach for LangGraph when any of these is true:
 
-| Signal | Why LangGraph |
-|---|---|
-| **The model decides the path** (agent) | needs a loop, not a fixed chain |
+| Signal                                        | Why LangGraph                                                 |
+| --------------------------------------------- | ------------------------------------------------------------- |
+| **The model decides the path** (agent)        | needs a loop, not a fixed chain                               |
 | **Did the task require multiple tool calls?** | "What is 4+6, then double it?" — needs observe-then-re-decide |
-| **Need memory across requests** | checkpointer keyed by `thread_id` |
-| **Need human approval mid-process** | interrupt/suspend, resume with input |
-| **Multi-agent orchestration** | supervisor delegates to sub-agents |
-| **Branching / conditional routes** | graph edges encode conditions |
+| **Need memory across requests**               | checkpointer keyed by `thread_id`                             |
+| **Need human approval mid-process**           | interrupt/suspend, resume with input                          |
+| **Multi-agent orchestration**                 | supervisor delegates to sub-agents                            |
+| **Branching / conditional routes**            | graph edges encode conditions                                 |
 
-In this workspace: `langgraph/agent.ts` and `mcp-client/server.ts` both use `createReactAgent` — the model *decides* whether to call `convertCurrency`, `queryDatabase`, or GitHub tools. `voltagent` uses supervisor + sub-agents. These are graphs.
+In this workspace: `langgraph/agent.ts` uses `createAgent` and `mcp-client/server.ts` uses `createReactAgent` — the model _decides_ whether to call `convertCurrency`, `queryDatabase`, or GitHub tools. `voltagent` uses supervisor + sub-agents. These are graphs.
 
 ---
 
 ## 8. The v2.0 story: deprecations
 
-This is why the workspace's `langchain/server.ts` memory route is written the way it is. LangChain v2.0 deprecated two things that used to be the *recommended* pattern:
+This is why the workspace's `langchain/server.ts` memory route is written the way it is. LangChain v2.0 deprecated two things that used to be the _recommended_ pattern:
 
-| Deprecated (v1.x) | Replacement (v2.0) |
-|---|---|
-| `RunnableWithMessageHistory` | LangGraph `StateGraph` + checkpointer |
-| `AgentExecutor` | LangGraph `createReactAgent` |
+| Deprecated (v1.x)            | Replacement (v2.0)                                      |
+| ---------------------------- | ------------------------------------------------------- |
+| `RunnableWithMessageHistory` | LangGraph `StateGraph` + checkpointer                   |
+| `AgentExecutor`              | LangGraph `createAgent` (originally `createReactAgent`) |
 
 The `langchain/server.ts` comment spells this out: the old memory approach wrapped a runnable with message history; the new one is a `StateGraph` compiled with a `MemorySaver`, keyed by `thread_id`. Memory, in other words, **moved out of LangChain and into LangGraph**. This is why the `langchain` project itself imports `@langchain/langgraph` even though it's nominally a "LangChain" demo — the framework leaned on the graph layer the moment it needed to remember something.
 
@@ -174,19 +174,19 @@ flowchart TD
     end
 ```
 
-A LangGraph node is usually *just a LangChain chain*. The node in `langchain/server.ts` is `prompt.pipe(model)` — pure LangChain — wrapped in a node and given state via LangGraph. So the choice isn't "which library" but "**do I need a chain, or a chain wrapped in a stateful, looping graph?**"
+A LangGraph node is usually _just a LangChain chain_. The node in `langchain/server.ts` is `prompt.pipe(model)` — pure LangChain — wrapped in a node and given state via LangGraph. So the choice isn't "which library" but "**do I need a chain, or a chain wrapped in a stateful, looping graph?**"
 
 ---
 
 ## 10. Concept → project map
 
-| Pattern | Project | Uses LangChain | Uses LangGraph |
-|---|---|---|---|
-| RAG pipeline (fixed) | `rag-json`, `chromadb`, `rag-redis` | ✅ | — |
-| Prompt/chain/stream demos | `langchain` `/prompt`, `/chain`, `/lc` | ✅ | — |
-| Memory across turns | `langchain` `/memory` | ✅ | ✅ (`StateGraph` + `MemorySaver`) |
-| ReAct agent with tools | `langgraph`, `mcp-client` | ✅ (LLM + tools) | ✅ (`createReactAgent`) |
-| Supervisor + sub-agents | `voltagent` | — | ✅ |
+| Pattern                   | Project                                | Uses LangChain     | Uses LangGraph                          |
+| ------------------------- | -------------------------------------- | ------------------ | --------------------------------------- |
+| RAG pipeline (fixed)      | `rag-json`, `chromadb`, `rag-redis`    | ✅                 | —                                       |
+| Prompt/chain/stream demos | `langchain` `/prompt`, `/chain`, `/lc` | ✅                 | —                                       |
+| Memory across turns       | `langchain` `/memory`                  | ✅                 | ✅ (`StateGraph` + `MemorySaver`)       |
+| ReAct agent with tools    | `langgraph`, `mcp-client`              | ✅ (model + tools) | ✅ (`createAgent` / `createReactAgent`) |
+| Supervisor + sub-agents   | `voltagent`                            | —                  | ✅                                      |
 
 ---
 
@@ -195,5 +195,5 @@ A LangGraph node is usually *just a LangChain chain*. The node in `langchain/ser
 - [langchain-fundamentals.md](langchain-fundamentals.md) — the LangChain building blocks
 - [ai-agents.md](ai-agents.md) — what a graph enables (ReAct loop, tools, memory)
 - [multi-agent-orchestration.md](multi-agent-orchestration.md) — graph-shaped delegation
-- [`ts/langgraph/agent.ts`](../ts/langgraph/agent.ts) — `createReactAgent` in practice
+- [`ts/langgraph/agent.ts`](../ts/langgraph/agent.ts) — `createAgent` in practice
 - [LangGraph docs](https://langchain-ai.github.io/langgraph/concepts/)

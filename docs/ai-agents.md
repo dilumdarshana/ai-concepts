@@ -21,7 +21,7 @@ Everything you need to know about building AI agents: what an agent is, the ReAc
 
 ## 1. What is an agent?
 
-An **agent** is an LLM that can *do things* — not just produce text. It is given a set of **tools** (callable functions), and it decides *which* tool to invoke, *when*, and with *what arguments*, based on the user's natural-language request.
+An **agent** is an LLM that can _do things_ — not just produce text. It is given a set of **tools** (callable functions), and it decides _which_ tool to invoke, _when_, and with _what arguments_, based on the user's natural-language request.
 
 ```mermaid
 flowchart LR
@@ -39,14 +39,14 @@ A plain chat model turns text into text. An agent turns text into **a sequence o
 
 ## 2. Chains vs agents
 
-| | Chain | Agent |
-|---|---|---|
-| Control flow | Fixed, written by you | Decided by the LLM at runtime |
-| Tools | None (or one hardcoded step) | Multiple, chosen dynamically |
-| Good for | Deterministic pipelines (RAG) | Open-ended tasks, unknown paths |
-| Example in repo | `rag-json` `RunnableSequence` | `langgraph`, `mcp-client` |
+|                 | Chain                         | Agent                           |
+| --------------- | ----------------------------- | ------------------------------- |
+| Control flow    | Fixed, written by you         | Decided by the LLM at runtime   |
+| Tools           | None (or one hardcoded step)  | Multiple, chosen dynamically    |
+| Good for        | Deterministic pipelines (RAG) | Open-ended tasks, unknown paths |
+| Example in repo | `rag-json` `RunnableSequence` | `langgraph`, `mcp-client`       |
 
-A chain is a recipe: *embed → retrieve → prompt → LLM*. An agent is a loop: *think → act → observe → repeat* until the model decides it is done. Agents build on chains — every tool call is itself a small chain.
+A chain is a recipe: _embed → retrieve → prompt → LLM_. An agent is a loop: _think → act → observe → repeat_ until the model decides it is done. Agents build on chains — every tool call is itself a small chain.
 
 ---
 
@@ -71,7 +71,7 @@ flowchart TD
 
 ## 4. The ReAct loop
 
-**ReAct** (*Reason* + *Act*) is the pattern most agents implement: the model alternates between a *thought* about what to do next, an *action* (tool call), and an *observation* (the tool result), repeating until it produces a final answer.
+**ReAct** (_Reason_ + _Act_) is the pattern most agents implement: the model alternates between a _thought_ about what to do next, an _action_ (tool call), and an _observation_ (the tool result), repeating until it produces a final answer.
 
 ```mermaid
 flowchart TD
@@ -83,17 +83,17 @@ flowchart TD
     DONE -->|yes| ANSWER[Final answer<br/>'100 USD = 92 EUR']
 ```
 
-In LangGraph this loop is hidden inside `createReactAgent` — you hand it an LLM and a list of tools, and it wires the *thought → action → observation* cycle for you:
+In LangGraph this loop is hidden behind the prebuilt agent — `createAgent` from the `langchain` package (the non-deprecated successor of `createReactAgent`). You hand it a model and a list of tools, and it wires the _thought → action → observation_ cycle for you:
 
 ```ts
 // langgraph/agent.ts
-const agent = createReactAgent({
-  llm: model,
+const agent = createAgent({
+  model,
   tools: [convertCurrency, getDatabaseSchema, queryDatabase, ...mcpTools],
 });
 ```
 
-Why agents need a loop rather than a single pass: a question rarely maps to one tool call. *"Convert 100 USD to EUR and tell me the result in JPY"* needs two calls; *"what tables are in my DB?"* needs the schema tool *then* a query tool. The loop lets the model chain as many steps as the task requires.
+Why agents need a loop rather than a single pass: a question rarely maps to one tool call. _"Convert 100 USD to EUR and tell me the result in JPY"_ needs two calls; _"what tables are in my DB?"_ needs the schema tool _then_ a query tool. The loop lets the model chain as many steps as the task requires.
 
 ---
 
@@ -104,26 +104,30 @@ Tools are declared by wrapping a function with a **Zod schema** that both valida
 ```ts
 // langgraph/tools/currencyTool.ts
 const currencySchema = z.object({
-  fromCurrency: z.string().describe('The currency to convert from (e.g., USD, EUR)'),
-  toCurrency: z.string().describe('The currency to convert to (e.g., USD, EUR)'),
-  amount: z.number().positive().describe('The amount to convert'),
+  fromCurrency: z
+    .string()
+    .describe("The currency to convert from (e.g., USD, EUR)"),
+  toCurrency: z
+    .string()
+    .describe("The currency to convert to (e.g., USD, EUR)"),
+  amount: z.number().positive().describe("The amount to convert"),
 });
 
 export const convertCurrency = tool(toolFunction, {
-  name: 'convertCurrency',
-  description: 'Convert currency to another currency',
+  name: "convertCurrency",
+  description: "Convert currency to another currency",
   schema: currencySchema,
 });
 ```
 
-| Piece | What it does | Seen by the LLM? |
-|---|---|---|
-| `name` | stable identifier for the call | ✓ |
-| `description` | *when* to use the tool | ✓ |
+| Piece          | What it does                       | Seen by the LLM?   |
+| -------------- | ---------------------------------- | ------------------ |
+| `name`         | stable identifier for the call     | ✓                  |
+| `description`  | _when_ to use the tool             | ✓                  |
 | `schema` (Zod) | argument names, types, constraints | ✓ (as JSON Schema) |
-| function body | actually does the work | ✗ |
+| function body  | actually does the work             | ✗                  |
 
-The same pattern appears in `voltagent` with `createTool({ name, description, parameters, execute })` — different framework, identical idea: *schema in, structured call out*.
+The same pattern appears in `voltagent` with `createTool({ name, description, parameters, execute })` — different framework, identical idea: _schema in, structured call out_.
 
 A practical detail from `databaseTool.ts`: `queryDatabase` **guards its own input** (`if (!trimmed.startsWith('SELECT')) return 'Only SELECT queries are allowed…'`). Tool code is untrusted-ish — the model crafts SQL from natural language, so the tool enforces read-only access before executing.
 
@@ -140,22 +144,22 @@ const appGraph = workflow.compile({ checkpointer: memory });
 
 await appGraph.invoke(
   { skill, message },
-  { configurable: { thread_id: 'assistant' } }, // state key
+  { configurable: { thread_id: "assistant" } }, // state key
 );
 ```
 
-| Store | Persists across restarts? | Where |
-|---|---|---|
-| `MemorySaver` (in-memory) | ✗ — resets on restart | `langchain/chat.ts` |
-| `SqliteSaver` / `PostgresSaver` | ✓ | swap-in for production |
+| Store                           | Persists across restarts? | Where                  |
+| ------------------------------- | ------------------------- | ---------------------- |
+| `MemorySaver` (in-memory)       | ✗ — resets on restart     | `langchain/chat.ts`    |
+| `SqliteSaver` / `PostgresSaver` | ✓                         | swap-in for production |
 
-`thread_id` is the conversation key: two requests with the same `thread_id` share history; different ids are independent sessions. The `langgraph` project sidesteps persistence by being single-shot — each `/agent` request builds a fresh `HumanMessage` with no checkpointer.
+`thread_id` is the conversation key: two requests with the same `thread_id` share history; different ids are independent sessions. The `langgraph` project's `/agent` route is single-shot (each request builds a fresh `HumanMessage`, no checkpointer), while its `/memory` route demonstrates the full persistence pattern with `MemorySaver` and `thread_id`.
 
 ---
 
 ## 7. MCP tools in an agent
 
-Agents aren't limited to hand-written tools. The Model Context Protocol ([what-is-mcp.md](what-is-mcp.md)) lets an agent discover tools from *external servers* at runtime:
+Agents aren't limited to hand-written tools. The Model Context Protocol ([what-is-mcp.md](what-is-mcp.md)) lets an agent discover tools from _external servers_ at runtime:
 
 ```ts
 // langgraph/agent.ts
@@ -165,7 +169,7 @@ const mcpClient = new MultiServerMCPClient({
   },
 });
 const mcpTools = await mcpClient.getTools();   // "github_*" tools
-const agent = createReactAgent({ llm: model, tools: […, ...mcpTools] });
+const agent = createAgent({ model, tools: […, ...mcpTools] });
 ```
 
 `mcp-client/server.ts` connects to three stdio servers (filesystem, MongoDB, currency converter) and turns their advertised tools into LangChain tools in one call. The key idea: **tools are no longer code you own** — they are a capability surface negotiated over a protocol, then dropped into the same agent loop.
@@ -174,15 +178,15 @@ const agent = createReactAgent({ llm: model, tools: […, ...mcpTools] });
 
 ## 8. Concept → project map
 
-| Concept | Where in this workspace |
-|---|---|
-| ReAct loop | `createReactAgent` in `langgraph/agent.ts`, `mcp-client/server.ts` |
-| Tool with Zod schema | `langgraph/tools/currencyTool.ts`, `databaseTool.ts` |
-| Tool schema validation | `z.object({ … }).describe(…)` |
-| Read-only tool guard | `queryDatabase` `SELECT` check in `databaseTool.ts` |
-| MCP tools into an agent | `MultiServerMCPClient.getTools()` in `langgraph/agent.ts`, `mcp-client/server.ts` |
-| State persistence / `thread_id` | `MemorySaver` in `langchain/chat.ts` |
-| Alternative tool API | `createTool()` in `voltagent/src/tools/*` |
+| Concept                         | Where in this workspace                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------------- |
+| ReAct loop                      | `createAgent` in `langgraph/agent.ts`, `createReactAgent` in `mcp-client/server.ts` |
+| Tool with Zod schema            | `langgraph/tools/currencyTool.ts`, `databaseTool.ts`                                |
+| Tool schema validation          | `z.object({ … }).describe(…)`                                                       |
+| Read-only tool guard            | `queryDatabase` `SELECT` check in `databaseTool.ts`                                 |
+| MCP tools into an agent         | `MultiServerMCPClient.getTools()` in `langgraph/agent.ts`, `mcp-client/server.ts`   |
+| State persistence / `thread_id` | `MemorySaver` in `langchain/chat.ts`                                                |
+| Alternative tool API            | `createTool()` in `voltagent/src/tools/*`                                           |
 
 ---
 

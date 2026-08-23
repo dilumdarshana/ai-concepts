@@ -1,6 +1,86 @@
+### Index
+GET http://localhost:3000/
+
+### 1. StateGraph — nodes, edges, state
+POST http://localhost:3000/graph
+Content-Type: application/json
+
+{ "value": 5 }
+
+### 2. State reducers — replace vs accumulate
+POST http://localhost:3000/reducers
+Content-Type: application/json
+
+{}
+
+### 3. Conditional edges
+POST http://localhost:3000/conditional
+Content-Type: application/json
+
+{ "topic": "The invention of the wheel" }
+
+### 4. Parallel fan-out / fan-in
+POST http://localhost:3000/parallel
+Content-Type: application/json
+
+{}
+
+### 5. Memory — MessagesAnnotation + MemorySaver (same thread_id to share history)
+POST http://localhost:3000/memory
+Content-Type: application/json
+
+{ "message": "My name is Dilum", "thread_id": "assistant" }
+
+###
+POST http://localhost:3000/memory
+Content-Type: application/json
+
+{ "message": "What is my name?", "thread_id": "assistant" }
+
+### 6. createAgent — prebuilt ReAct agent (currency / DB / GitHub MCP)
 POST http://localhost:3000/agent
 Content-Type: application/json
 
-{
-  "message": "Show all records from the country table"
-}
+{ "message": "Convert 100 USD to EUR" }
+
+### 7. Streaming — token chunks
+POST http://localhost:3000/stream
+Content-Type: application/json
+
+{ "message": "Count from 1 to 5, one number per line." }
+
+### 8. Human-in-the-loop — suspend...
+POST http://localhost:3000/interrupt
+Content-Type: application/json
+
+{ "request": "Refund $50" }
+
+### 8b. ...then resume (use the thread_id from the interrupt response)
+POST http://localhost:3000/interrupt/resume
+Content-Type: application/json
+
+{ "thread_id": "hitl-<from-interrupt>", "approve": true }
+
+### 9. Subgraph — compiled graph used as a node
+POST http://localhost:3000/subgraph
+Content-Type: application/json
+
+{ "value": 7 }
+
+### 10. Supervisor — routes to a sub-agent
+POST http://localhost:3000/supervisor
+Content-Type: application/json
+
+{ "task": "convert 100 USD to EUR" }
+
+### 11. Time travel — replay & fork
+POST http://localhost:3000/time-travel
+Content-Type: application/json
+
+{ "thread_id": "tt", "steps": 3, "fork": true }
+
+### 12. Structured output
+POST http://localhost:3000/structured
+Content-Type: application/json
+
+{ "text": "The graph API is elegant and fast, but the docs are sparse." }

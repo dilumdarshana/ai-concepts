@@ -43,7 +43,7 @@ Concept overviews for everything in this workspace: RAG, vector search, agents, 
 | Project | Concept doc | Deeper read |
 |---|---|---|
 | `langchain` | `langchain-fundamentals.md`, `ai-agents.md` §6 | `ts/langchain/README.md` |
-| `langgraph` | `ai-agents.md` | `ts/langgraph/README.md` |
+| `langgraph` | `ai-agents.md` | `ts/langgraph/CONCEPTS.md` |
 | `chromadb` | `vector-search.md` | `ts/chromadb/CONCEPTS.md` |
 | `rag-json` | `introduction-to-rag.md`, `langchain-fundamentals.md` | `ts/rag-json/AGENTS.md` |
 | `rag-huggingface` | `vector-search.md` §2 | `ts/rag-huggingface/README.md` |
