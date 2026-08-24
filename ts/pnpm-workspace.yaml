@@ -1,14 +1,21 @@
 allowBuilds:
   '@biomejs/biome': true
+  '@modelcontextprotocol/ext-apps': false
   '@modelcontextprotocol/inspector': true
   '@prisma/client': true
   '@prisma/engines': true
+  cpu-features: false
   esbuild: true
+  kerberos: false
+  macos-export-certificate-and-key: false
+  mongodb-client-encryption: false
   onnxruntime-node: true
+  os-dns-native: false
   prisma: true
   protobufjs: true
   sharp: true
   simple-git-hooks: true
+  ssh2: false
 
 minimumReleaseAgeExclude:
   - uuid@14.0.1
