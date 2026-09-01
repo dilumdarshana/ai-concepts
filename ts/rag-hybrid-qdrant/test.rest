@@ -1,0 +1,103 @@
+# ============================================================
+# rag-hybrid-qdrant - manual API tests
+#
+# Prerequisites:
+#   1. docker compose up -d     -> Qdrant on :6333
+#   2. pnpm dev:rag-hybrid-qdrant -> Express API on :6300
+#   3. .env with OPENAI_API_KEY  -> embeddings + chat model
+#
+# Endpoints: GET /health, POST /ingest, POST /query,
+#            POST /chat, POST /flush
+# Run each with "Send Request" (VS Code REST Client).
+# First time: run 1 -> 2 -> 3.xx in order.
+# ============================================================
+
+# ------------------------------------------------------------
+# 1. Health check
+# Expected 200: { "status": "healthy", "documents": 0, ... }
+# ------------------------------------------------------------
+GET http://localhost:6300/health
+
+###
+
+# ------------------------------------------------------------
+# 2. Ingest all docs in data/documents/
+# Content-aware chunking (markdown by heading, JSON per row),
+# OpenAI dense embeddings + in-process BM25 sparse vectors.
+# Recreates the "documents" collection, so it is idempotent.
+# Expected 201: { "ingested": 18, "sources": [...3 sources...] }
+# ------------------------------------------------------------
+POST http://localhost:6300/ingest
+
+###
+
+# ------------------------------------------------------------
+# 3a. Hybrid retrieval (default)
+# Dense + sparse prefetches fused with native RRF.
+# Returns `channels` (per-channel top-k) for observability.
+# Expected 200 with fused results + 2 channel arrays.
+# ------------------------------------------------------------
+POST http://localhost:6300/query
+Content-Type: application/json
+
+{
+  "query": "How does BM25 weight terms and why is it used with dense vectors?",
+  "mode": "hybrid",
+  "k": 3
+}
+
+###
+
+# ------------------------------------------------------------
+# 3b. Dense-only retrieval
+# Expected 200 with cosine-similarity scores.
+# ------------------------------------------------------------
+POST http://localhost:6300/query
+Content-Type: application/json
+
+{
+  "query": "semantic meaning in vector databases",
+  "mode": "dense",
+  "k": 3
+}
+
+###
+
+# ------------------------------------------------------------
+# 3c. Sparse-only retrieval (BM25)
+# Expected 200 with exact-keyword BM25 scores.
+# ------------------------------------------------------------
+POST http://localhost:6300/query
+Content-Type: application/json
+
+{
+  "query": "BM25 keyword matching",
+  "mode": "sparse",
+  "k": 3
+}
+
+###
+
+# ------------------------------------------------------------
+# 4. Chat (full RAG)
+# Hybrid retrieve -> fuse -> LLM answer with citations [1]...
+# Expected 200: { "answer", "sources": [{ source, path, score }] }
+# ------------------------------------------------------------
+POST http://localhost:6300/chat
+Content-Type: application/json
+
+{
+  "query": "How does BM25 weight terms and why is it used alongside dense vectors?",
+  "k": 3
+}
+
+###
+
+# ------------------------------------------------------------
+# 5. Flush (delete the collection)
+# Expected 200: { "flushed": true, "collection": "documents" }
+# Run /ingest again to repopulate.
+# ------------------------------------------------------------
+POST http://localhost:6300/flush
+
+###

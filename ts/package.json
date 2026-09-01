@@ -18,6 +18,7 @@
     "dev:rag-redis": "pnpm --filter rag-redis dev",
     "dev:rag-graph": "pnpm --filter rag-graph dev",
     "dev:rag-hybrid": "pnpm --filter rag-hybrid dev",
+    "dev:rag-hybrid-qdrant": "pnpm --filter rag-hybrid-qdrant dev",
     "dev:voltagent": "pnpm --filter voltagent dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

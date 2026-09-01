@@ -22,6 +22,7 @@ pnpm add <pkg> --filter <name> # add dependency to a specific project
 | `pnpm dev:rag-redis` | [rag-redis](rag-redis/) | Express | Redis/RediSearch as vector DB for movie data |
 | `pnpm dev:rag-graph` | [rag-graph](rag-graph/) | Express | Neo4j GraphRAG — knowledge graph + hybrid vector/graph retrieval |
 | `pnpm dev:rag-hybrid` | [rag-hybrid](rag-hybrid/) | Express | Hybrid retrieval: dense + BM25 + RRF + reranking |
+| `pnpm dev:rag-hybrid-qdrant` | [rag-hybrid-qdrant](rag-hybrid-qdrant/) | Express | Qdrant hybrid retrieval: content-aware chunking + dense/BM25 + native RRF |
 | `pnpm dev:mcp-client` | [mcp-client](mcp-client/) | Express | MCP client connecting to subprocess MCP servers via LangGraph |
 | `pnpm dev:server-mongo` | [mcp-server-mongo](mcp-server-mongo/) | MCP SDK | MCP server (stdio) for MongoDB queries |
 | `pnpm dev:server-mongo-v2` | [mcp-server-mongo-v2](mcp-server-mongo-v2/) | MCP Server v2 | MCP server for MongoDB queries (v2 SDK) |
@@ -32,7 +33,7 @@ pnpm add <pkg> --filter <name> # add dependency to a specific project
 - **Node.js** 20+ (`.nvmrc`)
 - **pnpm** 11.5+
 - **OpenAI API key** (most projects)
-- **Docker** (chromadb: ChromaDB container; rag-redis: Redis with RediSearch)
+- **Docker** (chromadb: ChromaDB container; rag-redis: Redis with RediSearch; rag-graph: Neo4j; rag-hybrid: ChromaDB; rag-hybrid-qdrant: Qdrant)
 
 ## Setup
 

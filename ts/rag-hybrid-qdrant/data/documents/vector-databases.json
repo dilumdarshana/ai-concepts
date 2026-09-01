@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Pinecone",
+    "category": "managed vector database",
+    "description": "Fully managed cloud vector database with serverless indexes, integrated metadata filters, and built-in hybrid search combining dense and sparse vectors.",
+    "pricing": "usage-based, free tier available"
+  },
+  {
+    "title": "Qdrant",
+    "category": "open-source vector database",
+    "description": "Rust-based vector search engine with named dense and sparse vectors, native Reciprocal Rank Fusion in the Universal Query API, and payload-based filtering.",
+    "pricing": "free and open-source; self-hosted or cloud"
+  },
+  {
+    "title": "Chroma",
+    "category": "open-source vector database",
+    "description": "Simple embeddable vector store with collection-level metadata filtering and optional embedding functions. Runs on Docker for local development.",
+    "pricing": "free and open-source; cloud launch"
+  },
+  {
+    "title": "Weaviate",
+    "category": "open-source vector database",
+    "description": "Vector database with built-in modules for vectorization, hybrid search using BM25 and dense vectors, and GraphQL-style querying.",
+    "pricing": "open-source (Apache 2.0); cloud"
+  }
+]

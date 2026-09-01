@@ -24,6 +24,7 @@ pnpm format:check              # check formatting without writing
 | `pnpm dev:rag-redis` | `ts/rag-redis/` | Express + Redis/RediSearch vector DB |
 | `pnpm dev:rag-graph` | `ts/rag-graph/` | Express + Neo4j GraphRAG (requires Docker) |
 | `pnpm dev:rag-hybrid` | `ts/rag-hybrid/` | Express + ChromaDB hybrid retrieval: dense + BM25 + RRF + reranking (requires Docker) |
+| `pnpm dev:rag-hybrid-qdrant` | `ts/rag-hybrid-qdrant/` | Express + Qdrant hybrid retrieval: content-aware chunking + dense/BM25 + native RRF (requires Docker) |
 | `pnpm dev:voltagent` | `ts/voltagent/` | VoltAgent app with Biome lint + typecheck |
 | — | `ts/mcp-server-mongo/` | MCP server (stdio) for MongoDB (requires build) |
 
