@@ -431,5 +431,6 @@ Common pattern: store binary/int8 vectors in the index for fast coarse search, t
 
 - [ts/rag-graph/CONCEPTS.md](../ts/rag-graph/CONCEPTS.md) — GraphRAG deep dive
 - [introduction-to-rag.md](introduction-to-rag.md) — RAG pipeline basics
+- [rag-troubleshooting.md](rag-troubleshooting.md) — using these levers to diagnose and scale a live system
 - [OpenAI embeddings guide](https://platform.openai.com/docs/guides/embeddings)
 - [HNSW paper](https://arxiv.org/abs/1603.09320) · [BM25 explained](https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables) · [SPLADE paper](https://arxiv.org/abs/2107.05720)

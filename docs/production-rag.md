@@ -76,7 +76,7 @@ The judge prompt pattern: *"Given this context and this answer, is every claim i
 flowchart TD
     Q[Golden query] --> R[Retriever] --> C[top-k chunks]
     C --> G[LLM] --> A[answer]
-    C --> RM[Recall@k / nDCG]
+    C --> RM["Recall@k / nDCG"]
     A --> GJ[LLM judge<br/>faithfulness, relevance]
 ```
 
@@ -94,9 +94,9 @@ The theory is in [vector-search.md](vector-search.md); here is the production ch
 | 4 | **Metadata filtering** (pre-filter) | correctness for permissions/dates |
 | 5 | **Query rewriting / HyDE** | fixes the "user asks vaguely" problem |
 
-The workspace already demonstrates 1–4 (`rag-hybrid` does dense + BM25 + RRF + rerank end to end). What it lacks is **tuning against a golden set** — the same pipeline with numbers proving each knob matters.
+The workspace already demonstrates 1–4 (`rag-hybrid` does dense + BM25 + RRF + rerank end to end). What it lacks is **tuning against a golden set** — the same pipeline with numbers proving each knob matters. For the deeper retrieval levers — multi-query/RAG-Fusion, self-RAG, CRAG — see [advanced-rag.md](advanced-rag.md).
 
-Rule of thumb: retrieval quality issues look like *generation* issues in production. A wrong answer is usually a retrieval miss, not a bad LLM. Diagnose retrieval first.
+Rule of thumb: retrieval quality issues look like *generation* issues in production. A wrong answer is usually a retrieval miss, not a bad LLM. Diagnose retrieval first. When a wrong answer does appear, see the step-by-step diagnostic loop in [rag-troubleshooting.md](rag-troubleshooting.md#2-answers-suddenly-turn-wrong).
 
 ---
 
@@ -242,6 +242,8 @@ The workspace gives you every *Serve* box. Ingest and Observe are the two you bu
 ## Further reading
 
 - [vector-search.md](vector-search.md) — the retrieval theory behind §3
+- [advanced-rag.md](advanced-rag.md) — the next layer: query transformation, self/corrective RAG
+- [rag-troubleshooting.md](rag-troubleshooting.md) — the diagnostic playbook when answers go wrong
 - [ai-agents.md](ai-agents.md) — the ReAct loop a production RAG agent would use
 - [ts/rag-hybrid/CONCEPTS.md](../ts/rag-hybrid/CONCEPTS.md) — the closest workspace project to production retrieval
 - [RAGAS](https://docs.ragas.io/) — open-source evaluation framework

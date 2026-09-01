@@ -49,6 +49,8 @@ flowchart TD
 - **GraphRAG** (`rag-graph`): Use when the answer requires connecting entities across multiple chunks (e.g., "Which technologies does X work with?").
 - **Hybrid** (vector + graph traversal): The best of both worlds — vector finds the starting point, graph expands to related entities. For the full picture — including keyword/BM25 as a third channel and RRF fusion — see [Vector Search § Hybrid search](vector-search.md#6-hybrid-search).
 
+When even hybrid retrieval isn't enough, the next layer is making retrieval *adaptive* — rewriting and fusing queries, and letting the model decide when to retrieve. That's the playground of [advanced-rag.md](advanced-rag.md).
+
 ---
 
 # What is MCP?
