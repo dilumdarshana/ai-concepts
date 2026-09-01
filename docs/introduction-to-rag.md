@@ -12,7 +12,7 @@ Retrieval-Augmented Generation (RAG) is a technique that grounds large language 
 
 ```mermaid
 flowchart TD
-    DOC[Documents] --> LOAD[Document loader<br/>(JSONLoader, WebLoader, etc.)]
+    DOC[Documents] --> LOAD["Document loader<br/>(JSONLoader, WebLoader, etc.)"]
     LOAD --> CHUNK[Chunking<br/>split into overlapping sentences]
     CHUNK --> EMBED[Embedding model<br/>OpenAI, HuggingFace, etc.]
     EMBED --> STORE[(Vector store<br/>ChromaDB, Pinecone, Redis, Neo4j)]
