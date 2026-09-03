@@ -5,6 +5,7 @@ Express server that demos the major LangChain concepts — one route per concept
 ## Prerequisites
 
 - OpenAI API key
+- (Optional) Langfuse account for observability/tracing — [free cloud](https://cloud.langfuse.com) or self-hosted
 
 ## Setup
 
@@ -24,6 +25,30 @@ pnpm dev:langchain
 ```
 
 Server starts on `http://localhost:3000`. `GET /` lists all concept routes.
+
+## Observability (Langfuse)
+
+Every route is traced automatically when Langfuse is configured. Each request produces a trace in [Langfuse Cloud](https://cloud.langfuse.com) (or your self-hosted instance) showing model calls, latency, token usage, and cost — with zero code changes per route.
+
+**Setup (optional):**
+
+```sh
+# Add to ts/langchain/.env
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com   # EU default; use us.cloud.langfuse.com for US
+```
+
+Tracing is **off by default** — the app runs identically without these keys.
+
+**What you see:**
+
+- Each `POST /<route>` → one Langfuse trace (under the Traces tab).
+- `/tools` shows the multiply/add tool loop as nested spans under the model call.
+- `/memory` shows the `StateGraph` node + model call, all nested under one trace.
+- `/stream` shows token-by-token streaming latency.
+
+**Architecture:** `CallbackHandler` (`@langfuse/langchain`) listens to LangChain's callbacks → creates OTel spans (`@langfuse/tracing`) → exported by `LangfuseSpanProcessor` (`@langfuse/otel`) to your Langfuse project. See `langfuse.ts` and `CONCEPTS.md §12` for the full wiring.
 
 ## Concept routes
 

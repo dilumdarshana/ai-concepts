@@ -30,6 +30,7 @@ import {
   StateGraph,
   START,
 } from '@langchain/langgraph';
+import { langfuseCallbacks } from './langfuse';
 
 dotenv.config();
 
@@ -110,8 +111,11 @@ app.post('/messages', async (req: Request, res: Response) => {
     new HumanMessage(message),
   ];
 
-  const response = await model.invoke(messages);
-  res.json({ roles: messages.map((m) => m.constructor.name), response: response.content });
+  const response = await model.invoke(messages, langfuseCallbacks());
+  res.json({
+    roles: messages.map((m) => m.constructor.name),
+    response: response.content,
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -130,7 +134,7 @@ app.post('/prompt', async (req: Request, res: Response) => {
   );
 
   const chain = prompt.pipe(model).pipe(new StringOutputParser());
-  const output = await chain.invoke({ topic, audience });
+  const output = await chain.invoke({ topic, audience }, langfuseCallbacks());
 
   res.json({ prompt: await prompt.format({ topic, audience }), output });
 });
@@ -145,8 +149,10 @@ app.post('/prompt', async (req: Request, res: Response) => {
  * the seam that turns a one-shot prompt into a multi-turn conversation.
  */
 app.post('/chat-prompt', async (req: Request, res: Response) => {
-  const { message = 'What is the difference between RAG and fine-tuning?', role = 'tutor' } =
-    req.body;
+  const {
+    message = 'What is the difference between RAG and fine-tuning?',
+    role = 'tutor',
+  } = req.body;
 
   const prompt = ChatPromptTemplate.fromMessages([
     ['system', 'You are a {role} who explains with an analogy.'],
@@ -155,7 +161,10 @@ app.post('/chat-prompt', async (req: Request, res: Response) => {
   ]);
 
   const chain = prompt.pipe(model).pipe(new StringOutputParser());
-  const output = await chain.invoke({ role, message, history: [] });
+  const output = await chain.invoke(
+    { role, message, history: [] },
+    langfuseCallbacks(),
+  );
 
   res.json({ output });
 });
@@ -178,7 +187,7 @@ app.post('/structured', async (req: Request, res: Response) => {
   const { question = 'In one sentence, what is a vector database?' } = req.body;
 
   const structured = strictModel.withStructuredOutput(schema);
-  const response = await structured.invoke(question);
+  const response = await structured.invoke(question, langfuseCallbacks());
 
   res.json(response);
 });
@@ -195,10 +204,16 @@ app.post('/structured', async (req: Request, res: Response) => {
 app.post('/chain', async (req: Request, res: Response) => {
   const { topic = 'MCP' } = req.body;
 
-  const prompt = PromptTemplate.fromTemplate('Define {topic} in exactly one sentence.');
-  const chain = RunnableSequence.from([prompt, model, new StringOutputParser()]);
+  const prompt = PromptTemplate.fromTemplate(
+    'Define {topic} in exactly one sentence.',
+  );
+  const chain = RunnableSequence.from([
+    prompt,
+    model,
+    new StringOutputParser(),
+  ]);
 
-  const output = await chain.invoke({ topic });
+  const output = await chain.invoke({ topic }, langfuseCallbacks());
 
   res.json({ output });
 });
@@ -218,10 +233,12 @@ app.post('/lc', async (req: Request, res: Response) => {
 
   const echoAndCount = RunnablePassthrough.assign({
     length: RunnableLambda.from((input: { word: string }) => input.word.length),
-    upper: RunnableLambda.from((input: { word: string }) => input.word.toUpperCase()),
+    upper: RunnableLambda.from((input: { word: string }) =>
+      input.word.toUpperCase(),
+    ),
   });
 
-  const result = await echoAndCount.invoke({ word });
+  const result = await echoAndCount.invoke({ word }, langfuseCallbacks());
   res.json(result);
 });
 
@@ -244,7 +261,10 @@ app.post('/stream', async (req: Request, res: Response) => {
   const prompt = PromptTemplate.fromTemplate('{message}');
   const chain = prompt.pipe(strictModel).pipe(new StringOutputParser());
 
-  for await (const chunk of await chain.stream({ message })) {
+  for await (const chunk of await chain.stream(
+    { message },
+    langfuseCallbacks(),
+  )) {
     res.write(chunk);
   }
   res.end();
@@ -265,7 +285,8 @@ const multiplyTool = tool(
   async ({ a, b }: { a: number; b: number }) => String(a * b),
   {
     name: 'multiply',
-    description: 'Multiply two numbers. Call this when the user asks for a product.',
+    description:
+      'Multiply two numbers. Call this when the user asks for a product.',
     schema: z.object({ a: z.number(), b: z.number() }),
   },
 );
@@ -287,12 +308,14 @@ app.post('/tools', async (req: Request, res: Response) => {
   // bindTools advertises the tools to the model so it may call them.
   const toolModel = strictModel.bindTools(tools);
 
-  let messages: (HumanMessage | AIMessage | ToolMessage)[] = [new HumanMessage(message)];
+  let messages: (HumanMessage | AIMessage | ToolMessage)[] = [
+    new HumanMessage(message),
+  ];
 
   // Run up to 10 model steps. The model calls tools until it produces a final
   // answer with no tool_requests.
   for (let i = 0; i < 10; i++) {
-    const aiMessage = await toolModel.invoke(messages);
+    const aiMessage = await toolModel.invoke(messages, langfuseCallbacks());
 
     messages.push(aiMessage);
 
@@ -312,7 +335,9 @@ app.post('/tools', async (req: Request, res: Response) => {
       if (found) {
         result = await found.invoke(call.args as { a: number; b: number });
       }
-      messages.push(new ToolMessage({ tool_call_id: call.id ?? 'tool', content: result }));
+      messages.push(
+        new ToolMessage({ tool_call_id: call.id ?? 'tool', content: result }),
+      );
     }
   }
 
@@ -385,7 +410,7 @@ app.post('/memory', async (req: Request, res: Response) => {
   try {
     const aiResponse = await memoryGraph.invoke(
       { skill, message },
-      { configurable: { thread_id } },
+      { configurable: { thread_id }, ...langfuseCallbacks() },
     );
 
     res.json({ response: aiResponse.lastResponse });
@@ -408,7 +433,9 @@ app.post('/trim', async (req: Request, res: Response) => {
   const messages = [
     new SystemMessage('You are a helpful assistant.'),
     ...(history as { role: string; content: string }[]).map((m) =>
-      m.role === 'user' ? new HumanMessage(m.content) : new AIMessage(m.content),
+      m.role === 'user'
+        ? new HumanMessage(m.content)
+        : new AIMessage(m.content),
     ),
   ];
 
