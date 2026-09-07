@@ -83,7 +83,7 @@ Use `test.rest` (VS Code REST Client) or curl to test each route. Routes that ca
 
 ## Observability (Langfuse)
 
-Every route is traced automatically when Langfuse is configured — see `CONCEPTS.md §8` for the wiring. Add to `guardrails/.env`:
+Every route is traced automatically when Langfuse is configured — see `CONCEPTS.md §10` (Observability) for the wiring. Add to `guardrails/.env`:
 
 ```sh
 LANGFUSE_PUBLIC_KEY=pk-lf-...

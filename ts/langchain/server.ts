@@ -410,7 +410,10 @@ app.post('/memory', async (req: Request, res: Response) => {
   try {
     const aiResponse = await memoryGraph.invoke(
       { skill, message },
-      { configurable: { thread_id }, ...langfuseCallbacks() },
+      {
+        configurable: { thread_id },
+        ...langfuseCallbacks({ sessionId: thread_id }),
+      },
     );
 
     res.json({ response: aiResponse.lastResponse });

@@ -97,7 +97,18 @@ Content-Type: application/json
 
 {
   "topic": "technology",
-  "message": "Explain how transformers work."
+  "message": "Explain how transformers work.",
+  "session_id": "convo-1"
+}
+
+### 7. Full pipeline — same session, second turn (groups under one Langfuse session)
+POST {{baseUrl}}/chat
+Content-Type: application/json
+
+{
+  "topic": "technology",
+  "message": "What is attention?",
+  "session_id": "convo-1"
 }
 
 ### 7. Full pipeline — blocked at the topic guard

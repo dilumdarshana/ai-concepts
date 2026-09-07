@@ -386,7 +386,21 @@ langfuseHandler = new CallbackHandler();
 const output = await chain.invoke({ topic, audience }, langfuseCallbacks());
 ```
 
-The `langfuseCallbacks()` helper returns `{ callbacks: [handler] }` when keys are set, or `{}` when they aren't — so adding tracing is one spread, and it's disabled by default. Because the handler is attached per-invocation (not on the model), each HTTP request becomes its **own trace**. `/memory` nests its graph run under the handler in the graph config: `{ configurable: { thread_id }, ...langfuseCallbacks() }`.
+The `langfuseCallbacks()` helper returns `{ callbacks: [handler] }` when keys are set, or `{}` when they aren't — so adding tracing is one spread, and it's disabled by default. Because the handler is attached per-invocation (not on the model), each HTTP request becomes its **own trace**. `/memory` nests its graph run under the handler in the graph config: `{ configurable: { thread_id }, ...langfuseCallbacks({ sessionId: thread_id }) }`.
+
+### Grouping by session
+
+By default every trace is anonymous. To see a whole conversation as one timeline, tag traces with a `sessionId` — the natural key here is the conversation's `thread_id`:
+
+```ts
+// server.ts — /memory passes the thread_id as the Langfuse session
+const aiResponse = await memoryGraph.invoke(
+  { skill, message },
+  { configurable: { thread_id }, ...langfuseCallbacks({ sessionId: thread_id }) },
+);
+```
+
+`langfuseCallbacks({ sessionId })` creates a per-request handler tagged with that session, so every request sharing a `thread_id` groups under one session in the Langfuse UI. Click a session to replay the whole conversation — input, output, latency, and cost per turn.
 
 ### Env vars
 

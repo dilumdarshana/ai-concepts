@@ -331,8 +331,11 @@ app.post('/output/hallucination', async (req: Request, res: Response) => {
  * can see exactly which one blocked the request (or what was sanitized).
  */
 app.post('/chat', async (req: Request, res: Response) => {
-  const { topic = 'technology', message = 'Explain how transformers work.' } =
-    req.body;
+  const {
+    topic = 'technology',
+    message = 'Explain how transformers work.',
+    session_id,
+  } = req.body;
 
   try {
     // 1. Input guardrails — block or sanitize before the model sees anything.
@@ -352,14 +355,14 @@ app.post('/chat', async (req: Request, res: Response) => {
     ]);
     const answer = await chain.invoke(
       { message: sanitized.message },
-      langfuseCallbacks(),
+      langfuseCallbacks({ sessionId: session_id }),
     );
 
     // 3. Output guardrail — judge the answer before returning it.
     const verdict = await qualityJudge(
       judgeModel,
       { question: sanitized.message, answer },
-      langfuseCallbacks().callbacks,
+      langfuseCallbacks({ sessionId: session_id }).callbacks,
     );
 
     if (!verdict.passed) {

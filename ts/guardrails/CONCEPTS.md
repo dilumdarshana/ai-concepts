@@ -322,13 +322,24 @@ await injectionGuard.invoke({ message });
 const sanitized = await redactPII.invoke({ message });
 
 // 2. Model call — only the sanitized message reaches the model.
-const answer = await chain.invoke({ message: sanitized.message });
+const answer = await chain.invoke(
+  { message: sanitized.message },
+  langfuseCallbacks({ sessionId: session_id }),
+);
 
 // 3. Output guardrail — judge the answer before returning it.
-const verdict = await qualityJudge(strictModel, { question: sanitized.message, answer });
+const verdict = await qualityJudge(
+  judgeModel,
+  { question: sanitized.message, answer },
+  langfuseCallbacks({ sessionId: session_id }).callbacks,
+);
 ```
 
 The response tells you everything: `blocked`, `guardrail` (which rule fired), `reason`, and — when it got through — the `answer` plus the judge's `score`/`reason`. This is the shape of a production LLM endpoint: cheap deterministic guards up front, expensive judge only when needed.
+
+### Observability
+
+Every model call is traced with Langfuse when configured (see `langfuse.ts`). Pass an optional `session_id` in the request body to group all turns of a conversation under one Langfuse session — the model call and the judge call share it, so you can replay the whole exchange (input, answer, verdict, cost) as a single timeline in the UI.
 
 ---
 

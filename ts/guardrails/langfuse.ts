@@ -41,10 +41,24 @@ function getLangfuseHandler(): CallbackHandler | undefined {
  * Spread it into the invocation's second argument:
  *   `chain.invoke(input, langfuseCallbacks())`
  * Returns `{}` when Langfuse is not configured, so tracing is purely additive.
+ *
+ * Pass `{ sessionId }` (e.g. a conversation `thread_id`) to group every trace
+ * of that conversation under one session in the Langfuse UI.
  */
-export function langfuseCallbacks(): {
+export function langfuseCallbacks(options?: {
+  sessionId?: string;
+  userId?: string;
+}): {
   callbacks?: CallbackHandler[];
 } {
   const handler = getLangfuseHandler();
-  return handler ? { callbacks: [handler] } : {};
+  if (!handler) return {};
+
+  if (options?.sessionId || options?.userId) {
+    // Per-request handler so this invocation's trace is tagged with the
+    // conversation session — a whole thread groups under one session.
+    return { callbacks: [new CallbackHandler(options)] };
+  }
+
+  return { callbacks: [handler] };
 }
