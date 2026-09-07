@@ -23,6 +23,7 @@ minimumReleaseAgeExclude:
 
 packages:
   - 'langchain'
+  - 'guardrails'
   - 'chromadb'
   - 'rag-json'
   - 'rag-huggingface'

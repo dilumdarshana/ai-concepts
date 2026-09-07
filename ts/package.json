@@ -9,6 +9,7 @@
   "scripts": {
     "dev:chromadb": "pnpm --filter chromadb dev",
     "dev:langchain": "pnpm --filter langchain dev",
+    "dev:guardrails": "pnpm --filter guardrails dev",
     "dev:rag": "pnpm --filter rag dev",
     "dev:rag-huggingface": "pnpm --filter rag-huggingface dev",
     "dev:langgraph": "pnpm --filter langgraph dev",

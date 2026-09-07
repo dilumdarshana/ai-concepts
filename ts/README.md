@@ -15,6 +15,7 @@ pnpm add <pkg> --filter <name> # add dependency to a specific project
 | Command | Project | Framework | Description |
 |---|---|---|---|
 | `pnpm dev:langchain` | [langchain](langchain/) | Express | 10 route-per-concept demos: prompts, LCEL, streaming, tools, memory |
+| `pnpm dev:guardrails` | [guardrails](guardrails/) | Express | LLM guardrails: input/output validation, PII redaction, LLM-as-judge |
 | `pnpm dev:langgraph` | [langgraph](langgraph/) | Express | LangGraph agent with 3 tools + Prisma/PostgreSQL memory |
 | `pnpm dev:chromadb` | [chromadb](chromadb/) | Express | ChromaDB vector store (Cloud or Docker) with OpenAI embeddings |
 | `pnpm dev:rag` | [rag-json](rag-json/) | Next.js 15 | 4 chat API routes: basic → LangChain → personalized → RAG with JSONLoader |

@@ -16,6 +16,7 @@ A workspace of AI/LLM projects in **TypeScript** (`ts/`) and **Python** (`python
 | Project             | Stack (TypeScript)                                          | Stack (Python)                                   | What it does                                                              |
 | ------------------- | ----------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------- |
 | langchain           | [ts](ts/langchain/) · Express, LangChain, LangGraph, Langfuse | [python](python/langchain/) · FastAPI, LangChain | 10 route-per-concept demos: prompts, LCEL, streaming, tools, memory       |
+| guardrails          | [ts](ts/guardrails/) · Express, LangChain, Langfuse           | —                                                | LLM guardrails: input/output validation, PII redaction, LLM-as-judge     |
 | langgraph           | [ts](ts/langgraph/) · Express, LangGraph, Prisma/PostgreSQL | —                                                | Agent with tools, memory, and DB                                          |
 | chromadb            | [ts](ts/chromadb/) · Express, ChromaDB                      | —                                                | Vector store with OpenAI embeddings                                       |
 | rag-json            | [ts](ts/rag-json/) · Next.js 15, AI SDK v6, LangChain       | —                                                | 4 chat endpoints with increasing RAG complexity                           |
