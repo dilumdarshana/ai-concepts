@@ -90,6 +90,8 @@ Three layers are involved:
 | `LANGFUSE_PUBLIC_KEY` | Yes | — | Public API key (`pk-lf-...`) |
 | `LANGFUSE_SECRET_KEY` | Yes | — | Secret API key (`sk-lf-...`) |
 | `LANGFUSE_BASE_URL` | No | `https://cloud.langfuse.com` | Langfuse server URL. Use `https://us.cloud.langfuse.com` for US region. |
+| `LANGFUSE_TRACING_ENVIRONMENT` | No | `default` | Environment tag on every trace (`development`, `production`, …). |
+| `LANGFUSE_RELEASE` | No | — | Release/app version tag, e.g. a git SHA. |
 
 Both `PUBLIC_KEY` and `SECRET_KEY` must be present to enable tracing. If either
 is missing, the entire Langfuse integration is skipped — zero overhead, zero
@@ -107,66 +109,85 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 ## Core Wiring — `langfuse.ts`
 
-The entire integration lives in a single file (`langfuse.ts`, 64 lines). Here is
-how it works:
+The entire integration lives in a single file (`langfuse.ts`). Here is how it
+works:
 
-### Lazy singleton initialization
+### Lazy, process-wide initialization
 
 ```ts
-let langfuseHandler: CallbackHandler | undefined;
+let langfuseProcessor: LangfuseSpanProcessor | undefined;
+let initialized = false;
 
-function getLangfuseHandler(): CallbackHandler | undefined {
-  if (langfuseHandler !== undefined) return langfuseHandler;  // cached
+function initLangfuse(): LangfuseSpanProcessor | undefined {
+  if (initialized) return langfuseProcessor;  // cached
+  initialized = true;
 
   if (!process.env.LANGFUSE_PUBLIC_KEY || !process.env.LANGFUSE_SECRET_KEY) {
     return undefined;  // keys missing → no tracing
   }
 
   // Register the OTel provider once (process-wide singleton)
-  new NodeTracerProvider({
-    spanProcessors: [new LangfuseSpanProcessor()],
-  }).register();
+  const processor = new LangfuseSpanProcessor();
+  new NodeTracerProvider({ spanProcessors: [processor] }).register();
 
-  // Create and cache the handler
-  langfuseHandler = new CallbackHandler();
-  return langfuseHandler;
+  registerShutdownFlush(processor);
+
+  langfuseProcessor = processor;
+  return processor;
 }
 ```
 
 Key points:
 
 - **Lazy**: nothing happens until the first `langfuseCallbacks()` call.
-- **Singleton**: `NodeTracerProvider` and `CallbackHandler` are created once and
-  reused for all subsequent invocations.
+- **Provider is a singleton**: `NodeTracerProvider` + `LangfuseSpanProcessor` are
+  created once and reused. This is required — the OTel provider is global.
+- **Handler is per-call**: a fresh `CallbackHandler` is built for every
+  invocation (see below), so no per-run state is shared.
 - **Opt-out by omission**: missing env vars → `undefined` → empty config → no
   tracing.
 
 ### The exported `langfuseCallbacks()` helper
 
 ```ts
-export function langfuseCallbacks(options?: {
+export interface LangfuseCallbackOptions {
   sessionId?: string;
   userId?: string;
-}): { callbacks?: CallbackHandler[] } {
-  const handler = getLangfuseHandler();
-  if (!handler) return {};
+  tags?: string[];
+  version?: string;
+  traceMetadata?: Record<string, unknown>;
+}
 
-  // Session/user → new handler per call (metadata baked in at construction)
-  if (options?.sessionId || options?.userId) {
-    return { callbacks: [new CallbackHandler(options)] };
-  }
+export function langfuseCallbacks(
+  options: LangfuseCallbackOptions = {},
+): { callbacks?: CallbackHandler[] } {
+  const processor = initLangfuse();
+  if (!processor) return {};
 
-  // Default → cached singleton handler
-  return { callbacks: [handler] };
+  return { callbacks: [new CallbackHandler(options)] };
 }
 ```
 
-Two modes:
+A new handler is created on every call. `CallbackHandler` keeps per-run state
+(`runMap`, completion start times, `last_trace_id`), so sharing one instance
+across concurrent HTTP requests can mix trace data. The cost of a new instance
+is negligible.
 
-| Mode | When | Handler |
-|---|---|---|
-| Default | No options | Cached singleton — lightweight, shared |
-| Session/user | `sessionId` or `userId` provided | New `CallbackHandler` per call — metadata must be baked in at construction |
+### Flushing on shutdown
+
+`LangfuseSpanProcessor` batches spans before exporting. If the process exits
+before the batch flushes, recent traces are lost. The module registers hooks to
+flush on exit:
+
+```ts
+process.once('beforeExit', () => void flush());
+process.once('SIGINT', () => void flush().finally(() => process.kill(process.pid, 'SIGINT')));
+process.once('SIGTERM', () => void flush().finally(() => process.kill(process.pid, 'SIGTERM')));
+```
+
+`flush()` calls `processor.shutdown()`, which drains the queue and releases
+resources. The signal handlers re-raise the signal afterwards so Node's default
+exit behaviour is preserved.
 
 ---
 
@@ -243,6 +264,22 @@ const response = await model.invoke(
 ```ts
 langfuseCallbacks({ sessionId: thread_id, userId: 'user-123' })
 ```
+
+### Tags, version, and metadata
+
+The helper also accepts `tags`, `version`, and `traceMetadata`:
+
+```ts
+langfuseCallbacks({
+  sessionId: thread_id,
+  tags: ['route:/chat', 'production'],
+  version: 'v1.2.0',
+  traceMetadata: { feature: 'rag', locale: 'en' },
+});
+```
+
+These map directly to `CallbackHandler` constructor params and surface as
+filterable attributes in the Langfuse UI.
 
 ---
 
@@ -401,9 +438,10 @@ No code changes needed — `langfuseCallbacks()` returns `{}` automatically.
    not attached to the `ChatOpenAI` instance. This means each HTTP request
    produces its own trace, giving per-request observability.
 
-3. **Singleton for default, new instance for sessions** — the cached
-   `CallbackHandler` avoids re-allocation on every request. A fresh handler is
-   only created when session/user metadata must be baked in at construction time.
+3. **Handler per call, provider per process** — the OTel provider/processor is a
+   process-wide singleton (required), but a new `CallbackHandler` is created for
+   every invocation. The handler is stateful, so per-call instances prevent
+   trace data from mixing across concurrent requests.
 
 4. **OTel provider registered once** — `NodeTracerProvider.register()` is
    process-wide. Calling it again is harmless but the guard ensures no duplicate
@@ -429,7 +467,8 @@ No code changes needed — `langfuseCallbacks()` returns `{}` automatically.
 | US region traces not showing | `LANGFUSE_BASE_URL` defaults to EU | Set `LANGFUSE_BASE_URL=https://us.cloud.langfuse.com` |
 | Session traces not grouped | Missing `sessionId` in `langfuseCallbacks()` | Pass `{ sessionId: threadId }` |
 | Duplicate spans | Calling `NodeTracerProvider.register()` multiple times | The singleton guard prevents this — ensure you're using the `langfuseCallbacks()` helper |
-| High memory usage | Creating new `CallbackHandler` per request without session | Use the default path (no options) which caches the handler |
+| Traces missing after restart | Batched spans not flushed before exit | Shutdown hooks are registered automatically; don't call `process.exit()` without flushing |
+| Traces missing environment tag | `LANGFUSE_TRACING_ENVIRONMENT` unset | Set it in `.env` (`development`, `production`, …) |
 
 ---
 

@@ -12,27 +12,65 @@ import { CallbackHandler } from '@langfuse/langchain';
  *
  * Tracing is opt-in: if `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` are not
  * set, this wrapper returns no callbacks and the app runs exactly as before.
+ *
+ * Optional env vars (read internally by `LangfuseSpanProcessor`):
+ *   LANGFUSE_BASE_URL            — instance URL (default: EU cloud)
+ *   LANGFUSE_TRACING_ENVIRONMENT — e.g. "development" / "production"
+ *   LANGFUSE_RELEASE             — app version / git sha
  */
 
-let langfuseHandler: CallbackHandler | undefined;
+export interface LangfuseCallbackOptions {
+  /** Groups every trace of one conversation under a single session. */
+  sessionId?: string;
+  /** Associates the trace with an end user. */
+  userId?: string;
+  /** Free-form tags for filtering in the Langfuse UI. */
+  tags?: string[];
+  /** Version of the app / prompt, for A/B comparison. */
+  version?: string;
+  /** Arbitrary metadata attached to the trace. */
+  traceMetadata?: Record<string, unknown>;
+}
 
-function getLangfuseHandler(): CallbackHandler | undefined {
-  if (langfuseHandler !== undefined) return langfuseHandler;
+let langfuseProcessor: LangfuseSpanProcessor | undefined;
+let initialized = false;
+
+function initLangfuse(): LangfuseSpanProcessor | undefined {
+  if (initialized) return langfuseProcessor;
+  initialized = true;
 
   if (!process.env.LANGFUSE_PUBLIC_KEY || !process.env.LANGFUSE_SECRET_KEY) {
     return undefined;
   }
 
-  // Register the Langfuse span processor once at process start so every span
-  // created by the CallbackHandler is flushed to Langfuse (reads the
-  // LANGFUSE_* env vars — pinned to the Langfuse project).
-  new NodeTracerProvider({
-    spanProcessors: [new LangfuseSpanProcessor()],
-  }).register();
+  // Register the span processor once per process. It reads the LANGFUSE_* env
+  // vars, including BASE_URL / TRACING_ENVIRONMENT / RELEASE.
+  const processor = new LangfuseSpanProcessor();
+  new NodeTracerProvider({ spanProcessors: [processor] }).register();
 
-  // One handler reused across invocations; each invocation becomes its own trace.
-  langfuseHandler = new CallbackHandler();
-  return langfuseHandler;
+  registerShutdownFlush(processor);
+
+  langfuseProcessor = processor;
+  return processor;
+}
+
+/**
+ * Spans are batched before export, so flush the queue before the process exits —
+ * otherwise traces from the last few seconds are lost on restart.
+ */
+function registerShutdownFlush(processor: LangfuseSpanProcessor): void {
+  const flush = async (): Promise<void> => {
+    await processor.shutdown().catch(() => undefined);
+  };
+
+  process.once('beforeExit', () => void flush());
+
+  for (const signal of ['SIGINT', 'SIGTERM'] as const) {
+    process.once(signal, () => {
+      // Re-raise after flushing so Node's default signal handling still runs.
+      void flush().finally(() => process.kill(process.pid, signal));
+    });
+  }
 }
 
 /**
@@ -44,21 +82,17 @@ function getLangfuseHandler(): CallbackHandler | undefined {
  *
  * Pass `{ sessionId }` (e.g. a conversation `thread_id`) to group every trace
  * of that conversation under one session in the Langfuse UI.
+ *
+ * A fresh handler is created per call: `CallbackHandler` keeps per-run state, so
+ * sharing one instance across concurrent requests can mix traces.
  */
-export function langfuseCallbacks(options?: {
-  sessionId?: string;
-  userId?: string;
-}): {
+export function langfuseCallbacks(
+  options: LangfuseCallbackOptions = {},
+): {
   callbacks?: CallbackHandler[];
 } {
-  const handler = getLangfuseHandler();
-  if (!handler) return {};
+  const processor = initLangfuse();
+  if (!processor) return {};
 
-  if (options?.sessionId || options?.userId) {
-    // Per-request handler so this invocation's trace is tagged with the
-    // conversation session — a whole thread groups under one session.
-    return { callbacks: [new CallbackHandler(options)] };
-  }
-
-  return { callbacks: [handler] };
+  return { callbacks: [new CallbackHandler(options)] };
 }
