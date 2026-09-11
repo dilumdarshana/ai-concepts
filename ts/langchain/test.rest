@@ -29,7 +29,7 @@ POST http://localhost:3000/messages
 Content-Type: application/json
 
 {
-  "message": "Explain vector databases in one line."
+  "message": "Explain langfuse in one line."
 }
 
 ###
@@ -218,4 +218,38 @@ Content-Type: application/json
     { "role": "assistant", "content": "A long assistant reply that fills the budget." },
     { "role": "user", "content": "A short recent prompt that survives." }
   ]
+}
+
+###
+
+# ------------------------------------------------------------
+# 11. /judge - LLM-as-judge writes a score back to Langfuse
+# Concept: a second model grades the first model's answer against
+# a rubric, then the score is attached to the original trace via
+# @langfuse/client. Requires LANGFUSE_PUBLIC_KEY/SECRET_KEY to
+# record the score; without them the judgement is still returned.
+# Expected: { "response": "...", "judgement": { "score": 0.9,
+#           "reasoning": "..." }, "traceId": "..." }
+# ------------------------------------------------------------
+POST http://localhost:3000/judge
+Content-Type: application/json
+
+{
+  "message": "Explain vector databases in one sentence.",
+  "criteria": "accuracy and conciseness"
+}
+
+###
+
+# ------------------------------------------------------------
+# 11b. /judge - default criteria (helpfulness, accuracy, clarity)
+# Concept: omit "criteria" to use the built-in rubric. A vague
+# answer should score lower.
+# Expected: { "judgement": { "score": < 0.5, ... } }
+# ------------------------------------------------------------
+POST http://localhost:3000/judge
+Content-Type: application/json
+
+{
+  "message": "Say something vague about databases."
 }

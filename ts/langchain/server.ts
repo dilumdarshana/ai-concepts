@@ -22,6 +22,7 @@ import {
 } from '@langchain/core/runnables';
 import { tool } from '@langchain/core/tools';
 import { StringOutputParser } from '@langchain/core/output_parsers';
+import { awaitAllCallbacks } from '@langchain/core/callbacks/promises';
 import { ChatOpenAI } from '@langchain/openai';
 import {
   Annotation,
@@ -30,7 +31,8 @@ import {
   StateGraph,
   START,
 } from '@langchain/langgraph';
-import { langfuseCallbacks } from './langfuse';
+import { createLangfuseHandler, flushLangfuse, langfuseCallbacks } from './langfuse';
+import { judgeResponse } from './judge';
 
 dotenv.config();
 
@@ -53,13 +55,14 @@ app.use(express.json());
  *   7. /stream                  — streaming tokens
  *   8. /tools                   — tool calling (@tool + bindTools)
  *   9. /memory                  — LangGraph StateGraph + MemorySaver (state + history)
+ *  10. /judge                   — LLM-as-judge (score a response into Langfuse)
  */
 
 // GPT-4o is a good default. `temperature: 0` is best for structured/tool tasks,
 // higher values for chat — see llm-fundamentals.md §5.
 const model = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-4o',
+  model: 'gpt-5-nano',
   temperature: 0.7,
 });
 
@@ -67,7 +70,7 @@ const model = new ChatOpenAI({
 // *shape* matters more than the wording.
 const strictModel = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-4o',
+  model: 'gpt-5-mini',
   temperature: 0,
 });
 
@@ -89,6 +92,7 @@ app.get('/', (_req: Request, res: Response) => {
       '/stream',
       '/tools',
       '/memory',
+      '/judge',
     ],
   });
 });
@@ -457,6 +461,55 @@ app.post('/trim', async (req: Request, res: Response) => {
   });
 
   res.json({ original: messages.length, remaining: trimmed.length });
+});
+
+// ---------------------------------------------------------------------------
+// 10. LLM-as-judge — grade a response and record the score in Langfuse
+// ---------------------------------------------------------------------------
+
+/*
+ * A second model grades the first model's answer against a rubric. The judge is
+ * constrained to a Zod schema (score + reasoning), and the score is written back
+ * to the original trace in Langfuse. This is the "online evaluation" pattern:
+ * run the app, judge the output, and monitor the score over time.
+ *
+ * `createLangfuseHandler` gives us the handler so we can read `last_trace_id`.
+ * LangChain runs callbacks in the background, so `awaitAllCallbacks()` drains
+ * them before we read the ID. Without Langfuse keys the route still works — it
+ * returns the judgement but records no score.
+ */
+app.post('/judge', async (req: Request, res: Response) => {
+  const {
+    message = 'Explain vector databases in one sentence.',
+    criteria,
+  } = req.body;
+
+  const handler = createLangfuseHandler({ tags: ['route:/judge'] });
+
+  const answer = await model.invoke(
+    [
+      new SystemMessage('You are a concise, accurate assistant.'),
+      new HumanMessage(message),
+    ],
+    handler ? { callbacks: [handler] } : {},
+  );
+
+  await awaitAllCallbacks();
+  // Export the trace now so it exists before we attach a score to it.
+  await flushLangfuse();
+
+  const judgement = await judgeResponse({
+    input: message,
+    output: String(answer.content),
+    traceId: handler?.last_trace_id,
+    criteria,
+  });
+
+  res.json({
+    response: answer.content,
+    judgement,
+    traceId: handler?.last_trace_id ?? null,
+  });
 });
 
 const PORT = process.env.PORT || 3000;

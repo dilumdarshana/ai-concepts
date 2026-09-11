@@ -65,12 +65,44 @@ function registerShutdownFlush(processor: LangfuseSpanProcessor): void {
 
   process.once('beforeExit', () => void flush());
 
-  for (const signal of ['SIGINT', 'SIGTERM'] as const) {
+  for (const signal of ['SIGINT', 'SIGTERM', 'SIGUSR2'] as const) {
     process.once(signal, () => {
       // Re-raise after flushing so Node's default signal handling still runs.
+      // SIGUSR2 is included because nodemon uses it to restart the child.
       void flush().finally(() => process.kill(process.pid, signal));
     });
   }
+}
+
+/**
+ * Force-flush queued spans so the current trace is exported immediately instead
+ * of waiting for the batch interval. Used before attaching a score so the trace
+ * exists in Langfuse when the score arrives.
+ */
+export async function flushLangfuse(): Promise<void> {
+  if (!langfuseProcessor) return;
+  await langfuseProcessor.forceFlush().catch(() => undefined);
+}
+
+/**
+ * Create a `CallbackHandler` for a single invocation, or `undefined` when
+ * Langfuse is not configured.
+ *
+ * Use this directly when you need the handler afterwards — e.g. to read
+ * `handler.last_trace_id` and attach a score to the trace (see `judge.ts`).
+ * Remember to `await awaitAllCallbacks()` first: LangChain runs callbacks in
+ * the background, so `last_trace_id` is only set once they drain.
+ *
+ * A fresh handler is created per call: `CallbackHandler` keeps per-run state, so
+ * sharing one instance across concurrent requests can mix traces.
+ */
+export function createLangfuseHandler(
+  options: LangfuseCallbackOptions = {},
+): CallbackHandler | undefined {
+  const processor = initLangfuse();
+  if (!processor) return undefined;
+
+  return new CallbackHandler(options);
 }
 
 /**
@@ -82,17 +114,12 @@ function registerShutdownFlush(processor: LangfuseSpanProcessor): void {
  *
  * Pass `{ sessionId }` (e.g. a conversation `thread_id`) to group every trace
  * of that conversation under one session in the Langfuse UI.
- *
- * A fresh handler is created per call: `CallbackHandler` keeps per-run state, so
- * sharing one instance across concurrent requests can mix traces.
  */
 export function langfuseCallbacks(
   options: LangfuseCallbackOptions = {},
 ): {
   callbacks?: CallbackHandler[];
 } {
-  const processor = initLangfuse();
-  if (!processor) return {};
-
-  return { callbacks: [new CallbackHandler(options)] };
+  const handler = createLangfuseHandler(options);
+  return handler ? { callbacks: [handler] } : {};
 }

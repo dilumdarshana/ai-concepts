@@ -22,7 +22,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.1.0
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       langchain:
         specifier: ^1.5.2
         version: 1.5.2(@langchain/core@1.2.1(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(ws@8.21.0)
@@ -62,7 +62,7 @@ importers:
         version: 3.5.0
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -90,7 +90,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -116,6 +116,9 @@ importers:
       '@langchain/openai':
         specifier: ^1.5.10
         version: 1.5.10(@aws-sdk/credential-provider-node@3.972.81)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@smithy/signature-v4@5.7.3)(ws@8.21.0)
+      '@langfuse/client':
+        specifier: ^5.11.1
+        version: 5.11.1(@opentelemetry/api@1.9.1)
       '@langfuse/langchain':
         specifier: ^5.11.0
         version: 5.11.0(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@opentelemetry/api@1.9.1)
@@ -130,7 +133,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       openai:
         specifier: ^7.5.0
         version: 7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3)
@@ -161,7 +164,7 @@ importers:
         version: 1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@langchain/mcp-adapters':
         specifier: ^1.1.4
-        version: 1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))
+        version: 1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))(supports-color@5.5.0)
       '@langchain/openai':
         specifier: ^1.5.10
         version: 1.5.10(@aws-sdk/credential-provider-node@3.972.81)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@smithy/signature-v4@5.7.3)(ws@8.21.0)
@@ -176,7 +179,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       langchain:
         specifier: ^1.5.2
         version: 1.5.2(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(ws@8.21.0)
@@ -216,7 +219,7 @@ importers:
         version: 1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@langchain/mcp-adapters':
         specifier: ^1.1.4
-        version: 1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))
+        version: 1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))(supports-color@5.5.0)
       '@langchain/openai':
         specifier: ^1.5.10
         version: 1.5.10(@aws-sdk/credential-provider-node@3.972.81)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@smithy/signature-v4@5.7.3)(ws@8.21.0)
@@ -225,7 +228,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       langchain:
         specifier: ^1.5.2
         version: 1.5.2(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(ws@8.21.0)
@@ -244,7 +247,7 @@ importers:
         version: 24.13.3
       mongodb-mcp-server:
         specifier: ^2.1.0
-        version: 2.1.0(@aws-sdk/credential-providers@3.1116.0)(@cfworker/json-schema@4.1.1)(@types/express@5.0.6)(@types/node@24.13.3)(gcp-metadata@7.0.1)(mongodb-client-encryption@7.2.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(socks@2.8.9)
+        version: 2.1.0(@aws-sdk/credential-providers@3.1116.0)(@cfworker/json-schema@4.1.1)(@types/express@5.0.6)(@types/node@24.13.3)(gcp-metadata@7.0.1)(mongodb-client-encryption@7.2.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(socks@2.8.9)(supports-color@5.5.0)
       nodemon:
         specifier: ^3.1.14
         version: 3.1.14
@@ -265,7 +268,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       mongodb:
         specifier: ^7.5.0
         version: 7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
@@ -314,7 +317,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
       mongodb:
         specifier: ^7.5.0
         version: 7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
@@ -394,7 +397,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -425,7 +428,7 @@ importers:
         version: 17.4.2
       express:
         specifier: ^5.2.1
-        version: 5.2.1
+        version: 5.2.1(supports-color@5.5.0)
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -505,7 +508,7 @@ importers:
         version: 22.0.1
       '@voltagent/cli':
         specifier: ^0.1.9
-        version: 0.1.21(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@types/node@22.19.21)(@voltagent/logger@0.1.4)(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)
+        version: 0.1.21(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@types/node@22.19.21)(@voltagent/logger@0.1.4)(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)
       '@voltagent/core':
         specifier: ^0.1.63
         version: 0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76)
@@ -1827,8 +1830,18 @@ packages:
   '@langchain/protocol@0.0.18':
     resolution: {integrity: sha512-XW1egQtPfsGI41w2AMZNFZrUIwFSQHTjVMZs0OaTpCAvht/QLoaPN8FQcsysMVypOhupG28J29yOorrc70otBQ==}
 
+  '@langfuse/client@5.11.1':
+    resolution: {integrity: sha512-8xqjQKAo9TKSSgclnphdforUTDY8H3lv6Cf/yq2q6STkG8fmIV8AxJWm27/AI9XVodtQPYjj8jKWt55qgGqqCg==}
+    peerDependencies:
+      '@opentelemetry/api': ^1.9.0
+
   '@langfuse/core@5.11.0':
     resolution: {integrity: sha512-Y5nBcrd8k0bEazb+lcOaEm6ICxxJJLGDkTax7dY4NyiYoO1LlTIFhkfwSOcneQRjpl7EvgL4Dy+9fzDXBDuVaA==}
+    peerDependencies:
+      '@opentelemetry/api': ^1.9.0
+
+  '@langfuse/core@5.11.1':
+    resolution: {integrity: sha512-Oor1z4BlgI5RaUrRYYKf3ijyCAx0tiGCWsABzfm6ZDAgbaaFuiwvJVtXGohiq5evcnjGGE5h4Mf4ZjH1yd5vjw==}
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
 
@@ -1849,6 +1862,12 @@ packages:
 
   '@langfuse/tracing@5.11.0':
     resolution: {integrity: sha512-RrAradZuRVYnr7TLv1tHwLzyYxli96E8ujPmrt5LXLsEYsqUlfAhweW8khE1wqwj7uooLFg2FVvw1+IAIQx/+Q==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.9.0
+
+  '@langfuse/tracing@5.11.1':
+    resolution: {integrity: sha512-5lT0VhKSI3P5z3jylAE7Qf+V6GJ6IT0TZhvAQdU5bP0oUx2kRoXcnpdxwqEr7NdKIzaAPiN9E08ehO9wk/8xTA==}
     engines: {node: '>=20'}
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
@@ -7571,7 +7590,7 @@ snapshots:
       cors: 2.8.6
       dayjs: 1.11.23
       dotenv: 17.4.2
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       zod: 4.4.3
     transitivePeerDependencies:
       - hono
@@ -8146,7 +8165,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@gitlab/gitlab-ai-provider@3.6.1(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(graphql@16.14.2)(ws@8.21.0)':
+  '@gitlab/gitlab-ai-provider@3.6.1(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)':
     dependencies:
       '@ai-sdk/provider': 3.0.10
       '@ai-sdk/provider-utils': 4.0.30(zod@3.25.76)
@@ -8155,7 +8174,7 @@ snapshots:
       graphql-request: 6.1.0(graphql@16.14.2)
       isomorphic-ws: 5.0.0(ws@8.21.0)
       openai: 6.49.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@3.25.76)
-      socket.io-client: 4.8.3
+      socket.io-client: 4.8.3(supports-color@5.5.0)
       vscode-jsonrpc: 8.2.1
       zod: 3.25.76
     transitivePeerDependencies:
@@ -8627,7 +8646,7 @@ snapshots:
       - svelte
       - vue
 
-  '@langchain/mcp-adapters@1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))':
+  '@langchain/mcp-adapters@1.1.4(@cfworker/json-schema@4.1.1)(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(@langchain/langgraph@1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3))(supports-color@5.5.0)':
     dependencies:
       '@langchain/core': 1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0)
       '@langchain/langgraph': 1.4.12(@langchain/core@1.2.9(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.11.0(@opentelemetry/api@1.9.1))(openai@7.5.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.0)(zod@4.4.3))(ws@8.21.0))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3)
@@ -8678,7 +8697,18 @@ snapshots:
 
   '@langchain/protocol@0.0.18': {}
 
+  '@langfuse/client@5.11.1(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@langfuse/core': 5.11.1(@opentelemetry/api@1.9.1)
+      '@langfuse/tracing': 5.11.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/api': 1.9.1
+      mustache: 4.2.0
+
   '@langfuse/core@5.11.0(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+
+  '@langfuse/core@5.11.1(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
 
@@ -8700,6 +8730,11 @@ snapshots:
   '@langfuse/tracing@5.11.0(@opentelemetry/api@1.9.1)':
     dependencies:
       '@langfuse/core': 5.11.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/api': 1.9.1
+
+  '@langfuse/tracing@5.11.1(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@langfuse/core': 5.11.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/api': 1.9.1
 
   '@libsql/client@0.15.15':
@@ -8891,7 +8926,7 @@ snapshots:
       cross-spawn: 7.0.6
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.26
       jose: 6.2.3
@@ -8915,7 +8950,7 @@ snapshots:
       cross-spawn: 7.0.6
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.26
       jose: 6.2.3
@@ -8950,7 +8985,7 @@ snapshots:
       raw-body: 3.0.2
       zod: 4.4.3
     optionalDependencies:
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
 
   '@modelcontextprotocol/server@2.0.0':
     dependencies:
@@ -8990,7 +9025,7 @@ snapshots:
 
   '@mongodb-js/devtools-connect@3.17.10(@mongodb-js/oidc-plugin@2.2.0)(mongodb-log-writer@2.5.14(bson@7.3.1))(mongodb@7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9))':
     dependencies:
-      '@mongodb-js/devtools-proxy-support': 0.7.19
+      '@mongodb-js/devtools-proxy-support': 0.7.19(supports-color@5.5.0)
       '@mongodb-js/oidc-http-server-pages': 1.2.14
       '@mongodb-js/oidc-plugin': 2.2.0
       lodash.merge: 4.6.2
@@ -9006,16 +9041,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mongodb-js/devtools-proxy-support@0.7.19':
+  '@mongodb-js/devtools-proxy-support@0.7.19(supports-color@5.5.0)':
     dependencies:
       '@mongodb-js/socksv5': 0.0.11
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@5.5.0)
-      http-proxy-agent: 7.0.2
+      http-proxy-agent: 7.0.2(supports-color@5.5.0)
       https-proxy-agent: 7.0.6
       lru-cache: 11.5.2
       node-fetch: 3.3.2
-      pac-proxy-agent: 7.2.0
+      pac-proxy-agent: 7.2.0(supports-color@5.5.0)
       socks-proxy-agent: 8.0.5
       ssh2: 1.17.0
       system-ca: 3.0.0
@@ -9054,7 +9089,7 @@ snapshots:
 
   '@mongodb-js/oidc-plugin@2.2.0':
     dependencies:
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       node-fetch: 3.3.2
       open: 10.2.0
       openid-client: 6.8.7
@@ -9089,7 +9124,7 @@ snapshots:
       '@mongosh/shell-bson': 3.0.6(bson@7.3.1)
       bson: 7.3.1
       mongodb: 7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
-      mongodb-build-info: 1.9.12
+      mongodb-build-info: 1.9.12(supports-color@5.5.0)
       mongodb-connection-string-url: 7.0.1
     transitivePeerDependencies:
       - '@aws-sdk/credential-providers'
@@ -9111,7 +9146,7 @@ snapshots:
       '@mongosh/types': 5.2.0(@mongodb-js/oidc-plugin@2.2.0)(mongodb-log-writer@2.5.14(bson@7.3.1))(mongodb@7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9))
       gcp-metadata: 7.0.1
       mongodb: 7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
-      mongodb-build-info: 1.9.12
+      mongodb-build-info: 1.9.12(supports-color@5.5.0)
       mongodb-connection-string-url: 7.0.1
       socks: 2.8.9
     optionalDependencies:
@@ -10382,11 +10417,11 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@voltagent/cli@0.1.21(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@types/node@22.19.21)(@voltagent/logger@0.1.4)(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)':
+  '@voltagent/cli@0.1.21(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@types/node@22.19.21)(@voltagent/logger@0.1.4)(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)':
     dependencies:
-      '@voltagent/evals': 2.0.4(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76))
+      '@voltagent/evals': 2.0.4(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76))
       '@voltagent/internal': 1.0.3
-      '@voltagent/sdk': 2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)
+      '@voltagent/sdk': 2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)
       adm-zip: 0.5.17
       boxen: 5.1.2
       bundle-require: 5.1.0(esbuild@0.25.12)
@@ -10454,7 +10489,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@voltagent/core@2.7.7(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)':
+  '@voltagent/core@2.7.7(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)':
     dependencies:
       '@ai-sdk/amazon-bedrock': 3.0.103(zod@3.25.76)
       '@ai-sdk/anthropic': 3.0.85(zod@3.25.76)
@@ -10475,7 +10510,7 @@ snapshots:
       '@ai-sdk/vercel': 2.0.53(zod@3.25.76)
       '@ai-sdk/xai': 3.0.96(zod@3.25.76)
       '@aihubmix/ai-sdk-provider': 1.0.3(zod@3.25.76)
-      '@gitlab/gitlab-ai-provider': 3.6.1(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(graphql@16.14.2)(ws@8.21.0)
+      '@gitlab/gitlab-ai-provider': 3.6.1(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)
       '@modelcontextprotocol/sdk': 1.30.0(@cfworker/json-schema@4.1.1)(zod@3.25.76)
       '@mymediset/sap-ai-provider': 2.1.0(ai@6.0.208(zod@3.25.76))
       '@opentelemetry/api': 1.9.1
@@ -10519,11 +10554,11 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@voltagent/evals@2.0.4(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76))':
+  '@voltagent/evals@2.0.4(@voltagent/scorers@2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76))(@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76))':
     dependencies:
       '@voltagent/internal': 1.0.3
       '@voltagent/scorers': 2.1.0(@voltagent/core@0.1.86(@cfworker/json-schema@4.1.1)(@voltagent/logger@0.1.4)(zod@3.25.76))(ai@6.0.208(zod@3.25.76))(ws@8.21.0)(zod@3.25.76)
-      '@voltagent/sdk': 2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)
+      '@voltagent/sdk': 2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)
 
   '@voltagent/internal@0.0.9': {}
 
@@ -10549,9 +10584,9 @@ snapshots:
       - encoding
       - ws
 
-  '@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)':
+  '@voltagent/sdk@2.0.3(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)':
     dependencies:
-      '@voltagent/core': 2.7.7(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(ws@8.21.0)(zod@3.25.76)
+      '@voltagent/core': 2.7.7(@ai-sdk/provider-utils@4.0.30(zod@3.25.76))(@ai-sdk/provider@3.0.10)(@aws-sdk/credential-provider-node@3.972.81)(@cfworker/json-schema@4.1.1)(@smithy/signature-v4@5.7.3)(@voltagent/logger@0.1.4)(ai@6.0.208(zod@3.25.76))(graphql@16.14.2)(supports-color@5.5.0)(ws@8.21.0)(zod@3.25.76)
       '@voltagent/internal': 1.0.3
     transitivePeerDependencies:
       - '@ai-sdk/provider'
@@ -10809,7 +10844,7 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  body-parser@2.3.0:
+  body-parser@2.3.0(supports-color@5.5.0):
     dependencies:
       bytes: 3.1.2
       content-type: 2.1.0
@@ -11401,7 +11436,7 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  engine.io-client@6.6.6:
+  engine.io-client@6.6.6(supports-color@5.5.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@5.5.0)
@@ -11635,13 +11670,13 @@ snapshots:
 
   express-rate-limit@8.5.2(express@5.2.1):
     dependencies:
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       ip-address: 10.2.0
 
-  express@5.2.1:
+  express@5.2.1(supports-color@5.5.0):
     dependencies:
       accepts: 2.0.0
-      body-parser: 2.3.0
+      body-parser: 2.3.0(supports-color@5.5.0)
       content-disposition: 1.1.0
       content-type: 1.0.5
       cookie: 0.7.2
@@ -11651,7 +11686,7 @@ snapshots:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 2.1.1
+      finalhandler: 2.1.1(supports-color@5.5.0)
       fresh: 2.0.0
       http-errors: 2.0.1
       merge-descriptors: 2.0.0
@@ -11662,8 +11697,8 @@ snapshots:
       proxy-addr: 2.0.7
       qs: 6.15.3
       range-parser: 1.3.0
-      router: 2.2.0
-      send: 1.2.1
+      router: 2.2.0(supports-color@5.5.0)
+      send: 1.2.1(supports-color@5.5.0)
       serve-static: 2.2.1
       statuses: 2.0.2
       type-is: 2.1.0
@@ -11757,7 +11792,7 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
-  finalhandler@2.1.1:
+  finalhandler@2.1.1(supports-color@5.5.0):
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       encodeurl: 2.0.0
@@ -11913,7 +11948,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
 
-  get-uri@6.0.5:
+  get-uri@6.0.5(supports-color@5.5.0):
     dependencies:
       basic-ftp: 5.3.1
       data-uri-to-buffer: 6.0.2
@@ -12090,7 +12125,7 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@7.0.2:
+  http-proxy-agent@7.0.2(supports-color@5.5.0):
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@5.5.0)
@@ -12922,7 +12957,7 @@ snapshots:
 
   ml-xsadd@3.0.1: {}
 
-  mongodb-build-info@1.9.12:
+  mongodb-build-info@1.9.12(supports-color@5.5.0):
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       mongodb-connection-string-url: 7.0.1
@@ -12945,14 +12980,14 @@ snapshots:
       bson: 7.3.1
       heap-js: 2.7.1
 
-  mongodb-mcp-server@2.1.0(@aws-sdk/credential-providers@3.1116.0)(@cfworker/json-schema@4.1.1)(@types/express@5.0.6)(@types/node@24.13.3)(gcp-metadata@7.0.1)(mongodb-client-encryption@7.2.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(socks@2.8.9):
+  mongodb-mcp-server@2.1.0(@aws-sdk/credential-providers@3.1116.0)(@cfworker/json-schema@4.1.1)(@types/express@5.0.6)(@types/node@24.13.3)(gcp-metadata@7.0.1)(mongodb-client-encryption@7.2.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(socks@2.8.9)(supports-color@5.5.0):
     dependencies:
       '@inquirer/prompts': 8.6.0(@types/node@24.13.3)
       '@inquirer/select': 5.2.2(@types/node@24.13.3)
       '@mcp-ui/server': 6.1.0(@cfworker/json-schema@4.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@modelcontextprotocol/sdk': 1.30.0(@cfworker/json-schema@4.1.1)(zod@4.4.3)
       '@mongodb-js/device-id': 0.4.14
-      '@mongodb-js/devtools-proxy-support': 0.7.19
+      '@mongodb-js/devtools-proxy-support': 0.7.19(supports-color@5.5.0)
       '@mongodb-js/mcp-metrics': 2.1.0
       '@mongodb-js/mcp-types': 2.1.0
       '@mongodb-js/mongodb-schema': 12.7.4(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
@@ -12961,12 +12996,12 @@ snapshots:
       '@types/express': 5.0.6
       bson: 7.3.1
       chalk: 5.6.2
-      express: 5.2.1
+      express: 5.2.1(supports-color@5.5.0)
       hadron-document: 8.11.8(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
       jsonc-parser: 3.3.1
       lru-cache: 11.5.2
       mongodb: 7.5.0(@aws-sdk/credential-providers@3.1116.0)(gcp-metadata@7.0.1)(kerberos@7.0.0)(mongodb-client-encryption@7.2.1)(socks@2.8.9)
-      mongodb-build-info: 1.9.12
+      mongodb-build-info: 1.9.12(supports-color@5.5.0)
       mongodb-connection-string-url: 7.0.1
       mongodb-log-writer: 2.5.14(bson@7.3.1)
       mongodb-redact: 1.4.12
@@ -13365,13 +13400,13 @@ snapshots:
 
   p-timeout@7.0.1: {}
 
-  pac-proxy-agent@7.2.0:
+  pac-proxy-agent@7.2.0(supports-color@5.5.0):
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@5.5.0)
-      get-uri: 6.0.5
-      http-proxy-agent: 7.0.2
+      get-uri: 6.0.5(supports-color@5.5.0)
+      http-proxy-agent: 7.0.2(supports-color@5.5.0)
       https-proxy-agent: 7.0.6
       pac-resolver: 7.0.1
       socks-proxy-agent: 8.0.5
@@ -13845,7 +13880,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.3
       '@rolldown/binding-win32-x64-msvc': 1.2.3
 
-  router@2.2.0:
+  router@2.2.0(supports-color@5.5.0):
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       depd: 2.0.0
@@ -13915,7 +13950,7 @@ snapshots:
 
   semver@7.8.5: {}
 
-  send@1.2.1:
+  send@1.2.1(supports-color@5.5.0):
     dependencies:
       debug: 4.4.3(supports-color@5.5.0)
       encodeurl: 2.0.0
@@ -13942,7 +13977,7 @@ snapshots:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 1.2.1
+      send: 1.2.1(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14064,18 +14099,18 @@ snapshots:
 
   smart-buffer@4.2.0: {}
 
-  socket.io-client@4.8.3:
+  socket.io-client@4.8.3(supports-color@5.5.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@5.5.0)
-      engine.io-client: 6.6.6
-      socket.io-parser: 4.2.6
+      engine.io-client: 6.6.6(supports-color@5.5.0)
+      socket.io-parser: 4.2.6(supports-color@5.5.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-parser@4.2.6:
+  socket.io-parser@4.2.6(supports-color@5.5.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@5.5.0)

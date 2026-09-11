@@ -17,9 +17,10 @@ OpenTelemetry (OTel) span export.
 7. [Usage Patterns](#usage-patterns)
 8. [What Appears in the Langfuse UI](#what-appears-in-the-langfuse-ui)
 9. [Sample Code Recipes](#sample-code-recipes)
-10. [Design Decisions](#design-decisions)
-11. [Troubleshooting](#troubleshooting)
-12. [Useful Links](#useful-links)
+10. [LLM-as-Judge](#llm-as-judge)
+11. [Design Decisions](#design-decisions)
+12. [Troubleshooting](#troubleshooting)
+13. [Useful Links](#useful-links)
 
 ---
 
@@ -79,7 +80,11 @@ Three layers are involved:
 |---|---|---|
 | `@langfuse/langchain` | `^5.11.0` | `5.11.0` |
 | `@langfuse/otel` | `^5.11.0` | `5.11.0` |
+| `@langfuse/client` | `^5.11.1` | `5.11.1` |
 | `@opentelemetry/sdk-trace-node` | `^2.11.0` | — |
+
+`@langfuse/client` is only used by `judge.ts` to ingest scores (see
+[LLM-as-Judge](#llm-as-judge)); tracing itself does not require it.
 
 ---
 
@@ -358,6 +363,7 @@ const response = await toolModel.invoke(messages, langfuseCallbacks());
 | `/stream` | LLM stream with token-by-token timing |
 | `/tools` | Nested: LLM → tool call → LLM |
 | `/memory` | StateGraph node → LLM, grouped under one session |
+| `/judge` | LLM call with an `llm-judge` numeric score attached |
 | `/trim` | No trace (no LangChain model call) |
 
 ---
@@ -426,6 +432,106 @@ await model.invoke(messages, { callbacks: [handler] });
 
 Simply remove `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` from `.env`.
 No code changes needed — `langfuseCallbacks()` returns `{}` automatically.
+
+---
+
+## LLM-as-Judge
+
+LLM-as-a-Judge uses a second model (the "judge") to grade an answer against a
+rubric and records the result as a **score** on the trace. There are two ways to
+do this with Langfuse:
+
+| Approach | Runs where | Code needed | Best for |
+|---|---|---|---|
+| **UI-managed evaluator** | Langfuse server | None | Production monitoring at scale |
+| **In-app judge** | Your app | `judge.ts` | Concepts, custom rubrics, immediate feedback |
+
+This project implements the **in-app judge** (`judge.ts` + `POST /judge`).
+
+> Note: Langfuse is deprecating **trace-level** evaluators in favour of
+> **observation-level** evaluators. The in-app approach here attaches a score to
+> the trace ID directly, which remains supported via the scores API.
+
+### The `/judge` route
+
+```bash
+curl -X POST http://localhost:3000/judge \
+  -H "Content-Type: application/json" \
+  -d '{ "message": "Explain vector databases in one sentence." }'
+```
+
+Response:
+
+```json
+{
+  "response": "A vector database stores data as embeddings ...",
+  "judgement": { "score": 0.9, "reasoning": "Accurate and concise." },
+  "traceId": "8f2c...e91"
+}
+```
+
+### How it works
+
+```
+POST /judge
+ ├─ createLangfuseHandler({ tags: ['route:/judge'] })   → handler
+ ├─ model.invoke(messages, { callbacks: [handler] })     → traced answer
+ ├─ await awaitAllCallbacks()                            → drain background callbacks
+ ├─ handler.last_trace_id                                → the trace to score
+ ├─ await flushLangfuse()                                → export the trace now
+ ├─ judgeResponse({ input, output, traceId })            → judge model (Zod schema)
+ │    └─ langfuse.score.create({ traceId, name, value, dataType, comment })
+ └─ res.json({ response, judgement, traceId })
+```
+
+Key pieces:
+
+- **`createLangfuseHandler()`** (`langfuse.ts`) — returns the `CallbackHandler`
+  so you can read `last_trace_id`. `langfuseCallbacks()` is the spread-friendly
+  wrapper for the common case.
+- **`await awaitAllCallbacks()`** — LangChain runs callbacks in the background,
+  so `last_trace_id` is only populated after they drain. Without this you may
+  read `null`.
+- **`await flushLangfuse()`** — exports the just-finished trace immediately
+  instead of waiting for the batch interval, so the trace exists in Langfuse
+  before the score is attached.
+- **`judgeResponse()`** (`judge.ts`) — a `temperature: 0` model constrained with
+  `withStructuredOutput` to `{ score: 0..1, reasoning: string }`.
+- **`client.score.create(...)`** — writes the score back to the original trace;
+  `client.score.flush()` sends it immediately.
+
+### Score types
+
+`score.create` accepts four data types:
+
+```ts
+client.score.create({
+  traceId,
+  name: 'correctness',
+  value: 0.9,          // numeric: float
+  dataType: 'NUMERIC',
+  comment: 'Factually correct',
+});
+
+// CATEGORICAL → string value (e.g. 'correct' | 'partially_correct')
+// BOOLEAN     → 0 or 1
+// TEXT        → string, 1–500 chars
+```
+
+Attach to a specific observation with `observationId`, or to a session with
+`sessionId` instead of `traceId`.
+
+### UI-managed evaluator (no code)
+
+1. Configure an [LLM Connection](https://langfuse.com/docs/administration/llm-connection)
+   in Langfuse (provider + key).
+2. Create an **LLM-as-a-Judge evaluator** with a rubric and a score type.
+3. Add a **rule** to run it on matching observations (filter by trace name, tag,
+   `userId`, `sessionId`, etc.).
+4. Optionally use the [Evaluators API](https://api.reference.langfuse.com/#tag/evaluators)
+   to version-control the setup.
+
+The `/judge` route tags its trace `route:/judge`, which makes a good rule filter.
 
 ---
 
