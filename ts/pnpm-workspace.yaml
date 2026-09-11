@@ -21,6 +21,9 @@ minimumReleaseAgeExclude:
   - uuid@14.0.1
   - '@langchain/openai@1.5.10'
 
+overrides:
+  '@langchain/core': ^1.2.10
+
 packages:
   - 'langchain'
   - 'guardrails'
