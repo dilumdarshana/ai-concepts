@@ -20,16 +20,18 @@ GET http://localhost:3000/
 ###
 
 # ------------------------------------------------------------
-# 1. /messages - message roles
+# 1. /messages - message roles + hosted web search tool
 # Concept: SystemMessage/HumanMessage are role-tagged, not raw
-# strings. Returns the roles used and the model's reply.
-# Expected: { "roles": ["SystemMessage","HumanMessage"], ... }
+# strings. The model also gets OpenAI's hosted web_search tool,
+# which runs server-side and returns results inline in content.
+# Expected: { "roles": ["SystemMessage","HumanMessage"],
+#             "response": "...", "toolCalls": [...] }
 # ------------------------------------------------------------
 POST http://localhost:3000/messages
 Content-Type: application/json
 
 {
-  "message": "Explain langfuse in one line."
+  "message": "Who is the president in Sri Lanka"
 }
 
 ###

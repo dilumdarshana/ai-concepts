@@ -23,7 +23,7 @@ import {
 import { tool } from '@langchain/core/tools';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { awaitAllCallbacks } from '@langchain/core/callbacks/promises';
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatOpenAI, tools as modelTools } from '@langchain/openai';
 import {
   Annotation,
   MemorySaver,
@@ -62,7 +62,7 @@ app.use(express.json());
 // higher values for chat — see llm-fundamentals.md §5.
 const model = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-5-nano',
+  model: 'gpt-4o',
   temperature: 0.7,
 });
 
@@ -115,10 +115,17 @@ app.post('/messages', async (req: Request, res: Response) => {
     new HumanMessage(message),
   ];
 
-  const response = await model.invoke(messages, langfuseCallbacks());
+  // `webSearch()` is a hosted OpenAI tool: the search runs server-side and the
+  // results come back inline in the response — no agentic loop needed.
+  const response = await model.invoke(messages, {
+    tools: [modelTools.webSearch()],
+    ...langfuseCallbacks(),
+  });
+
   res.json({
     roles: messages.map((m) => m.constructor.name),
     response: response.content,
+    toolCalls: response.additional_kwargs.tool_outputs ?? [],
   });
 });
 
