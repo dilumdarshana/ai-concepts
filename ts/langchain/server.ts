@@ -70,7 +70,7 @@ const model = new ChatOpenAI({
 // *shape* matters more than the wording.
 const strictModel = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  model: 'gpt-5-mini',
+  model: 'gpt-4o',
   temperature: 0,
 });
 
@@ -108,7 +108,7 @@ app.get('/', (_req: Request, res: Response) => {
  * model turn, ToolMessage carries a tool result back into the loop.
  */
 app.post('/messages', async (req: Request, res: Response) => {
-  const { message = 'Explain it briefly.' } = req.body;
+  const { message = 'Explain it briefly.', search = true } = req.body;
 
   const messages = [
     new SystemMessage('You are a terse, confident senior engineer.'),
@@ -116,9 +116,10 @@ app.post('/messages', async (req: Request, res: Response) => {
   ];
 
   // `webSearch()` is a hosted OpenAI tool: the search runs server-side and the
-  // results come back inline in the response — no agentic loop needed.
+  // results come back inline in the response — no agentic loop needed. Note it
+  // disables prompt caching, so pass `search: false` to observe cache hits.
   const response = await model.invoke(messages, {
-    tools: [modelTools.webSearch()],
+    ...(search ? { tools: [modelTools.webSearch()] } : {}),
     ...langfuseCallbacks(),
   });
 
@@ -126,6 +127,9 @@ app.post('/messages', async (req: Request, res: Response) => {
     roles: messages.map((m) => m.constructor.name),
     response: response.content,
     toolCalls: response.additional_kwargs.tool_outputs ?? [],
+    cacheRead: response.usage_metadata?.input_token_details?.cache_read ?? 0,
+    cacheCreation:
+      response.usage_metadata?.input_token_details?.cache_creation ?? 0,
   });
 });
 
@@ -197,10 +201,13 @@ const schema = z.object({
 app.post('/structured', async (req: Request, res: Response) => {
   const { question = 'In one sentence, what is a vector database?' } = req.body;
 
-  const structured = strictModel.withStructuredOutput(schema);
-  const response = await structured.invoke(question, langfuseCallbacks());
+  const structured = strictModel.withStructuredOutput(schema, { includeRaw: true });
+  const { raw, parsed } = await structured.invoke(question, langfuseCallbacks());
 
-  res.json(response);
+  res.json({
+    ...parsed,
+    usage: (raw as AIMessage).usage_metadata,
+  });
 });
 
 // ---------------------------------------------------------------------------
